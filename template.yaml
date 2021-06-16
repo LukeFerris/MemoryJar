@@ -178,68 +178,6 @@ Resources:
       Type: website
       ProjectName: !Ref Website
       SourceVersion: !Ref SourceVersion
-  Database:
-    Type: AWS::RDS::DBCluster
-    Properties:
-      BackupRetentionPeriod: 1
-      DBSubnetGroupName: !Ref DatabaseSubnetGroup
-      Engine: aurora-mysql
-      EngineMode: serverless
-      MasterUsername: !Sub '{{resolve:secretsmanager:${DatabaseRootUserSecret}:SecretString:username}}'
-      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DatabaseRootUserSecret}:SecretString:password}}'
-      EnableHttpEndpoint: true
-      ScalingConfiguration:
-        AutoPause: false
-        MinCapacity: 2
-        MaxCapacity: 256
-      StorageEncrypted: true
-      VpcSecurityGroupIds:
-        - !Ref DatabaseSecurityGroup
-  DatabaseSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
-    Properties:
-      DBSubnetGroupDescription: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
-        - ResourceName: Database
-      SubnetIds: !Ref DefaultVPCSubnets
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
-            - ResourceName: Database
-  DatabaseSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Database Security Group
-      SecurityGroupIngress:
-        CidrIp: 0.0.0.0/0
-        FromPort: 3306
-        IpProtocol: tcp
-        ToPort: 3306
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Security Group
-            - ResourceName: Database
-      VpcId: !Ref DefaultVPCId
-  DatabaseRootUserSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Description: !Sub
-        - Root user login info for Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName}
-        - ResourceName: Database
-      GenerateSecretString:
-        SecretStringTemplate: '{"username": "root"}'
-        GenerateStringKey: password
-        PasswordLength: 16
-        ExcludeCharacters: '"@/\'
-      Name: !Sub /${EnvironmentTagName}/${StackTagName}/Database/RootUser
-  DatabaseRootUserSecretAttachment:
-    Type: AWS::SecretsManager::SecretTargetAttachment
-    Properties:
-      SecretId: !Ref DatabaseRootUserSecret
-      TargetId: !Ref Database
-      TargetType: AWS::RDS::DBCluster
   memoryjar:
     Type: AWS::S3::Bucket
     Properties:
@@ -280,7 +218,7 @@ Resources:
       Policies:
         - AWSXrayWriteOnlyAccess
         - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Ref DatabaseRootUserSecret
+            SecretArn: !Ref memoryjarDatabaseRootUserSecret
         - Statement:
             - Effect: Allow
               Action:
@@ -290,14 +228,14 @@ Resources:
                 - rds-data:ExecuteStatement
                 - rds-data:RollbackTransaction
               Resource:
-                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${Database}
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
       Environment:
         Variables:
-          DB_ID: !Ref Database
-          DB_ADDRESS: !GetAtt Database.Endpoint.Address
-          DB_PORT: !GetAtt Database.Endpoint.Port
-          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${Database}
-          DB_ROOT_USER_SECRET_ARN: !Ref DatabaseRootUserSecret
+          DB_ID: !Ref memoryjarDatabase
+          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
+          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
       Events:
         HttpApiGET:
           Type: HttpApi
@@ -320,6 +258,68 @@ Resources:
             get:
               responses: {}
       FailOnWarnings: true
+  memoryjarDatabase:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      BackupRetentionPeriod: 1
+      DBSubnetGroupName: !Ref memoryjarDatabaseSubnetGroup
+      Engine: aurora-postgresql
+      EngineMode: serverless
+      MasterUsername: !Sub '{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:password}}'
+      EnableHttpEndpoint: true
+      ScalingConfiguration:
+        AutoPause: false
+        MinCapacity: 2
+        MaxCapacity: 384
+      StorageEncrypted: true
+      VpcSecurityGroupIds:
+        - !Ref memoryjarDatabaseSecurityGroup
+  memoryjarDatabaseRootUserSecretAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId: !Ref memoryjarDatabaseRootUserSecret
+      TargetId: !Ref memoryjarDatabase
+      TargetType: AWS::RDS::DBCluster
+  memoryjarDatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
+        - ResourceName: memoryjarDatabase
+      SubnetIds: !Ref DefaultVPCSubnets
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
+            - ResourceName: memoryjarDatabase
+  memoryjarDatabaseRootUserSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: !Sub
+        - Root user login info for Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName}
+        - ResourceName: memoryjarDatabase
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "root"}'
+        GenerateStringKey: password
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+      Name: !Sub /${EnvironmentTagName}/${StackTagName}/memoryjarDatabase/RootUser
+  memoryjarDatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Database Security Group
+      SecurityGroupIngress:
+        CidrIp: 0.0.0.0/0
+        FromPort: 5432
+        IpProtocol: tcp
+        ToPort: 5432
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Security Group
+            - ResourceName: memoryjarDatabase
+      VpcId: !Ref DefaultVPCId
 Parameters:
   SourceLocation:
     Type: String
