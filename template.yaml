@@ -13,6 +13,13 @@ Resources:
         Enabled: true
         DefaultRootObject: index.html
         PriceClass: PriceClass_100
+        Origins:
+          - DomainName: !GetAtt memoryjar.RegionalDomainName
+            Id: StackeryCDN
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub
+                - origin-access-identity/cloudfront/${OriginAccessIdentity}
+                - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
@@ -31,6 +38,10 @@ Resources:
             Value: !Ref memoryjar
           - Name: BUCKET_ARN
             Value: !GetAtt memoryjar.Arn
+          - Name: FUNCTION_NAME
+            Value: !Ref Function
+          - Name: FUNCTION_ARN
+            Value: !GetAtt Function.Arn
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -84,6 +95,7 @@ Resources:
           - PublishDirectory: src/site/public
             BuildCommand: npm run build
             SourceDirectory: src/site
+            DestinationBucketName: !Ref memoryjar
       Tags:
         - Key: Stackery Project Type
           Value: Website Builder
@@ -157,6 +169,9 @@ Resources:
                   - s3:ListBucket
                   - s3:PutObject
                   - s3:PutObjectAcl
+                Resource:
+                  - !Sub ${memoryjar.Arn}/*
+                  - !Sub ${memoryjar.Arn}
   WebsiteBuildTrigger:
     Type: Custom::StackeryWebsiteBuildTrigger
     DependsOn: WebsiteEvents
@@ -242,12 +257,49 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref DatabaseRootUserSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:ExecuteStatement
+                - rds-data:RollbackTransaction
+              Resource:
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${Database}
+      Environment:
+        Variables:
+          DB_ID: !Ref Database
+          DB_ADDRESS: !GetAtt Database.Endpoint.Address
+          DB_PORT: !GetAtt Database.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${Database}
+          DB_ROOT_USER_SECRET_ARN: !Ref DatabaseRootUserSecret
   memoryjar:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${AWS::StackName}-memoryjar-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
+  CdnOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Stackery
+  CdnBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref memoryjar
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CdnOriginAccessIdentity}
+            Action: s3:GetObject
+            Resource: !Sub
+              - ${BucketArn}/*
+              - BucketArn: !GetAtt memoryjar.Arn
 Parameters:
   SourceLocation:
     Type: String
