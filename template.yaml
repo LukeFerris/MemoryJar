@@ -14,7 +14,7 @@ Resources:
         DefaultRootObject: index.html
         PriceClass: PriceClass_100
         Origins:
-          - DomainName: !GetAtt memoryjarBucket.RegionalDomainName
+          - DomainName: !GetAtt memoryjarbucket.RegionalDomainName
             Id: StackeryCDN
             S3OriginConfig:
               OriginAccessIdentity: !Sub
@@ -35,9 +35,9 @@ Resources:
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: BUCKET_NAME
-            Value: !Ref memoryjarBucket
+            Value: !Ref memoryjarbucket
           - Name: BUCKET_ARN
-            Value: !GetAtt memoryjarBucket.Arn
+            Value: !GetAtt memoryjarbucket.Arn
           - Name: API_URL
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
       ServiceRole: !GetAtt WebsiteRole.Arn
@@ -93,7 +93,7 @@ Resources:
           - PublishDirectory: src/site/public
             BuildCommand: npm run build
             SourceDirectory: site
-            DestinationBucketName: !Ref memoryjarBucket
+            DestinationBucketName: !Ref memoryjarbucket
       Tags:
         - Key: Stackery Project Type
           Value: Website Builder
@@ -168,8 +168,8 @@ Resources:
                   - s3:PutObject
                   - s3:PutObjectAcl
                 Resource:
-                  - !Sub ${memoryjarBucket.Arn}/*
-                  - !Sub ${memoryjarBucket.Arn}
+                  - !Sub ${memoryjarbucket.Arn}/*
+                  - !Sub ${memoryjarbucket.Arn}
   WebsiteBuildTrigger:
     Type: Custom::StackeryWebsiteBuildTrigger
     DependsOn: WebsiteEvents
@@ -301,10 +301,10 @@ Resources:
             - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Security Group
             - ResourceName: memoryjarDatabase
       VpcId: !Ref DefaultVPCId
-  memoryjarBucket:
+  memoryjarbucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${AWS::StackName}-memoryjarBucket-${AWS::AccountId}
+      BucketName: !Sub ${AWS::StackName}-memoryjar-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
 Parameters:
