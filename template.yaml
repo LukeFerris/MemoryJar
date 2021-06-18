@@ -92,7 +92,7 @@ Resources:
                   - aws s3 sync '${PublishDirectory}' 's3://${DestinationBucketName}' --acl public-read --cache-control 'max-age=0, must-revalidate, public' --no-progress --delete
           - PublishDirectory: src/site/public
             BuildCommand: npm run build
-            SourceDirectory: src/site
+            SourceDirectory: site
             DestinationBucketName: !Ref memoryjarBucket
       Tags:
         - Key: Stackery Project Type
