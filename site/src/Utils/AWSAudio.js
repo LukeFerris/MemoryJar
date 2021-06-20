@@ -2,22 +2,23 @@ import AWS from 'aws-sdk';
 const s3bucketName = 'memoryjarbucket';
 const audioPath = '/audio';
 const identityPoolId = '';
+let recorder;
+const dateinfo = new Date();
+const timestampData = dateinfo.getTime(); //timestamp used for file uniqueness
+let etag = [];
+let recordedChunks = [];
+let booleanStop = false;
+let filename = timestampData.toString() + ".webm"; //unique filename 
+let uploadId = ""; // upload id is required in multipart
+//To use microphone it shud be {audio: true}
+let audioConstraints = {
+    audio: true
+};
+let bucketName = s3bucketName + audioPath;
+let s3;
+let incr;
 
 export const audioStreamInitialisationResult = () => {
-   
-    const dateinfo = new Date();
-    const timestampData = this.dateinfo.getTime(); //timestamp used for file uniqueness
-    let etag = [];
-    let recordedChunks = [];
-    let booleanStop = false;
-    let filename = this.timestampData.toString() + ".webm"; //unique filename 
-    let uploadId = ""; // upload id is required in multipart
-    let recorder;
-    //To use microphone it shud be {audio: true}
-    let audioConstraints = {
-        audio: true
-    };
-    let bucketName = s3bucketName + audioPath;
 
     /*
         Creates a new credentials object, which will allow us to communicate with the aws services.
@@ -30,8 +31,8 @@ export const audioStreamInitialisationResult = () => {
         /*
             Constructs a service object.
         */
-        let s3 = new AWS.S3();
-        let incr = 1;
+        s3 = new AWS.S3();
+        incr = 1;
     
         /*
             Feature detecting is a simple check for the existence of "navigator.mediaDevices.getUserMedia"
@@ -246,9 +247,9 @@ export const audioStreamInitialisationResult = () => {
                 } // an error occurred
                 else {
                     // initialize variable back to normal
-                    etag = [], recordedChunks = [];
-                    uploadId = "";
-                    booleanStop = false;
+                    // etag = [], recordedChunks = [];
+                    // uploadId = "";
+                    // booleanStop = false;
                     alert("we have successfully saved the recording..");
                 }
             });
