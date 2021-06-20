@@ -90,7 +90,7 @@ Resources:
                       cd "${!CODEBUILD_SRC_DIR}"
                     fi
                   - aws s3 sync '${PublishDirectory}' 's3://${DestinationBucketName}' --acl public-read --cache-control 'max-age=0, must-revalidate, public' --no-progress --delete
-          - PublishDirectory: src/site/public
+          - PublishDirectory: site/public
             BuildCommand: npm run build
             SourceDirectory: site
             DestinationBucketName: !Ref memoryjarbucket
