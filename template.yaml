@@ -309,6 +309,10 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-memoryjar-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
+  memoryjarBucketIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: 'true'
 Parameters:
   SourceLocation:
     Type: String
