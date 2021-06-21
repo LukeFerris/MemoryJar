@@ -18,77 +18,65 @@ let bucketName = s3bucketName + audioPath;
 let s3;
 let incr;
 
-export const audioStreamInitialisationResult = () => {
+export const GetAudioStream = async () => {
 
-    /*
-        Creates a new credentials object, which will allow us to communicate with the aws services.
-    */
+    let promise = new Promise(function(resolve, reject) {
+        
+        console.log('Getting audio stream');
+
         AWS.config.region = 'eu-central-1';
         // AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         //     IdentityPoolId: identityPoolId,
         // });
-    
-        /*
-            Constructs a service object.
-        */
         s3 = new AWS.S3();
         incr = 1;
-    
-        /*
-            Feature detecting is a simple check for the existence of "navigator.mediaDevices.getUserMedia"
-            To use the microphone. we need to request permission. 
-            The parameter to getUserMedia() is an object specifying the details and requirements for each type of media you want to access.
-            To use microphone it shud be {audio: true}
-        */
-       console.log('checking for audio access');
+
+        console.log('checking for audio access');
         navigator.mediaDevices.getUserMedia(audioConstraints)
-            .then(function(stream) {
+        .then((stream) => { 
+            console.log('found.. configuring recorder');
+            recorder = new MediaRecorder(stream); 
+            resolve(recorder);
+
+            console.log('adding event handler');
+            recorder.addEventListener('dataavailable', function(e) {
+                var normalArr = [];
                 /*
-                    Creates a new MediaRecorder object, given a MediaStream to record.
+                    Here we push the stream data to an array for future use.
                 */
-                let recorder = new MediaRecorder(stream);
-    
+                recordedChunks.push(e.data);
+                normalArr.push(e.data);
+
                 /*
-                    Called to handle the dataavailable event, which is periodically triggered each time timeslice milliseconds of media have been recorded 
-                    (or when the entire media has been recorded, if timeslice wasn't specified). 
-                    The event, of type BlobEvent, contains the recorded media in its data property. 
-                    You can then collect and act upon that recorded media data using this event handler.
+                    here we create a blob from the stream data that we have received.
                 */
-                recorder.addEventListener('dataavailable', function(e) {
-                    var normalArr = [];
+                var blob = new Blob(normalArr, {
+                    type: 'audio/webm'
+                });
+
+                /*
+                    if the length of recordedChunks is 1 then it means its the 1st part of our data.
+                    So we createMultipartUpload which will return an upload id. 
+                    Upload id is used to upload the other parts of the stream
+                    else.
+                    It Uploads a part in a multipart upload.
+                */
+                if (recordedChunks.length == 1) {
+                    startMultiUpload(blob, filename)
+                } else {
                     /*
-                        Here we push the stream data to an array for future use.
+                        incr is basically a part number.
+                        Part number of part being uploaded. This is a positive integer between 1 and 10,000.
                     */
-                    recordedChunks.push(e.data);
-                    normalArr.push(e.data);
-    
-                    /*
-                        here we create a blob from the stream data that we have received.
-                    */
-                    var blob = new Blob(normalArr, {
-                        type: 'audio/webm'
-                    });
-    
-                    /*
-                        if the length of recordedChunks is 1 then it means its the 1st part of our data.
-                        So we createMultipartUpload which will return an upload id. 
-                        Upload id is used to upload the other parts of the stream
-                        else.
-                        It Uploads a part in a multipart upload.
-                    */
-                    if (recordedChunks.length == 1) {
-                        startMultiUpload(blob, filename)
-                    } else {
-                        /*
-                            incr is basically a part number.
-                            Part number of part being uploaded. This is a positive integer between 1 and 10,000.
-                        */
-                        incr = incr + 1
-                        continueMultiUpload(blob, incr, uploadId, filename, bucketName);
-                    }
-                })
-            });
- };
+                    incr = incr + 1
+                    continueMultiUpload(blob, incr, uploadId, filename, bucketName);
+                }
+            })
+        });
+    });
+
+    return promise;
+};
 
   /*
         The MediaRecorder method start(), which is part of the MediaStream Recording API,
@@ -98,7 +86,7 @@ export const audioStreamInitialisationResult = () => {
         Then, each time that amount of media has been recorded, an event will be delivered to let you act upon the recorded media, 
         while a new Blob is created to record the next slice of the media
     */
-        function startRecording() {
+        export const StartRecording = (recorder) => {
     
             /*
                 1800000 is the number of milliseconds to record into each Blob. 
@@ -109,6 +97,7 @@ export const audioStreamInitialisationResult = () => {
             PLEASE NOTE YOU CAN CHANGE THIS PARAM OF 1800000 but the size should be greater then or equal to 5MB. 
             As for multipart upload the minimum breakdown of the file should be 5MB 
             */
+            console.log('Starting record..');
             recorder.start(900000);
 
         }
@@ -121,8 +110,9 @@ export const audioStreamInitialisationResult = () => {
             3 - Raise a dataavailable event containing the Blob of data that has been gathered.
             4 - Raise a stop event.
         */
-        function stopRecording() {
+        export const StopRecording = () => {
             
+            console.log('stopping record..');
             recorder.stop();
             /*
                 Once the recording is stop we change the flag of booleanStop to true.

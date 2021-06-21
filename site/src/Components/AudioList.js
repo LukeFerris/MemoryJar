@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import Audio from '../Utils/AWSAudio';
+import { GetAudioStream, StartRecording, StopRecording } from '../Utils/AWSAudio';
 
 function Copyright() {
   return (
@@ -81,7 +81,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AudioList() {
   const classes = useStyles();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [recorder, setRecorder] = useState(null);
+
+  async function StartAudioCapture()
+  {
+    let recorder = await GetAudioStream();
+    console.log("Recorder set to: " + recorder);
+    setRecorder(recorder);
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -91,6 +100,15 @@ export default function AudioList() {
           <Typography variant="h6" color="inherit" noWrap>
             Memory Jar
           </Typography>
+          <Button size="small" color="primary" onClick={StartAudioCapture}>
+          Get Audio
+          </Button>
+          <Button size="small" color="primary" onClick={() => { StartRecording(recorder); }}>
+          Start
+          </Button>
+          <Button size="small" color="primary" onClick={() => { StopRecording(); }}>
+          Stop
+          </Button>
         </Toolbar>
       </AppBar>
       <main>
@@ -104,7 +122,7 @@ export default function AudioList() {
               </Grid>
               <Grid item>
               <Typography variant="h6" color="inherit" noWrap>
-                Loading audio clips
+                Speak wise one..
                 </Typography>
               </Grid>
             </Grid> : null }
@@ -117,7 +135,7 @@ export default function AudioList() {
       {/* Footer */}
       { !loading ? <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
-          The Escape Guide
+          Memory Jar
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
           Get in touch: <a href="mailto: escape@forefront.studio" target="new">escape@forefront.studio</a>
