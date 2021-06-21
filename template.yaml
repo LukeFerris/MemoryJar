@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
   Cdn:
@@ -40,6 +40,8 @@ Resources:
             Value: !GetAtt memoryjarbucket.Arn
           - Name: API_URL
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+          - Name: COGNITO_POOL_ID
+            Value: !Ref memoryjarBucketIdentityPool
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -130,7 +132,7 @@ Resources:
     Properties:
       RoleName: !Sub ${AWS::StackName}-Website
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           Effect: Allow
           Principal:
@@ -139,7 +141,7 @@ Resources:
       Policies:
         - PolicyName: Logs
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
@@ -150,14 +152,14 @@ Resources:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${AWS::StackName}-Website:log-stream:*
         - PolicyName: DownloadSourceFromStackeryAssetsBucket
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action: s3:GetObject
                 Resource: arn:aws:s3:::stackery-assetsbucket-*/*
         - PolicyName: UploadToDestinationObjectStore
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
@@ -224,16 +226,16 @@ Resources:
             Path: /
             Method: GET
             ApiId: !Ref HttpApi
-            PayloadFormatVersion: "2.0"
+            PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       DefinitionBody:
-        openapi: "3.0"
+        openapi: '3.0'
         info:
           title: !Sub ${AWS::StackName}-HttpApi
-          version: "1.0"
+          version: '1.0'
         paths:
           /:
             get:
@@ -246,8 +248,8 @@ Resources:
       DBSubnetGroupName: !Ref memoryjarDatabaseSubnetGroup
       Engine: aurora-postgresql
       EngineMode: serverless
-      MasterUsername: !Sub "{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:username}}"
-      MasterUserPassword: !Sub "{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:password}}"
+      MasterUsername: !Sub '{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${memoryjarDatabaseRootUserSecret}:SecretString:password}}'
       EnableHttpEndpoint: true
       ScalingConfiguration:
         AutoPause: false
