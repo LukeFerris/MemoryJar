@@ -91,6 +91,11 @@ export default function AudioList() {
     setRecorder(recorder);
   }
 
+  async function GetUploadUrl()
+  {
+    alert('getting url');
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -100,20 +105,25 @@ export default function AudioList() {
           <Typography variant="h6" color="inherit" noWrap>
             Memory Jar
           </Typography>
-          <Button size="small" color="primary" onClick={StartAudioCapture}>
-          Get Audio
-          </Button>
-          <Button size="small" color="primary" onClick={() => { StartRecording(recorder); }}>
-          Start
-          </Button>
-          <Button size="small" color="primary" onClick={() => { StopRecording(); }}>
-          Stop
-          </Button>
         </Toolbar>
       </AppBar>
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={12}>
+            <Button size="small" color="primary" onClick={GetUploadUrl}>
+            Get Upload URL
+            </Button>
+            <Button size="small" color="primary" onClick={StartAudioCapture}>
+            Get Audio
+            </Button>
+            <Button size="small" color="primary" onClick={() => { StartRecording(recorder); }}>
+            Start
+            </Button>
+            <Button size="small" color="primary" onClick={() => { StopRecording(); }}>
+            Stop
+            </Button>
+          </Grid>
           <Grid item key='loading' xs={12} sm={6} md={12}>
 
             { loading ? <Grid container direction="column" alignItems="center">
