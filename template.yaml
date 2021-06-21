@@ -40,8 +40,6 @@ Resources:
             Value: !GetAtt memoryjarbucket.Arn
           - Name: API_URL
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
-          - Name: COGNITO_POOL_ID
-            Value: !Ref memoryjarBucketIdentityPool
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -309,10 +307,6 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-memoryjar-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
-  memoryjarBucketIdentityPool:
-    Type: AWS::Cognito::IdentityPool
-    Properties:
-      AllowUnauthenticatedIdentities: 'true'
 Parameters:
   SourceLocation:
     Type: String
