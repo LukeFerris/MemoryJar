@@ -1,4 +1,4 @@
-const uuid = require('uuidv4')
+const uuidv4 = require('uuidv4')
 const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.REGION || 'eu-central-1' })
 const s3 = new AWS.S3();
@@ -8,7 +8,7 @@ exports.handler = async (event) => {
 }
 
 const getUploadURL = async () => {
-  const actionId = uuid()
+  const actionId = uuidv4.uuid()
   const s3Params = {
     Bucket: 'memoryjarbucket',
     Key:  `${actionId}.webm`,
