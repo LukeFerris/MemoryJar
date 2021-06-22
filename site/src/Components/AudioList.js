@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { GetAudioStream, StartRecording, StopRecording } from '../Utils/AWSAudio';
+import API from '../Utils/API';
 
 function Copyright() {
   return (
@@ -83,17 +84,24 @@ export default function AudioList() {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [recorder, setRecorder] = useState(null);
+  const [uploadUrl, setUploadUrl] = useState(null);
+  const [fileId, setFileId] = useState(null);
 
   async function StartAudioCapture()
   {
-    let recorder = await GetAudioStream();
+    let recorder = await GetAudioStream(uploadUrl);
     console.log("Recorder set to: " + recorder);
     setRecorder(recorder);
   }
 
   async function GetUploadUrl()
   {
-    alert('getting url');
+    API.get('/').then((result) => 
+    {
+      console.log('result is: ' + JSON.stringify(result.data));
+      setUploadUrl(result.data.uploadURL);
+      setFileId(result.data.id);
+    });
   }
 
   return (

@@ -1,6 +1,8 @@
 import AWS from 'aws-sdk';
+import axios from 'axios';
 const s3bucketName = 'memoryjarbucket';
 const audioPath = '/audio';
+
 const identityPoolId = '';
 let recorder;
 const dateinfo = new Date();
@@ -18,7 +20,7 @@ let bucketName = s3bucketName + audioPath;
 let s3;
 let incr;
 
-export const GetAudioStream = async () => {
+export const GetAudioStream = async (uploadUrl) => {
 
     let promise = new Promise(function(resolve, reject) {
         
@@ -62,14 +64,16 @@ export const GetAudioStream = async () => {
                     It Uploads a part in a multipart upload.
                 */
                 if (recordedChunks.length == 1) {
-                    startMultiUpload(blob, filename)
+                    // startMultiUpload(blob, filename)
+                    Upload(uploadUrl, blob, filename);
                 } else {
+                    console.log('multipart uploads are not supported');
                     /*
                         incr is basically a part number.
                         Part number of part being uploaded. This is a positive integer between 1 and 10,000.
                     */
-                    incr = incr + 1
-                    continueMultiUpload(blob, incr, uploadId, filename, bucketName);
+                    // incr = incr + 1
+                    // continueMultiUpload(blob, incr, uploadId, filename, bucketName);
                 }
             })
         });
@@ -77,6 +81,18 @@ export const GetAudioStream = async () => {
 
     return promise;
 };
+
+export const Upload = async (uploadUrl, blob, filename) =>
+{
+    console.log('uploading to S3 using uploadUrl: ' + uploadUrl);
+
+    const result = await axios(uploadUrl, {
+        method: "PUT",
+        body: blob
+    })
+
+    return result;
+}
 
   /*
         The MediaRecorder method start(), which is part of the MediaStream Recording API,
