@@ -10,8 +10,8 @@ exports.handler = async (event) => {
 const getUploadURL = async () => {
   const actionId = uuidv4.uuid()
   const s3Params = {
-    Bucket: 'AudioLibrary',
-    Key:  `${actionId}.webm`,
+    Bucket: 'memory-jar-stack-memory-jar-dev-audiolibr-360520317360',
+    Key: `${actionId}.webm`,
     ContentType: 'audio/webm',
     ACL: 'public-read',
   }
@@ -30,4 +30,6 @@ const getUploadURL = async () => {
     })
   })
 }
-  
+
+
+
