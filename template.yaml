@@ -34,10 +34,6 @@ Resources:
         Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
-          - Name: BUCKET_NAME
-            Value: !Ref memoryjarbucket
-          - Name: BUCKET_ARN
-            Value: !GetAtt memoryjarbucket.Arn
           - Name: API_URL
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
           - Name: API_URL_2
@@ -309,16 +305,6 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-memoryjar-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
-      CorsConfiguration:
-        CorsRules:
-          - AllowedHeaders:
-              - '*'
-            AllowedMethods:
-              - PUT
-            AllowedOrigins:
-              - '*'
-            Id: myCORSRuleId1
-            MaxAge: 3600
   requestUploadUrl:
     Type: AWS::Serverless::Function
     Properties:
@@ -335,11 +321,7 @@ Resources:
       Policies:
         - AWSXrayWriteOnlyAccess
         - S3CrudPolicy:
-            BucketName: !Ref memoryjarbucket
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref memoryjarbucket
-          BUCKET_ARN: !GetAtt memoryjarbucket.Arn
+            BucketName: !Ref AudioLibrary
       Events:
         HttpApi2GET:
           Type: HttpApi
@@ -349,6 +331,10 @@ Resources:
             ApiId: !Ref HttpApi2
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref AudioLibrary
+          BUCKET_ARN: !GetAtt AudioLibrary.Arn
   HttpApi2:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -362,6 +348,42 @@ Resources:
             get:
               responses: {}
       FailOnWarnings: true
+  AudioLibrary:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-audiolibr-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - PUT
+            AllowedOrigins:
+              - '*'
+            Id: myCORSRuleId1
+            MaxAge: 3600
+  AudioLibraryBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AudioLibrary
+      PolicyDocument:
+        Id: RequireEncryptionInTransit
+        Version: '2012-10-17'
+        Statement:
+          - Principal: '*'
+            Action: '*'
+            Effect: Deny
+            Resource:
+              - !GetAtt AudioLibrary.Arn
+              - !Sub ${AudioLibrary.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
 Parameters:
   SourceLocation:
     Type: String
