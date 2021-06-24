@@ -36,7 +36,7 @@ Resources:
         EnvironmentVariables:
           - Name: API_URL
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
-          - Name: API_URL_2
+          - Name: REACT_APP_URL_API
             Value: !Sub https://${HttpApi2}.execute-api.${AWS::Region}.amazonaws.com
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
