@@ -1,4 +1,5 @@
 import axios from 'axios';
+import API from '../Utils/API';
 
 let recorder;
 
@@ -6,7 +7,15 @@ let audioConstraints = {
     audio: true
 };
 
-export const GetAudioStream = async (uploadUrl) => {
+export const GetUploadUrl = async () => {
+    let uploadUrl = await API.get('/').then((result) => {
+        console.log('result is: ' + JSON.stringify(result.data));
+        return result.data.uploadURL;
+    });
+    return uploadUrl;
+}
+
+export const GetAudioCapture = async (uploadUrl) => {
 
     let promise = new Promise(function (resolve, reject) {
         console.log('checking for audio access');
@@ -30,7 +39,7 @@ export const GetAudioStream = async (uploadUrl) => {
                     });
 
                     Upload(uploadUrl, blob);
-                })
+                });
             });
     });
 

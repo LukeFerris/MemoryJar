@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import StopIcon from '@material-ui/icons/Stop';
 import GamesIcon from '@material-ui/icons/Games';
+import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,8 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { GetAudioStream, StartRecording, StopRecording } from '../Utils/AWSAudio';
-import API from '../Utils/API';
+import { GetAudioCapture, GetUploadUrl, StartRecording, StopRecording } from '../Utils/AWSAudio';
 
 function Copyright() {
   return (
@@ -82,26 +83,33 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AudioList() {
   const classes = useStyles();
+  const [recording, setRecording] = useState(false);
   const [loading, setLoading] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [uploadUrl, setUploadUrl] = useState(null);
   const [fileId, setFileId] = useState(null);
 
-  async function StartAudioCapture()
-  {
-    let recorder = await GetAudioStream(uploadUrl);
-    console.log("Recorder set to: " + recorder);
+  async function StartAudioCapture() {
+
+    // get the upload url
+    let uploadUrl = await GetUploadUrl();
+
+    console.log('upload url is: ' + uploadUrl);
+
+    // get the audio recorder
+    let recorder = await GetAudioCapture(uploadUrl);
+    console.log("Recorder is set");
     setRecorder(recorder);
+
+    // start the recorder
+    await StartRecording(recorder);
+    setRecording(true);
   }
 
-  async function GetUploadUrl()
-  {
-    API.get('/').then((result) => 
-    {
-      console.log('result is: ' + JSON.stringify(result.data));
-      setUploadUrl(result.data.uploadURL);
-      setFileId(result.data.id);
-    });
+  async function Stop() {
+
+    await StopRecording();
+    setRecording(false);
   }
 
   return (
@@ -118,40 +126,48 @@ export default function AudioList() {
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} md={12}>
-            <Button size="small" color="primary" onClick={GetUploadUrl}>
-            Get Upload URL
-            </Button>
-            <Button size="small" color="primary" onClick={StartAudioCapture}>
-            Get Audio
-            </Button>
-            <Button size="small" color="primary" onClick={() => { StartRecording(recorder); }}>
-            Start
-            </Button>
-            <Button size="small" color="primary" onClick={() => { StopRecording(); }}>
-            Stop
-            </Button>
-          </Grid>
-          <Grid item key='loading' xs={12} sm={6} md={12}>
+            <Grid item xs={12} sm={6} md={12}>
+              {!recording ?
+                <Button
+                  variant="contained"
+                  color="default"
+                  className={classes.button}
+                  onClick={StartAudioCapture}
+                  startIcon={<KeyboardVoiceIcon />}
+                >
+                  Record New Clip
+                </Button>
+                :
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  onClick={Stop}
+                  startIcon={<StopIcon />}
+                >
+                  Stop Recording
+                </Button>}
+            </Grid>
+            <Grid item key='loading' xs={12} sm={6} md={12}>
 
-            { loading ? <Grid container direction="column" alignItems="center">
-              <Grid item>
-                <CircularProgress className={classes.loadingProgress} />
-              </Grid>
-              <Grid item>
-              <Typography variant="h6" color="inherit" noWrap>
-                Speak wise one..
-                </Typography>
-              </Grid>
-            </Grid> : null }
-              
-          </Grid>
-            
+              {loading ? <Grid container direction="column" alignItems="center">
+                <Grid item>
+                  <CircularProgress className={classes.loadingProgress} />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" color="inherit" noWrap>
+                    Speak wise one..
+                  </Typography>
+                </Grid>
+              </Grid> : null}
+
+            </Grid>
+
           </Grid>
         </Container>
       </main>
       {/* Footer */}
-      { !loading ? <footer className={classes.footer}>
+      {!loading ? <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
           Memory Jar
         </Typography>
@@ -159,7 +175,7 @@ export default function AudioList() {
           Get in touch: <a href="mailto: escape@forefront.studio" target="new">escape@forefront.studio</a>
         </Typography>
         <Copyright />
-      </footer> : null }
+      </footer> : null}
       {/* End footer */}
     </React.Fragment>
   );
