@@ -3,7 +3,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import StopIcon from '@material-ui/icons/Stop';
-import GamesIcon from '@material-ui/icons/Games';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -117,7 +116,6 @@ export default function AudioList() {
       <CssBaseline />
       <AppBar position="relative" className={classes.appBar}>
         <Toolbar>
-          <GamesIcon className={classes.icon} />
           <Typography variant="h6" color="inherit" noWrap>
             Memory Jar
           </Typography>
