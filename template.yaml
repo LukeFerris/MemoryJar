@@ -237,6 +237,9 @@ Resources:
             get:
               responses: {}
       FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
