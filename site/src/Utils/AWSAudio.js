@@ -13,14 +13,14 @@ export const GetUploadUrl = async (audio_clip_id) => {
     return uploadUrl;
 }
 
-export const GetAudioCapture = async (recorder, uploadUrl) => {
+export const GetAudioCapture = async (uploadUrl) => {
 
     let promise = new Promise(function (resolve, reject) {
         console.log('checking for audio access');
         navigator.mediaDevices.getUserMedia(audioConstraints)
             .then((stream) => {
                 console.log('found.. configuring recorder');
-                recorder = new MediaRecorder(stream);
+                let recorder = new MediaRecorder(stream);
                 resolve(recorder);
 
                 console.log('adding event handler to process audio');
