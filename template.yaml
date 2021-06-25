@@ -351,6 +351,9 @@ Resources:
             get:
               responses: {}
       FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
   AudioLibrary:
     Type: AWS::S3::Bucket
     Properties:
