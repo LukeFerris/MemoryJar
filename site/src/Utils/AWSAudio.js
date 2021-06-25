@@ -1,14 +1,12 @@
 import axios from 'axios';
 import API from '../Utils/API';
 
-let recorder;
-
 let audioConstraints = {
     audio: true
 };
 
-export const GetUploadUrl = async () => {
-    let uploadUrl = await API.get('/').then((result) => {
+export const GetUploadUrl = async (audio_clip_id) => {
+    let uploadUrl = await API.get('/?audio_clip_id=' + audio_clip_id).then((result) => {
         console.log('result is: ' + JSON.stringify(result.data));
         return result.data.uploadURL;
     });
@@ -90,7 +88,7 @@ export const StartRecording = (recorder) => {
     3 - Raise a dataavailable event containing the Blob of data that has been gathered.
     4 - Raise a stop event.
 */
-export const StopRecording = () => {
+export const StopRecording = (recorder) => {
 
     console.log('stopping record..');
     recorder.stop();

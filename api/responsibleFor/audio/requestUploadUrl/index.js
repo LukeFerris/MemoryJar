@@ -1,17 +1,17 @@
-const uuidv4 = require('uuidv4')
 const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.REGION || 'eu-central-1' })
 const s3 = new AWS.S3();
 
 exports.handler = async (event) => {
-  return await getUploadURL()
+  if (event && event.query && event.query.audio_clip_id) {
+    return await getUploadURL(event.query.audio_clip_id);
+  }
 }
 
-const getUploadURL = async () => {
-  const actionId = uuidv4.uuid()
+const getUploadURL = async (audio_clip_id) => {
   const s3Params = {
     Bucket: 'memory-jar-stack-memory-jar-dev-audiolibr-360520317360',
-    Key: `${actionId}.webm`,
+    Key: `${audio_clip_id}.webm`,
     ContentType: 'audio/webm',
     ACL: 'public-read',
   }
@@ -24,8 +24,8 @@ const getUploadURL = async () => {
       "headers": { "Access-Control-Allow-Origin": "*" },
       "body": JSON.stringify({
         "uploadURL": uploadURL,
-        "photoFilename": `${actionId}.webm`,
-        "id": actionId
+        "clipFilename": `${actionId}.webm`,
+        "id": audio_clip_id
       })
     })
   })
