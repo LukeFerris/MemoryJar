@@ -13,7 +13,7 @@ export const GetUploadUrl = async (audio_clip_id) => {
     return uploadUrl;
 }
 
-export const GetAudioCapture = async (uploadUrl) => {
+export const GetAudioCapture = async (recorder, uploadUrl) => {
 
     let promise = new Promise(function (resolve, reject) {
         console.log('checking for audio access');
@@ -101,7 +101,7 @@ export const StopRecording = (recorder) => {
     3 - Stop gathering data into the current Blob, but keep it available so that recording can be resumed later on.
     4 - Raise a pause event.
 */
-function pauseRecording(id) {
+function pauseRecording(recorder) {
     recorder.pause();
 }
 
@@ -113,7 +113,7 @@ function pauseRecording(id) {
     3 - Continue gathering data into the current Blob.
     4 - Raise a resume event.
 */
-function resumeRecording(id) {
+function resumeRecording(recorder) {
 
     recorder.resume();
 
