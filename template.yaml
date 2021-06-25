@@ -34,7 +34,7 @@ Resources:
         Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
-          - Name: API_URL
+          - Name: REACT_APP_REGISTER_AUDIO_API
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
           - Name: REACT_APP_URL_API
             Value: !Sub https://${HttpApi2}.execute-api.${AWS::Region}.amazonaws.com
