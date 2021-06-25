@@ -10,7 +10,7 @@ exports.handler = async (event) => {
 
 const getUploadURL = async (audio_clip_id) => {
   const s3Params = {
-    Bucket: 'memory-jar-stack-memory-jar-dev-audiolibr-360520317360',
+    Bucket: process.env.BUCKET_NAME,
     Key: `${audio_clip_id}.webm`,
     ContentType: 'audio/webm',
     ACL: 'public-read',
