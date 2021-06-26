@@ -34,7 +34,7 @@ Resources:
         Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
-          - Name: API_URL
+          - Name: REACT_APP_REGISTER_AUDIO_API
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
           - Name: REACT_APP_URL_API
             Value: !Sub https://${HttpApi2}.execute-api.${AWS::Region}.amazonaws.com
@@ -215,15 +215,6 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
-      Events:
-        HttpApiGET:
-          Type: HttpApi
-          Properties:
-            Path: /
-            Method: GET
-            ApiId: !Ref HttpApi
-            PayloadFormatVersion: '2.0'
-            TimeoutInMillis: 29000
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -234,9 +225,12 @@ Resources:
           version: '1.0'
         paths:
           /:
-            get:
+            put:
               responses: {}
       FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
@@ -348,6 +342,9 @@ Resources:
             get:
               responses: {}
       FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
   AudioLibrary:
     Type: AWS::S3::Bucket
     Properties:
