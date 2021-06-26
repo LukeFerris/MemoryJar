@@ -13,7 +13,7 @@ export const GetUploadUrl = async (audio_clip_id) => {
     return uploadUrl;
 }
 
-export const GetAudioCapture = async (uploadUrl) => {
+export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id) => {
 
     let promise = new Promise(function (resolve, reject) {
         console.log('checking for audio access');
@@ -36,7 +36,7 @@ export const GetAudioCapture = async (uploadUrl) => {
                         type: 'audio/webm'
                     });
 
-                    Upload(uploadUrl, blob);
+                    Upload(uploadUrl, blob, memory_id, audio_clip_id);
                 });
             });
     });
@@ -44,7 +44,7 @@ export const GetAudioCapture = async (uploadUrl) => {
     return promise;
 };
 
-export const Upload = async (uploadUrl, blob) => {
+export const Upload = async (uploadUrl, blob, memory_id, audio_clip_id) => {
     console.log('uploading to S3 using uploadUrl: ' + uploadUrl);
 
     var options = {
@@ -53,7 +53,15 @@ export const Upload = async (uploadUrl, blob) => {
         }
     };
 
-    return await axios.put(uploadUrl, blob, options);
+    // upload the file
+    await axios.put(uploadUrl, blob, options);
+
+    console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
+
+    // now register it
+    return await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
+        "memory_id": memory_id, "audio_clip_id": audio_clip_id
+    })
 }
 
 /*

@@ -16,7 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { GetAudioCapture, GetUploadUrl, StartRecording, StopRecording } from '../Utils/AWSAudio';
-const uuidv4 = require('uuidv4')
+const uuid = require('uuid')
 
 function Copyright() {
   return (
@@ -91,7 +91,10 @@ export default function AudioList() {
   async function StartAudioCapture() {
 
     // generate unique id for the audio clip
-    const audio_clip_id = uuidv4.uuid()
+    const audio_clip_id = uuid.v4()
+
+    // generate a unique id for the memory
+    const memory_id = uuid.v4();
 
     // get the upload url
     let uploadUrl = await GetUploadUrl(audio_clip_id);
@@ -99,7 +102,7 @@ export default function AudioList() {
     console.log('upload url is: ' + uploadUrl);
 
     // get the audio recorder
-    let recorder = await GetAudioCapture(uploadUrl);
+    let recorder = await GetAudioCapture(uploadUrl, memory_id, audio_clip_id);
     console.log("Recorder is set");
     setRecorder(recorder);
 
