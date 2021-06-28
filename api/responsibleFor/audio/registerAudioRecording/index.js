@@ -15,10 +15,10 @@ exports.handler = async (event, context) => {
 
   try {
     switch (event.routeKey) {
-      case "GET /audio_clips":
+      case "GET /":
         body = await data.query(`SELECT * from audio_clip;`);
         break;
-      case "PUT /audio_clips":
+      case "PUT /":
         let clip = JSON.parse(event.body);
 
         // check to see if the memory exists
