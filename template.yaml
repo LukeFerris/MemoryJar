@@ -215,6 +215,15 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+      Events:
+        HttpApiPUT:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: PUT
+            ApiId: !Ref HttpApi
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -226,6 +235,8 @@ Resources:
         paths:
           /:
             put:
+              responses: {}
+            get:
               responses: {}
       FailOnWarnings: true
       CorsConfiguration:
