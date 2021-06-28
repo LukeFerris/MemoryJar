@@ -13,7 +13,7 @@ export const GetUploadUrl = async (audio_clip_id) => {
     return uploadUrl;
 }
 
-export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id) => {
+export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id, complete) => {
 
     let promise = new Promise(function (resolve, reject) {
         console.log('checking for audio access');
@@ -24,7 +24,7 @@ export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id) => {
                 resolve(recorder);
 
                 console.log('adding event handler to process audio');
-                recorder.addEventListener('dataavailable', function (e) {
+                recorder.addEventListener('dataavailable', async function (e) {
 
                     // we need an array to build the blow from (must be iterable)
                     let dataArray = [e.data];
@@ -36,7 +36,8 @@ export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id) => {
                         type: 'audio/webm'
                     });
 
-                    Upload(uploadUrl, blob, memory_id, audio_clip_id);
+                    await Upload(uploadUrl, blob, memory_id, audio_clip_id);
+                    complete(audio_clip_id);
                 });
             });
     });

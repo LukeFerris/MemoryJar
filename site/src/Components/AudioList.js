@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import StopIcon from '@material-ui/icons/Stop';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import AudioImage from '../Components/Audio.png';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,7 +16,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { GetAudioCapture, GetUploadUrl, StartRecording, StopRecording } from '../Utils/AWSAudio';
+import axios from 'axios';
+
 const uuid = require('uuid')
+
 
 function Copyright() {
   return (
@@ -87,6 +90,25 @@ export default function AudioList() {
   const [loading, setLoading] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [fileId, setFileId] = useState(null);
+  const [data, setData] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        process.env.REACT_APP_REGISTER_AUDIO_API,
+      );
+
+
+      setData(result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1));
+    };
+
+    fetchData();
+  }, [uploadedFiles]);
+
+  function complete(fileId) {
+    setUploadedFiles(uploadedFiles.push(fileId));
+  }
 
   async function StartAudioCapture() {
 
@@ -102,7 +124,7 @@ export default function AudioList() {
     console.log('upload url is: ' + uploadUrl);
 
     // get the audio recorder
-    let recorder = await GetAudioCapture(uploadUrl, memory_id, audio_clip_id);
+    let recorder = await GetAudioCapture(uploadUrl, memory_id, audio_clip_id, complete);
     console.log("Recorder is set");
     setRecorder(recorder);
 
@@ -166,7 +188,24 @@ export default function AudioList() {
               </Grid> : null}
 
             </Grid>
+            {data.map((audioClip) => (
+              <Grid item key={audioClip.audio_clip_id} xs={12} sm={6} md={4}>
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image={AudioImage}
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
 
+                    <b>Created: </b> {audioClip.created_time_stamp}<br />
+                    <b>Memory:</b> {audioClip.memory_id}<br />
+                    <b>Audio Clip:</b> {audioClip.audio_clip_id}
+
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </Container>
       </main>
