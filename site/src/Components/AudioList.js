@@ -9,6 +9,7 @@ import AudioImage from '../Components/Audio.png';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +18,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { GetAudioCapture, GetUploadUrl, StartRecording, StopRecording } from '../Utils/AWSAudio';
 import axios from 'axios';
+import AudioPlayer from 'material-ui-audio-player';
 
 const uuid = require('uuid')
 
@@ -110,6 +112,10 @@ export default function AudioList() {
     setUploadedFiles(uploadedFiles.push(fileId));
   }
 
+  function play(e) {
+    console.log(e);
+  }
+
   async function StartAudioCapture() {
 
     // generate unique id for the audio clip
@@ -190,7 +196,7 @@ export default function AudioList() {
             </Grid>
             {data.map((audioClip) => (
               <Grid item key={audioClip.audio_clip_id} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
+                <Card className={classes.card} id={audioClip.audio_clip_id}>
                   <CardMedia
                     className={classes.cardMedia}
                     image={AudioImage}
@@ -203,6 +209,7 @@ export default function AudioList() {
                     <b>Audio Clip:</b> {audioClip.audio_clip_id}
 
                   </CardContent>
+                  <AudioPlayer src={process.env.REACT_APP_AUDIO_LIBRARY_URL + audioClip.audio_clip_id + '.webm'} />
                 </Card>
               </Grid>
             ))}
