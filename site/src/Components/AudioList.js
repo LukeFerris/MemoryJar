@@ -209,7 +209,7 @@ export default function AudioList() {
                     <b>Audio Clip:</b> {audioClip.audio_clip_id}
 
                   </CardContent>
-                  <AudioPlayer src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + audioClip.audio_clip_id + '.webm'} />
+                  <AudioPlayer src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + audioClip.audio_clip_id + '/.webm'} />
                 </Card>
               </Grid>
             ))}
