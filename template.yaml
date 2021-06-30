@@ -250,6 +250,10 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - '*'
+        AllowHeaders:
+          - '*'
+        AllowMethods:
+          - '*'
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
