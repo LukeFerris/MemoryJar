@@ -38,6 +38,12 @@ Resources:
             Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
           - Name: REACT_APP_URL_API
             Value: !Sub https://${HttpApi2}.execute-api.${AWS::Region}.amazonaws.com
+          - Name: BUCKET_NAME
+            Value: !Ref AudioLibrary
+          - Name: BUCKET_ARN
+            Value: !GetAtt AudioLibrary.Arn
+          - Name: REACT_APP_AUDIO_LIBRARY_URL
+            Value: !GetAtt AudioLibrary.RegionalDomainName
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
