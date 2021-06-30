@@ -250,6 +250,10 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - '*'
+        AllowHeaders:
+          - '*'
+        AllowMethods:
+          - '*'
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
@@ -368,11 +372,6 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${AWS::StackName}-audiolibr-${AWS::AccountId}
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: aws:kms
-              KMSMasterKeyID: alias/aws/s3
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
