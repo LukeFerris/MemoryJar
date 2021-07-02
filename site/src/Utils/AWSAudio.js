@@ -20,7 +20,7 @@ export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id, compl
         navigator.mediaDevices.getUserMedia(audioConstraints)
             .then((stream) => {
                 console.log('found.. configuring recorder');
-                let recorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+                let recorder = new MediaRecorder(stream);
                 resolve(recorder);
 
                 console.log('adding event handler to process audio');

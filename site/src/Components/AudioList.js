@@ -22,7 +22,6 @@ import AudioPlayer from 'material-ui-audio-player';
 
 const uuid = require('uuid')
 
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -209,7 +208,7 @@ export default function AudioList() {
                     <b>Audio Clip:</b> {audioClip.audio_clip_id}
 
                   </CardContent>
-                  <AudioPlayer src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClip.audio_clip_id + '.webm'} />
+                  <AudioPlayer src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClip.audio_clip_id + '.mp4'} />
                 </Card>
               </Grid>
             ))}
