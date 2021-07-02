@@ -20,11 +20,13 @@ export const GetAudioCapture = async (uploadUrl, memory_id, audio_clip_id, compl
         navigator.mediaDevices.getUserMedia(audioConstraints)
             .then((stream) => {
                 console.log('found.. configuring recorder');
-                let recorder = new MediaRecorder(stream);
+                let recorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
                 resolve(recorder);
 
                 console.log('adding event handler to process audio');
                 recorder.addEventListener('dataavailable', async function (e) {
+
+                    console.log('type is: ' + e.data.type);
 
                     // we need an array to build the blow from (must be iterable)
                     let dataArray = [e.data];
