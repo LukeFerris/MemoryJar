@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import StopIcon from '@material-ui/icons/Stop';
-import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Card from '@material-ui/core/Card';
 import AudioImage from '../Components/Audio.png';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { GetAudioCapture, GetUploadUrl, StartRecording, StopRecording } from '../Utils/AWSAudio';
 import axios from 'axios';
 import AudioPlayer from 'material-ui-audio-player';
-
-const uuid = require('uuid')
+import Recorder from '../Components/Recorder';
 
 function Copyright() {
   return (
@@ -60,37 +54,15 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
   },
-  score: {
-    color: '#FFF',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap'
-  },
-  scoreRed: {
-    backgroundColor: '#e53935'
-  },
-  scoreGreen: {
-    backgroundColor: '#4CAF50'
-  },
-  scoreOrange: {
-    backgroundColor: '#FB8C00'
-  },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
-  },
-  sentimentIcon: {
-    paddingLeft: theme.spacing(0.5)
   }
 }));
 
 export default function AudioList() {
   const classes = useStyles();
-  const [recording, setRecording] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [recorder, setRecorder] = useState(null);
-  const [fileId, setFileId] = useState(null);
   const [data, setData] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -100,49 +72,24 @@ export default function AudioList() {
         process.env.REACT_APP_REGISTER_AUDIO_API,
       );
 
-
       setData(result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1));
     };
 
     fetchData();
   }, [uploadedFiles]);
 
-  function complete(fileId) {
-    setUploadedFiles(uploadedFiles.push(fileId));
-  }
+  const complete = async (memoryId, audioClipId) => {
+    console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
 
-  function play(e) {
-    console.log(e);
-  }
+    // now register it
+    await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
+      "memory_id": memoryId, "audio_clip_id": audioClipId
+    })
 
-  async function StartAudioCapture() {
-
-    // generate unique id for the audio clip
-    const audio_clip_id = uuid.v4()
-
-    // generate a unique id for the memory
-    const memory_id = uuid.v4();
-
-    // get the upload url
-    let uploadUrl = await GetUploadUrl(audio_clip_id);
-
-    console.log('upload url is: ' + uploadUrl);
-
-    // get the audio recorder
-    let recorder = await GetAudioCapture(uploadUrl, memory_id, audio_clip_id, complete);
-    console.log("Recorder is set");
-    setRecorder(recorder);
-
-    // start the recorder
-    await StartRecording(recorder);
-    setRecording(true);
-  }
-
-  async function Stop() {
-
-    await StopRecording(recorder);
-    setRecording(false);
-  }
+    setUploadedFiles(uploadedFiles.concat({
+      "memory_id": memoryId, "audio_clip_id": audioClipId
+    }));
+  };
 
   return (
     <React.Fragment>
@@ -158,26 +105,7 @@ export default function AudioList() {
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6} md={12}>
-              {!recording ?
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.button}
-                  onClick={StartAudioCapture}
-                  startIcon={<KeyboardVoiceIcon />}
-                >
-                  Record New Clip
-                </Button>
-                :
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  onClick={Stop}
-                  startIcon={<StopIcon />}
-                >
-                  Stop Recording
-                </Button>}
+              <Recorder onFileUploaded={complete} />
             </Grid>
             <Grid item key='loading' xs={12} sm={6} md={12}>
 
