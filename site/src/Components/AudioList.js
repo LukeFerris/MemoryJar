@@ -13,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
-import AudioPlayer from 'material-ui-audio-player';
 import Recorder from '../Components/Recorder';
 
 function Copyright() {
@@ -131,12 +130,14 @@ export default function AudioList() {
                   />
                   <CardContent className={classes.cardContent}>
 
-                    <b>Created: </b> {audioClip.created_time_stamp}<br />
-                    <b>Memory:</b> {audioClip.memory_id}<br />
-                    <b>Audio Clip:</b> {audioClip.audio_clip_id}
+                    <p>
+                      <b>Created: </b> {audioClip.created_time_stamp}<br />
+                      <b>Memory:</b> {audioClip.memory_id}<br />
+                      <b>Audio Clip:</b> {audioClip.audio_clip_id}<br />
+                    </p>
 
+                    <audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClip.audio_clip_id + '.mp4'} controls />
                   </CardContent>
-                  <AudioPlayer src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClip.audio_clip_id + '.mp4'} />
                 </Card>
               </Grid>
             ))}
