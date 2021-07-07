@@ -44,6 +44,12 @@ Resources:
             Value: !GetAtt AudioLibrary.Arn
           - Name: REACT_APP_AUDIO_LIBRARY_URL
             Value: !GetAtt AudioLibrary.RegionalDomainName
+          - Name: REACT_APP_USER_POOL_CLIENT_ID
+            Value: !Ref website
+          - Name: REACT_APP_USER_POOL_ID
+            Value: !Ref UserPool
+          - Name: USER_POOL_ARN
+            Value: !GetAtt UserPool.Arn
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -405,6 +411,21 @@ Resources:
             Condition:
               Bool:
                 aws:SecureTransport: 'false'
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AliasAttributes:
+        - email
+        - preferred_username
+      UserPoolName: !Sub ${AWS::StackName}-UserPool
+      AutoVerifiedAttributes:
+        - email
+  website:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
 Parameters:
   SourceLocation:
     Type: String
