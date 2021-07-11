@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import StopIcon from '@material-ui/icons/Stop';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import API from '../Utils/API';
 
