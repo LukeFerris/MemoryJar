@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
 
 // material-ui
 import { ButtonBase } from '@material-ui/core';
@@ -13,7 +14,7 @@ import Logo from './../../../ui-component/Logo';
 const LogoSection = () => {
     return (
         <ButtonBase disableRipple component={Link} to={config.defaultPath}>
-            <Logo />
+            <Typography>Memory Jar</Typography>
         </ButtonBase>
     );
 };

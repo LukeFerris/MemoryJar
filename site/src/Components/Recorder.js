@@ -98,7 +98,6 @@ export default function Recorder({ onFileUploaded }) {
                 <Button
                     disabled={isLoading}
                     variant="contained"
-                    color="default"
                     className={classes.button}
                     onClick={record}
                     startIcon={<KeyboardVoiceIcon />}
@@ -108,7 +107,6 @@ export default function Recorder({ onFileUploaded }) {
                 :
                 <Button
                     variant="contained"
-                    color="secondary"
                     className={classes.button}
                     onClick={record}
                     startIcon={<StopIcon />}

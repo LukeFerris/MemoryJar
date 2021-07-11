@@ -11,6 +11,7 @@ import SkeletonEarningCard from './../../../ui-component/cards/Skeleton/EarningC
 
 // assets
 import EarningIcon from './../../../assets/images/icons/earning.svg';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppOutlined';
@@ -123,9 +124,10 @@ const EarningCard = ({ isLoading }) => {
                         <Grid item>
                             <Grid container justifyContent="space-between">
                                 <Grid item>
-                                    <Avatar variant="rounded" className={classes.avatar}>
-                                        <img src={EarningIcon} alt="Notification" />
-                                    </Avatar>
+                                    <TimelineIcon />
+                                    {/* <Avatar variant="rounded" className={classes.avatar}>
+                                        <img src={TimelineIcon} alt="Notification" />
+                                    </Avatar> */}
                                 </Grid>
                                 <Grid item>
                                     <Avatar
@@ -154,16 +156,13 @@ const EarningCard = ({ isLoading }) => {
                                         }}
                                     >
                                         <MenuItem onClick={handleClose}>
-                                            <GetAppTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Import Card
+                                            <GetAppTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Add Memory
                                         </MenuItem>
                                         <MenuItem onClick={handleClose}>
-                                            <FileCopyTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Copy Data
+                                            <FileCopyTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Archive Theme
                                         </MenuItem>
                                         <MenuItem onClick={handleClose}>
-                                            <PictureAsPdfTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Export
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>
-                                            <ArchiveTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Archive File
+                                            <PictureAsPdfTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Download
                                         </MenuItem>
                                     </Menu>
                                 </Grid>
@@ -172,17 +171,12 @@ const EarningCard = ({ isLoading }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>$500.00</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Avatar className={classes.avatarCircle}>
-                                        <ArrowUpwardIcon fontSize="inherit" className={classes.circleIcon} />
-                                    </Avatar>
+                                    <Typography className={classes.cardHeading}>School Years</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid item sx={{ mb: 1.25 }}>
-                            <Typography className={classes.subHeading}>Total Earning</Typography>
+                            <Typography className={classes.subHeading}>1967-1975</Typography>
                         </Grid>
                     </Grid>
                 </MainCard>

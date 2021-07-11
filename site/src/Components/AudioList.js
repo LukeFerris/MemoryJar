@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
+import AudioItem from '../Components/AudioItem';
 import Recorder from '../Components/Recorder';
 
 function Copyright() {
@@ -91,70 +92,32 @@ export default function AudioList() {
   };
 
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar position="relative" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Memory Jar
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={6} md={12}>
-              <Recorder onFileUploaded={complete} />
-            </Grid>
-            <Grid item key='loading' xs={12} sm={6} md={12}>
+    <Grid container spacing={4}>
+      <Grid item xs={12} sm={6} md={12}>
+        <Recorder onFileUploaded={complete} />
+      </Grid>
+      {data.map((audioClip) => (
+        <Grid item key={audioClip.audio_clip_id} xs={12} sm={6} md={4}>
+          <AudioItem audioClipId={audioClip.audio_clip_id} />
+          {/* <Card className={classes.card} id={audioClip.audio_clip_id}>
+            <CardMedia
+              className={classes.cardMedia}
+              image={AudioImage}
+              title="Image title"
+            />
+            <CardContent className={classes.cardContent}>
 
-              {loading ? <Grid container direction="column" alignItems="center">
-                <Grid item>
-                  <CircularProgress className={classes.loadingProgress} />
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6" color="inherit" noWrap>
-                    Speak wise one..
-                  </Typography>
-                </Grid>
-              </Grid> : null}
+              <p>
+                <b>Created: </b> {audioClip.created_time_stamp}<br />
+                <b>Memory:</b> {audioClip.memory_id}<br />
+                <b>Audio Clip:</b> {audioClip.audio_clip_id}<br />
+              </p>
 
-            </Grid>
-            {data.map((audioClip) => (
-              <Grid item key={audioClip.audio_clip_id} xs={12} sm={6} md={4}>
-                <Card className={classes.card} id={audioClip.audio_clip_id}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={AudioImage}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
 
-                    <p>
-                      <b>Created: </b> {audioClip.created_time_stamp}<br />
-                      <b>Memory:</b> {audioClip.memory_id}<br />
-                      <b>Audio Clip:</b> {audioClip.audio_clip_id}<br />
-                    </p>
-
-                    <audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClip.audio_clip_id + '.mp4'} controls />
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      {/* Footer */}
-      {!loading ? <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Memory Jar
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Get in touch: <a href="mailto: escape@forefront.studio" target="new">escape@forefront.studio</a>
-        </Typography>
-        <Copyright />
-      </footer> : null}
-      {/* End footer */}
-    </React.Fragment>
+            </CardContent>
+          </Card> */}
+        </Grid>
+      ))}
+    </Grid>
   );
 }
