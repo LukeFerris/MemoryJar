@@ -1,0 +1,5 @@
+CREATE TABLE keys (
+	key_id VARCHAR (255) PRIMARY KEY,
+	data VARCHAR ( 1000 ) UNIQUE NOT NULL,
+	created_on TIMESTAMP NOT NULL
+);
