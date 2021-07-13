@@ -425,7 +425,7 @@ Resources:
       Description: !Sub
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: getMemories
-      CodeUri: src/Function
+      CodeUri: api/responsibleFor/audio/getMemories
       Handler: index.handler
       Runtime: nodejs14.x
       MemorySize: 3008
