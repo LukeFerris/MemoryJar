@@ -236,14 +236,6 @@ Resources:
             ApiId: !Ref HttpApi
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
-        HttpApiGET:
-          Type: HttpApi
-          Properties:
-            Path: /
-            Method: GET
-            ApiId: !Ref HttpApi
-            PayloadFormatVersion: '2.0'
-            TimeoutInMillis: 29000
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -426,6 +418,49 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       UserPoolId: !Ref UserPool
+  getMemories:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-getMemories
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: getMemories
+      CodeUri: src/Function
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref memoryjarDatabaseRootUserSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:ExecuteStatement
+                - rds-data:RollbackTransaction
+              Resource:
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+      Events:
+        HttpApiGET:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: GET
+            ApiId: !Ref HttpApi
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          DB_ID: !Ref memoryjarDatabase
+          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
+          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
 Parameters:
   SourceLocation:
     Type: String
