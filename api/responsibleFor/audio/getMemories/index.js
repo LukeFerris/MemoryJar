@@ -15,9 +15,16 @@ exports.handler = async (event, context) => {
 
   try {
     // check that auth data is present
-    console.log('checking for auth data');
-    console.log(event.requestContext.authorizer);
-    body = await data.query(`SELECT * from audio_clip;`);
+    if (typeof event.requestContext == 'undefined') {
+      console.log('No valid user supplied');
+      body = "No valid user supplied";
+      statusCode = 400;
+    }
+    else {
+      const userId = event.requestContext.authorizer.jwt.claims.sub;
+      console.log('user is: ' + userId);
+      await data.query("SELECT * from audio_clip where user_id='" + userId + "';");
+    }
   } catch (err) {
     statusCode = 400;
     body = err.message;
