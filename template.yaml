@@ -258,6 +258,14 @@ Resources:
           - '*'
         AllowMethods:
           - '*'
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
+              audience:
+                - !Ref website
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
