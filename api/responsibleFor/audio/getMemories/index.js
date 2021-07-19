@@ -14,19 +14,10 @@ exports.handler = async (event, context) => {
   };
 
   try {
-    // pull public key from database cache
-    let keys = await data.query('SELECT * from keys');
-
-    if (keys.records.length == 0) {
-      console.log('no keys present in database, downloading..');
-      break;
-    }
-    // if it doesn't exist, pull it from Amazon and cache it
-    // validate incoming jwt
-    // extract user id
-    // return audio clips only for selected user
+    // check that auth data is present
+    console.log('checking for auth data');
+    console.log(event.requestContext.authorizer);
     body = await data.query(`SELECT * from audio_clip;`);
-    break;
   } catch (err) {
     statusCode = 400;
     body = err.message;
