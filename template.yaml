@@ -266,6 +266,7 @@ Resources:
               issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
               audience:
                 - !Ref website
+        DefaultAuthorizer: CognitoAuth
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
