@@ -72,7 +72,13 @@ export default function AudioList() {
         }
       );
 
-      setData(result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1));
+      if (result.data) {
+        setData(result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1));
+      }
+      else {
+        console.log('no results returned');
+      }
+
     };
 
     fetchData();
@@ -84,7 +90,12 @@ export default function AudioList() {
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
       "memory_id": memoryId, "audio_clip_id": audioClipId, "user_id": token.payload.sub
-    })
+    },
+      {
+        headers: {
+          Authorization: token.jwtToken
+        }
+      })
 
     setUploadedFiles(uploadedFiles.concat({
       "memory_id": memoryId, "audio_clip_id": audioClipId, "user_id": token.payload.sub
