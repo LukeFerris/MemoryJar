@@ -35,9 +35,9 @@ Resources:
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: REACT_APP_REGISTER_AUDIO_API
-            Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+            Value: !Sub https://${UserDataAPI}.execute-api.${AWS::Region}.amazonaws.com
           - Name: REACT_APP_URL_API
-            Value: !Sub https://${HttpApi2}.execute-api.${AWS::Region}.amazonaws.com
+            Value: !Sub https://${UploadAPI}.execute-api.${AWS::Region}.amazonaws.com
           - Name: BUCKET_NAME
             Value: !Ref AudioLibrary
           - Name: BUCKET_ARN
@@ -50,6 +50,8 @@ Resources:
             Value: !Ref UserPool
           - Name: USER_POOL_ARN
             Value: !GetAtt UserPool.Arn
+          - Name: REACT_APP_THEME_API_URL
+            Value: !Sub https://${ThemeAPI}.execute-api.${AWS::Region}.amazonaws.com
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -228,45 +230,14 @@ Resources:
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
       Events:
-        HttpApiPUT:
+        UserDataAPIPUT:
           Type: HttpApi
           Properties:
             Path: /
             Method: PUT
-            ApiId: !Ref HttpApi
+            ApiId: !Ref UserDataAPI
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
-  HttpApi:
-    Type: AWS::Serverless::HttpApi
-    Properties:
-      DefinitionBody:
-        openapi: '3.0'
-        info:
-          title: !Sub ${AWS::StackName}-HttpApi
-          version: '1.0'
-        paths:
-          /:
-            put:
-              responses: {}
-            get:
-              responses: {}
-      FailOnWarnings: true
-      CorsConfiguration:
-        AllowOrigins:
-          - '*'
-        AllowHeaders:
-          - '*'
-        AllowMethods:
-          - '*'
-      Auth:
-        Authorizers:
-          CognitoAuth:
-            IdentitySource: $request.header.Authorization
-            JwtConfiguration:
-              issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
-              audience:
-                - !Ref website
-        DefaultAuthorizer: CognitoAuth
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
@@ -353,34 +324,18 @@ Resources:
         - S3CrudPolicy:
             BucketName: !Ref AudioLibrary
       Events:
-        HttpApi2GET:
+        UploadAPIGET:
           Type: HttpApi
           Properties:
             Path: /
             Method: GET
-            ApiId: !Ref HttpApi2
+            ApiId: !Ref UploadAPI
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
       Environment:
         Variables:
           BUCKET_NAME: !Ref AudioLibrary
           BUCKET_ARN: !GetAtt AudioLibrary.Arn
-  HttpApi2:
-    Type: AWS::Serverless::HttpApi
-    Properties:
-      DefinitionBody:
-        openapi: '3.0'
-        info:
-          title: !Sub ${AWS::StackName}-HttpApi2
-          version: '1.0'
-        paths:
-          /:
-            get:
-              responses: {}
-      FailOnWarnings: true
-      CorsConfiguration:
-        AllowOrigins:
-          - '*'
   AudioLibrary:
     Type: AWS::S3::Bucket
     Properties:
@@ -455,12 +410,124 @@ Resources:
               Resource:
                 - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
       Events:
-        HttpApiGET:
+        UserDataAPIGET:
           Type: HttpApi
           Properties:
             Path: /
             Method: GET
-            ApiId: !Ref HttpApi
+            ApiId: !Ref UserDataAPI
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          DB_ID: !Ref memoryjarDatabase
+          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
+          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+  UserDataAPI:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefinitionBody:
+        openapi: '3.0'
+        info:
+          title: !Sub ${AWS::StackName}-HttpApi
+          version: '1.0'
+        paths:
+          /:
+            put:
+              responses: {}
+            get:
+              responses: {}
+      FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowHeaders:
+          - '*'
+        AllowMethods:
+          - '*'
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
+              audience:
+                - !Ref website
+        DefaultAuthorizer: CognitoAuth
+  UploadAPI:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefinitionBody:
+        openapi: '3.0'
+        info:
+          title: !Sub ${AWS::StackName}-HttpApi2
+          version: '1.0'
+        paths:
+          /:
+            get:
+              responses: {}
+      FailOnWarnings: true
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+  ThemeAPI:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefinitionBody:
+        openapi: '3.0'
+        info:
+          title: !Sub ${AWS::StackName}-HttpApi
+          version: '1.0'
+        paths:
+          /:
+            get:
+              responses: {}
+      FailOnWarnings: true
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
+              audience:
+                - !Ref website
+        DefaultAuthorizer: CognitoAuth
+  getThemes:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-getThemes
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: getThemes
+      CodeUri: api/responsibleFor/audio/getThemes
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref memoryjarDatabaseRootUserSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:ExecuteStatement
+                - rds-data:RollbackTransaction
+              Resource:
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+      Events:
+        ThemeAPIGET:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: GET
+            ApiId: !Ref ThemeAPI
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
       Environment:
