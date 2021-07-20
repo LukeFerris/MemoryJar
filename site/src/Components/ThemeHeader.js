@@ -6,11 +6,11 @@ import { makeStyles } from '@material-ui/styles';
 import { Avatar, Grid, Menu, MenuItem, Typography } from '@material-ui/core';
 
 // project imports
-import MainCard from './../../../ui-component/cards/MainCard';
-import SkeletonEarningCard from './../../../ui-component/cards/Skeleton/EarningCard';
+import MainCard from '../ui-component/cards/MainCard';
+import SkeletonEarningCard from '../ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from './../../../assets/images/icons/earning.svg';
+import EarningIcon from '../assets/images/icons/earning.svg';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const EarningCard = ({ isLoading }) => {
+const ThemeHeader = ({ isLoading }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -185,8 +185,8 @@ const EarningCard = ({ isLoading }) => {
     );
 };
 
-EarningCard.propTypes = {
+ThemeHeader.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default ThemeHeader;

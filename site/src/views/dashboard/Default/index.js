@@ -4,10 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 
 // project imports
-import EarningCard from './EarningCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
-import AudioList from '../../../Components/AudioList';
+import ThemeList from '../../../Components/ThemeList';
 import config from '../../../config';
 
 //-----------------------|| DEFAULT DASHBOARD ||-----------------------//
@@ -23,11 +22,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Grid container spacing={config.gridSpacing}>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <EarningCard isLoading={isLoading} />
-                    </Grid>
-
-                    <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <AudioList />
+                        <ThemeList />
                     </Grid>
                 </Grid>
             </Grid>

@@ -1,6 +1,4 @@
 import './App.css';
-import AudioList from './Components/AudioList'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SignIn from './Components/SignIn';
 import useToken from './Components/useToken';
 import { CssBaseline, StyledEngineProvider } from '@material-ui/core';
@@ -36,13 +34,6 @@ function App() {
         </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>
-    // <Router>
-    //   <div>
-    //     <Switch>
-    //       <Route exact path="/" component={AudioList} />
-    //     </Switch>
-    //   </div>
-    // </Router>
   );
 }
 
