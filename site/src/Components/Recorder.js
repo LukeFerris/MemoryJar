@@ -20,12 +20,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Recorder({ onFileUploaded }) {
+export default function Recorder({ onFileUploaded, memoryId, promptId }) {
 
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
-    const [memoryId, setMemoryId] = useState(null);
     const [audioClipId, setAudioClipId] = useState(null);
     const [uploadUrl, setUploadUrl] = useState(null);
 
@@ -63,7 +62,7 @@ export default function Recorder({ onFileUploaded }) {
 
             await upload(uploadUrl, blob);
 
-            onFileUploaded(memoryId, audioClipId);
+            onFileUploaded(memoryId, promptId, audioClipId);
 
         } else {
 
@@ -75,10 +74,6 @@ export default function Recorder({ onFileUploaded }) {
                 // generate unique id for the audio clip
                 const audioClipId = uuid.v4();
                 setAudioClipId(audioClipId);
-
-                // generate a unique id for the memory
-                const memoryId = uuid.v4();
-                setMemoryId(memoryId);
 
                 await getUploadUrl(audioClipId);
 

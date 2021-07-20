@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const ThemeHeader = ({ isLoading }) => {
+const ThemeHeader = ({ isLoading, title }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -171,7 +171,7 @@ const ThemeHeader = ({ isLoading }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>School Years</Typography>
+                                    <Typography className={classes.cardHeading}>{title}</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>

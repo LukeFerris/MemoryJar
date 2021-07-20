@@ -47,6 +47,8 @@ export default function ThemeList() {
 
       if (result.data.records.length > 0) {
         setUserData(result.data.records);
+        let merged = themeData.map(theme => Object.assign(theme, result.data.records.find(prompt => prompt.prompt_id == theme.theme_id)));
+        setUserData(merged);
       }
       else {
         console.log('no results returned');
@@ -57,12 +59,12 @@ export default function ThemeList() {
     fetchUserData();
   }, [uploadedFiles]);
 
-  const complete = async (memoryId, audioClipId) => {
+  const complete = async (memoryId, promptId, audioClipId) => {
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
 
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
-      "memory_id": memoryId, "audio_clip_id": audioClipId, "user_id": token.payload.sub
+      "memory_id": memoryId, "audio_clip_id": audioClipId, "prompt_id": promptId
     },
       {
         headers: {
@@ -71,24 +73,26 @@ export default function ThemeList() {
       })
 
     setUploadedFiles(uploadedFiles.concat({
-      "memory_id": memoryId, "audio_clip_id": audioClipId, "user_id": token.payload.sub
+      "memory_id": memoryId, "audio_clip_id": audioClipId, "prompt_id": promptId
     }));
   };
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} sm={6} md={12}>
-        <Recorder onFileUploaded={complete} />
-      </Grid>
       {themeData.length > 0 ? themeData.map((theme) => (
         <Grid item xs={12}>
           <Grid item lg={4} md={6} sm={6} xs={12}>
-            <ThemeHeader isLoading={false} />
+            <ThemeHeader isLoading={false} title={theme.theme_name} />
           </Grid>
           {theme.prompts.length > 0 ? theme.prompts.map((prompt) => (
             <Grid item key={prompt.prompt_id} xs={12} sm={6} md={4}>
-              {/* <AudioItem audioClipId={audioClip.audio_clip_id} /> */}
-              {prompt.prompt_question}
+              <h5>{prompt.prompt_question}</h5>
+              {
+                prompt.audio_clip_id ?
+                  <AudioItem audioClipId={prompt.audio_clip_id} />
+                  :
+                  <Recorder prompt_id={prompt.prompt_id} onFileUploaded={complete} />
+              }
             </Grid>
           )) : <Grid item xs={12} sm={6} md={12}>
             <p>No prompts for this theme..</p>
