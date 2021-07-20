@@ -494,6 +494,13 @@ Resources:
               audience:
                 - !Ref website
         DefaultAuthorizer: CognitoAuth
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowHeaders:
+          - '*'
+        AllowMethods:
+          - '*'
   getThemes:
     Type: AWS::Serverless::Function
     Properties:
