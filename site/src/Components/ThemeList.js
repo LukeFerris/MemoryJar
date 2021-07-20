@@ -91,7 +91,7 @@ export default function ThemeList() {
                 prompt.audio_clip_id ?
                   <AudioItem audioClipId={prompt.audio_clip_id} />
                   :
-                  <Recorder prompt_id={prompt.prompt_id} onFileUploaded={complete} />
+                  <Recorder promptId={prompt.prompt_id} themeId={theme.theme_id} onFileUploaded={complete} />
               }
             </Grid>
           )) : <Grid item xs={12} sm={6} md={12}>

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Recorder({ onFileUploaded, memoryId, promptId }) {
+export default function Recorder({ onFileUploaded, themeId, promptId }) {
 
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +62,7 @@ export default function Recorder({ onFileUploaded, memoryId, promptId }) {
 
             await upload(uploadUrl, blob);
 
-            onFileUploaded(memoryId, promptId, audioClipId);
+            onFileUploaded(themeId, promptId, audioClipId);
 
         } else {
 
