@@ -11,13 +11,16 @@ export default function ThemeList() {
 
   const [themeData, setThemeData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [mergedData, setMergedData] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const { token } = useToken();
 
-  useEffect(() => {
+  useEffect(async () => {
+
 
     const fetchThemeData = async () => {
+      console.log('fetching theme data');
       const result = await axios(
         process.env.REACT_APP_THEME_API_URL,
         {
@@ -28,15 +31,19 @@ export default function ThemeList() {
       );
 
       if (result.data.records.length > 0) {
-        setThemeData(result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1));
+        let themeDataResult = result.data.records.sort((a, b) => (a.created_time_stamp < b.created_time_stamp) ? 1 : -1);
+        setThemeData(themeDataResult);
+        return themeDataResult;
       }
       else {
         console.log('no results returned');
+        return [];
       }
 
     };
 
     const fetchUserData = async () => {
+      console.log('fetching user data');
       const result = await axios(
         process.env.REACT_APP_REGISTER_AUDIO_API,
         {
@@ -47,17 +54,33 @@ export default function ThemeList() {
       );
 
       if (result.data.records.length > 0) {
+        console.log(result.data.records.length + ' media items returned for this user.');
         setUserData(result.data.records);
-        let merged = themeData.map(theme => Object.assign(theme, result.data.records.find(prompt => prompt.prompt_id == theme.theme_id)));
-        setUserData(merged);
+        return result.data.records;
       }
       else {
         console.log('no results returned');
       }
     };
 
-    fetchThemeData();
-    fetchUserData();
+    const mergeData = async (themeData, userData) => {
+      let mergedData = JSON.parse(JSON.stringify(themeData));
+
+      console.log(themeData);
+      console.log(mergedData);
+
+      for (let i = 0; i < themeData.length; i++) {
+        // for each theme, see if any of the returned items match the prompts
+        mergedData[i].prompts.map(prompt => Object.assign(prompt, userData.find(userPrompt => userPrompt.prompt_id == prompt.prompt_id)));
+      }
+
+      console.log(mergedData);
+      setMergedData(mergedData);
+    };
+
+    let themeData = await fetchThemeData();
+    let userData = await fetchUserData();
+    mergeData(themeData, userData);
   }, [uploadedFiles]);
 
   const complete = async (promptId, mediaItemId) => {
@@ -81,7 +104,7 @@ export default function ThemeList() {
 
   return (
     <Grid container spacing={4}>
-      {themeData.length > 0 ? themeData.map((theme) => (
+      {mergedData.length > 0 ? mergedData.map((theme) => (
         <Grid item xs={12}>
           <Grid item lg={4} md={6} sm={6} xs={12}>
             <ThemeHeader isLoading={false} title={theme.theme_name} />
