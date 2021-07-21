@@ -5,6 +5,7 @@ import AudioItem from './AudioItem';
 import Recorder from './Recorder';
 import useToken from './useToken';
 import ThemeHeader from './ThemeHeader';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
 
@@ -59,12 +60,13 @@ export default function ThemeList() {
     fetchUserData();
   }, [uploadedFiles]);
 
-  const complete = async (memoryId, promptId, audioClipId) => {
-    console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
+  const complete = async (promptId, mediaItemId) => {
 
+    console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
+    console.log('Prompt: ' + promptId);
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
-      "memory_id": memoryId, "audio_clip_id": audioClipId, "prompt_id": promptId
+      "mediaItemId": mediaItemId, "mediaType": 1, "promptId": promptId
     },
       {
         headers: {
@@ -73,7 +75,7 @@ export default function ThemeList() {
       })
 
     setUploadedFiles(uploadedFiles.concat({
-      "memory_id": memoryId, "audio_clip_id": audioClipId, "prompt_id": promptId
+      "media_item_id": mediaItemId, "prompt_id": promptId
     }));
   };
 
@@ -91,7 +93,7 @@ export default function ThemeList() {
                 prompt.audio_clip_id ?
                   <AudioItem audioClipId={prompt.audio_clip_id} />
                   :
-                  <Recorder promptId={prompt.prompt_id} themeId={theme.theme_id} onFileUploaded={complete} />
+                  <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => complete(prompt.prompt_id, fileIdentifier)} />
               }
             </Grid>
           )) : <Grid item xs={12} sm={6} md={12}>
