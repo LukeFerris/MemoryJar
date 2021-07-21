@@ -60,6 +60,7 @@ export default function ThemeList() {
       }
       else {
         console.log('no results returned');
+        return [];
       }
     };
 
