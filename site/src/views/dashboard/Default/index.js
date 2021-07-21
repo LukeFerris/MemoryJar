@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 
 // project imports
-import TotalIncomeDarkCard from './TotalIncomeDarkCard';
-import TotalIncomeLightCard from './TotalIncomeLightCard';
 import ThemeList from '../../../Components/ThemeList';
 import config from '../../../config';
 
@@ -20,10 +18,8 @@ const Dashboard = () => {
     return (
         <Grid container spacing={config.gridSpacing}>
             <Grid item xs={12}>
-                <Grid container spacing={config.gridSpacing}>
-                    <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <ThemeList />
-                    </Grid>
+                <Grid item lg={6} md={6} sm={12} xs={12}>
+                    <ThemeList />
                 </Grid>
             </Grid>
         </Grid>

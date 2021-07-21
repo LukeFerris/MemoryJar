@@ -105,12 +105,12 @@ export default function ThemeList() {
   return (
     <Grid container spacing={4}>
       {mergedData.length > 0 ? mergedData.map((theme) => (
-        <Grid item xs={12}>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Grid item xs={12}>
             <ThemeHeader isLoading={false} title={theme.theme_name} progress={theme.progress} />
           </Grid>
           {theme.prompts.length > 0 ? theme.prompts.map((prompt) => (
-            <Grid item key={prompt.prompt_id} xs={12} sm={6} md={4}>
+            <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
               <h5>{prompt.prompt_question}</h5>
               {
                 prompt.audio_clip_id ?
@@ -127,7 +127,8 @@ export default function ThemeList() {
       )) :
         <Grid item xs={12} sm={6} md={12}>
           <p>A lot of nothing here.. add a theme!</p>
-        </Grid>}
-    </Grid>
+        </Grid>
+      }
+    </Grid >
   );
 }
