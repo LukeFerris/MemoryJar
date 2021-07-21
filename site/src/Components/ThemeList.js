@@ -73,6 +73,9 @@ export default function ThemeList() {
       for (let i = 0; i < themeData.length; i++) {
         // for each theme, see if any of the returned items match the prompts
         mergedData[i].prompts.map(prompt => Object.assign(prompt, userData.find(userPrompt => userPrompt.prompt_id == prompt.prompt_id)));
+        const completedCount = mergedData[i].prompts.filter((obj) => obj.audio_clip_id).length;
+        const totalPrompts = mergedData[i].prompts.length;
+        mergedData[i].progress = (completedCount / totalPrompts) * 100;
       }
 
       console.log(mergedData);
@@ -108,7 +111,7 @@ export default function ThemeList() {
       {mergedData.length > 0 ? mergedData.map((theme) => (
         <Grid item xs={12}>
           <Grid item lg={4} md={6} sm={6} xs={12}>
-            <ThemeHeader isLoading={false} title={theme.theme_name} />
+            <ThemeHeader isLoading={false} title={theme.theme_name} progress={theme.progress} />
           </Grid>
           {theme.prompts.length > 0 ? theme.prompts.map((prompt) => (
             <Grid item key={prompt.prompt_id} xs={12} sm={6} md={4}>

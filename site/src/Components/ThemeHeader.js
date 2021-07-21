@@ -4,20 +4,16 @@ import React from 'react';
 // material-ui
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Grid, Menu, MenuItem, Typography } from '@material-ui/core';
+import LinearWithValueLabel from './LineProgressWithLabel';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
 import SkeletonEarningCard from '../ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from '../assets/images/icons/earning.svg';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import GetAppTwoToneIcon from '@material-ui/icons/GetAppOutlined';
-import FileCopyTwoToneIcon from '@material-ui/icons/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@material-ui/icons/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@material-ui/icons/ArchiveOutlined';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -101,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const ThemeHeader = ({ isLoading, title }) => {
+const ThemeHeader = ({ isLoading, title, progress }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -125,9 +121,6 @@ const ThemeHeader = ({ isLoading, title }) => {
                             <Grid container justifyContent="space-between">
                                 <Grid item>
                                     <TimelineIcon />
-                                    {/* <Avatar variant="rounded" className={classes.avatar}>
-                                        <img src={TimelineIcon} alt="Notification" />
-                                    </Avatar> */}
                                 </Grid>
                                 <Grid item>
                                     <Avatar
@@ -156,12 +149,6 @@ const ThemeHeader = ({ isLoading, title }) => {
                                         }}
                                     >
                                         <MenuItem onClick={handleClose}>
-                                            <GetAppTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Add Memory
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>
-                                            <FileCopyTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Archive Theme
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>
                                             <PictureAsPdfTwoToneIcon fontSize="inherit" className={classes.menuItem} /> Download
                                         </MenuItem>
                                     </Menu>
@@ -176,7 +163,7 @@ const ThemeHeader = ({ isLoading, title }) => {
                             </Grid>
                         </Grid>
                         <Grid item sx={{ mb: 1.25 }}>
-                            <Typography className={classes.subHeading}>1967-1975</Typography>
+                            <LinearWithValueLabel value={progress} />
                         </Grid>
                     </Grid>
                 </MainCard>
