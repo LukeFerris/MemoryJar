@@ -67,9 +67,6 @@ export default function ThemeList() {
     const mergeData = async (themeData, userData) => {
       let mergedData = JSON.parse(JSON.stringify(themeData));
 
-      console.log(themeData);
-      console.log(mergedData);
-
       for (let i = 0; i < themeData.length; i++) {
         // for each theme, see if any of the returned items match the prompts
         mergedData[i].prompts.map(prompt => Object.assign(prompt, userData.find(userPrompt => userPrompt.prompt_id == prompt.prompt_id)));
@@ -78,7 +75,6 @@ export default function ThemeList() {
         mergedData[i].progress = (completedCount / totalPrompts) * 100;
       }
 
-      console.log(mergedData);
       setMergedData(mergedData);
     };
 
