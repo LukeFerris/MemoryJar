@@ -98,7 +98,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
                     onClick={record}
                     startIcon={<StopIcon />}
                 >
-                    Stop Recording
+                    Stop
                 </Button>}
         </React.Fragment>
     );
