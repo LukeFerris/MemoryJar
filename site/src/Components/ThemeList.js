@@ -5,6 +5,7 @@ import AudioItem from './AudioItem';
 import Recorder from './Recorder';
 import useToken from './useToken';
 import ThemeHeader from './ThemeHeader';
+import PromptHeader from './PromptHeader';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
@@ -109,19 +110,21 @@ export default function ThemeList() {
           <Grid item xs={12}>
             <ThemeHeader isLoading={false} title={theme.theme_name} progress={theme.progress} />
           </Grid>
-          {theme.prompts.length > 0 ? theme.prompts.map((prompt) => (
-            <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
-              <h5>{prompt.prompt_question}</h5>
-              {
-                prompt.audio_clip_id ?
-                  <AudioItem audioClipId={prompt.audio_clip_id} />
-                  :
-                  <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => complete(prompt.prompt_id, fileIdentifier)} />
-              }
-            </Grid>
-          )) : <Grid item xs={12} sm={6} md={12}>
-            <p>No prompts for this theme..</p>
-          </Grid>}
+          <Grid container style={{ marginTop: 2 }} spacing={4}>
+            {theme.prompts.length > 0 ? theme.prompts.map((prompt) => (
+              <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
+                {
+                  prompt.audio_clip_id ?
+                    // <AudioItem audioClipId={prompt.audio_clip_id} />
+                    <PromptHeader question={prompt.prompt_question} />
+                    :
+                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => complete(prompt.prompt_id, fileIdentifier)} />
+                }
+              </Grid>
+            )) : <Grid item xs={12} sm={6} md={12}>
+              <p>No prompts for this theme..</p>
+            </Grid>}
+          </Grid>
 
         </Grid>
       )) :
