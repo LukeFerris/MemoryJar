@@ -136,7 +136,7 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
                                     :
                                     <Button
                                         variant="contained"
-                                        disabled={addEnabled}
+                                        disabled={!addEnabled}
                                         className={classes.button}
                                         onClick={handleClick}
                                         startIcon={<AddIcon />}
