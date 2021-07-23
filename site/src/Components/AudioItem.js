@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
             position: 'absolute',
             width: '210px',
             height: '210px',
-            background: 'linear-gradient(210.04deg, ' + theme.palette.warning.dark + ' -50.94%, rgba(144, 202, 249, 0) 83.49%)',
+            // background: 'linear-gradient(210.04deg, ' + theme.palette.warning.dark + ' -50.94%, rgba(144, 202, 249, 0) 83.49%)',
             borderRadius: '50%',
             top: '-30px',
             right: '-180px'
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
             position: 'absolute',
             width: '210px',
             height: '210px',
-            background: 'linear-gradient(140.9deg, ' + theme.palette.warning.dark + ' -14.02%, rgba(144, 202, 249, 0) 70.50%)',
+            // background: 'linear-gradient(140.9deg, ' + theme.palette.warning.dark + ' -14.02%, rgba(144, 202, 249, 0) 70.50%)',
             borderRadius: '50%',
             top: '-160px',
             right: '-130px'
@@ -81,7 +81,7 @@ const AudioItem = ({ isLoading, audioClipId }) => {
                                     mb: 0.45
                                 }}
                                 className={classes.padding}
-                                primary={<audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClipId + '.mp4'} controls />}
+                                primary={<audio style={{ width: '100%' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClipId + '.mp4'} controls />}
 
                             />
                         </ListItem>
