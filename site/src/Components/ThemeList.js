@@ -58,6 +58,7 @@ export default function ThemeList() {
   }]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
 
   const { token } = useToken();
 
@@ -132,13 +133,15 @@ export default function ThemeList() {
     let themeData = await fetchThemeData();
     let userData = await fetchUserData();
     mergeData(themeData, userData);
-    setIsLoading(false);
+    setIsUploading(false);
   }, [uploadedFiles]);
 
   const complete = async (promptId, mediaItemId) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
     console.log('Prompt: ' + promptId);
+    setIsUploading(true);
+
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
       "mediaItemId": mediaItemId, "mediaType": 1, "promptId": promptId
@@ -164,7 +167,7 @@ export default function ThemeList() {
           <Grid container style={{ marginTop: 2 }} spacing={4}>
             {theme.prompts && theme.prompts.map((prompt) => (
               <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
-                <PromptHeader isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} promptId={prompt.prompt_id} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
+                <PromptHeader uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} promptId={prompt.prompt_id} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
                 {
                   prompt.mediaItems.map(item => <AudioItem isLoading={isLoading} key={item.audio_clip_id} audioClipId={item.audio_clip_id} />)
                 }

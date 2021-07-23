@@ -23,6 +23,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [uploadUrl, setUploadUrl] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const getUploadUrl = async (audioClipId) => {
         let uploadUrl = await API.get('/?audio_clip_id=' + audioClipId).then((result) => {
@@ -48,6 +49,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
     const record = async () => {
 
         setIsLoading(true);
+        setIsProcessing(true);
 
         if (isRecording) {
 
@@ -56,6 +58,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
 
             await upload(uploadUrl, blob);
             setIsLoading(false);
+            setIsProcessing(false);
             onFileUploaded(fileIdentifier);
 
         } else {
@@ -70,6 +73,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
 
                 setIsLoading(false)
                 setIsRecording(true);
+                setIsProcessing(false)
 
             } catch (e) {
                 console.error(e);
@@ -80,26 +84,38 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
 
     return (
         <React.Fragment>
-            {!isRecording ?
+            {isProcessing ?
                 <Button
-                    disabled={isLoading}
+                    disabled={true}
                     variant="contained"
                     className={classes.button}
                     onClick={record}
                     startIcon={<KeyboardVoiceIcon />}
                 >
-                    Record
+                    Working..
                 </Button>
                 :
-                <Button
-                    variant="contained"
-                    disabled={isLoading}
-                    className={classes.button}
-                    onClick={record}
-                    startIcon={<StopIcon />}
-                >
-                    Stop
-                </Button>}
+                !isRecording ?
+                    <Button
+                        disabled={isLoading}
+                        variant="contained"
+                        className={classes.button}
+                        onClick={record}
+                        startIcon={<KeyboardVoiceIcon />}
+                    >
+                        Record
+                    </Button>
+                    :
+                    <Button
+                        variant="contained"
+                        disabled={isLoading}
+                        className={classes.button}
+                        onClick={record}
+                        startIcon={<StopIcon />}
+                    >
+                        Stop
+                    </Button>
+            }
         </React.Fragment>
     );
 }

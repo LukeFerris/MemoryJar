@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptId }) => {
+const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptId, uploading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [recordingEnabled, setRecordingEnabled] = useState(false);
@@ -134,15 +134,26 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
                                 recordingEnabled ?
                                     <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(promptId, fileIdentifier)} />
                                     :
-                                    <Button
-                                        variant="contained"
-                                        disabled={!addEnabled}
-                                        className={classes.button}
-                                        onClick={handleClick}
-                                        startIcon={<AddIcon />}
-                                    >
-                                        Answer
-                                    </Button>
+                                    uploading ?
+                                        <Button
+                                            variant="contained"
+                                            disabled={true}
+                                            className={classes.button}
+                                            onClick={handleClick}
+                                            startIcon={<AddIcon />}
+                                        >
+                                            Upload..
+                                        </Button>
+                                        :
+                                        <Button
+                                            variant="contained"
+                                            disabled={!addEnabled}
+                                            className={classes.button}
+                                            onClick={handleClick}
+                                            startIcon={<AddIcon />}
+                                        >
+                                            Answer
+                                        </Button>
                             }
                             <Menu
                                 id="menu-earning-card"
