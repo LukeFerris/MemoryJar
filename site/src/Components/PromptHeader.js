@@ -108,7 +108,7 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
                 <TotalIncomeCard />
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content}>
-                    <Grid xs={12} container justifyContent="space-between">
+                    <Grid container justifyContent="space-between">
                         <Grid item style={{ maxWidth: '60%' }}>
                             <List className={classes.padding}>
                                 <ListItem alignItems="center" disableGutters className={classes.padding}>

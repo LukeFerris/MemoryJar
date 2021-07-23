@@ -75,10 +75,7 @@ export default function ThemeList() {
           prompt.mediaItems = userData.filter(userPrompt => userPrompt.prompt_id == prompt.prompt_id)
         });
 
-        console.log(mergedData);
-
-        // Object.assign(prompt, userData.find(userPrompt => userPrompt.prompt_id == prompt.prompt_id)));
-        const completedCount = mergedData[i].prompts.filter((obj) => obj.audio_clip_id).length;
+        const completedCount = mergedData[i].prompts.filter((obj) => obj.mediaItems.length > 0).length;
         const totalPrompts = mergedData[i].prompts.length;
         mergedData[i].progress = (completedCount / totalPrompts) * 100;
       }
@@ -113,16 +110,16 @@ export default function ThemeList() {
   return (
     <Grid container spacing={4}>
       {mergedData.length > 0 ? mergedData.map((theme) => (
-        <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Grid item xs={12} sm={12} md={12} lg={12} key={theme.theme_id}>
           <Grid item xs={12}>
             <ThemeHeader isLoading={false} title={theme.theme_name} progress={theme.progress} />
           </Grid>
           <Grid container style={{ marginTop: 2 }} spacing={4}>
-            {theme.prompts.length > 0 && theme.prompts.map((prompt) => (
+            {theme.prompts && theme.prompts.map((prompt) => (
               <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
                 <PromptHeader addEnabled="true" question={prompt.prompt_question} promptId={prompt.prompt_id} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
                 {
-                  prompt.mediaItems.map(item => <AudioItem audioClipId={item.audio_clip_id} />)
+                  prompt.mediaItems.map(item => <AudioItem key={item.audio_clip_id} audioClipId={item.audio_clip_id} />)
                 }
               </Grid>
             ))}
