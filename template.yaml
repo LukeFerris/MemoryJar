@@ -20,6 +20,11 @@ Resources:
               OriginAccessIdentity: !Sub
                 - origin-access-identity/cloudfront/${OriginAccessIdentity}
                 - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
+        CustomErrorResponse:
+          ErrorCode: 403
+          ResponseCode: 200
+          ErrorCachingMinTTL: 60
+          ResponsePagePath: /index.html
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
