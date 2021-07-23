@@ -4,12 +4,11 @@ Resources:
   Cdn:
     Type: AWS::CloudFront::Distribution
     Properties:
-      CustomErrorResponse:
-        ErrorCode: 403
-        ResponseCode: 200
-        ErrorCachingMinTTL: 60
-        ResponsePagePath: /index.html
       DistributionConfig:
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /index.html
         DefaultCacheBehavior:
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Compress: true
