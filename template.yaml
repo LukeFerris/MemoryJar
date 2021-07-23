@@ -4,6 +4,11 @@ Resources:
   Cdn:
     Type: AWS::CloudFront::Distribution
     Properties:
+      CustomErrorResponse:
+        ErrorCode: 403
+        ResponseCode: 200
+        ErrorCachingMinTTL: 60
+        ResponsePagePath: /index.html
       DistributionConfig:
         DefaultCacheBehavior:
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
@@ -20,11 +25,6 @@ Resources:
               OriginAccessIdentity: !Sub
                 - origin-access-identity/cloudfront/${OriginAccessIdentity}
                 - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
-        CustomErrorResponse:
-          ErrorCode: 403
-          ResponseCode: 200
-          ErrorCachingMinTTL: 60
-          ResponsePagePath: /index.html
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
