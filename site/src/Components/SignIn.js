@@ -52,12 +52,13 @@ export default function SignIn({ onSuccess }) {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     function onSubmit(event) {
         event.preventDefault();
 
         const user = new CognitoUser({
-            Username: email,
+            Username: email.toLowerCase(),
             Pool: UserPool,
 
         })
@@ -66,6 +67,8 @@ export default function SignIn({ onSuccess }) {
             Username: email,
             Password: password
         })
+
+        setIsLoading(true);
 
         user.authenticateUser(authDetails, {
             onSuccess: data => {
@@ -138,6 +141,7 @@ export default function SignIn({ onSuccess }) {
                     <Button
                         type="submit"
                         fullWidth
+                        disabled={isLoading}
                         variant="contained"
                         color="primary"
                         className={classes.submit}
