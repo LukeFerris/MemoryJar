@@ -134,6 +134,7 @@ export default function ThemeList() {
     let userData = await fetchUserData();
     mergeData(themeData, userData);
     setIsUploading(false);
+    setIsLoading(false);
   }, [uploadedFiles]);
 
   const complete = async (promptId, mediaItemId) => {
