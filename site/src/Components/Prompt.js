@@ -86,7 +86,6 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [recordingEnabled, setRecordingEnabled] = useState(false);
-
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -102,7 +101,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
 
     const handleEndAudioCapture = (promptId, fileIdentifier) => {
         setRecordingEnabled(false);
-        onFileUploaded(promptId, fileIdentifier);
+        onFileUploaded(prompt.prompt_id, fileIdentifier);
     }
 
     return (
@@ -135,7 +134,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         <Grid item style={{ paddingTop: 5 }}>
                             {
                                 recordingEnabled ?
-                                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt.promptId, fileIdentifier)} />
+                                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier)} />
                                     :
                                     uploading ?
                                         <Button
@@ -145,7 +144,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                             onClick={handleClick}
                                             startIcon={<AddIcon />}
                                         >
-                                            Upload..
+                                            Uploading
                                         </Button>
                                         :
                                         <Button

@@ -159,7 +159,7 @@ export default function ThemeList() {
 
   return (
     <Grid container spacing={4}>
-      {mergedData.length > 0 ? mergedData.map((theme) => (
+      {mergedData.length > 0 && mergedData.map((theme) => (
         <Grid item xs={12} sm={12} md={12} lg={12} key={theme.theme_id}>
           <Grid item xs={12}>
             <ThemeHeader isLoading={isLoading} title={theme.theme_name} progress={theme.progress} />
@@ -172,10 +172,7 @@ export default function ThemeList() {
             ))}
           </Grid>
         </Grid>
-      )) :
-        <Grid item xs={12} sm={6} md={12}>
-          <p>A lot of nothing here.. add a theme!</p>
-        </Grid>
+      ))
       }
     </Grid >
   );
