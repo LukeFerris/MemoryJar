@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import Recorder from './Recorder';
 import useToken from './useToken';
 import ThemeHeader from './ThemeHeader';
+import StoryHeader from './StoryHeader';
 import Prompt from './Prompt';
-import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
 
@@ -58,6 +57,7 @@ export default function ThemeList() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [storyProgress, setStoryProgress] = useState(0);
 
   const { token } = useToken();
 
@@ -112,6 +112,9 @@ export default function ThemeList() {
     const mergeData = async (themeData, userData) => {
       let mergedData = JSON.parse(JSON.stringify(themeData));
 
+      let grandTotalPrompts = 0;
+      let grandCompletedCount = 0;
+
       for (let i = 0; i < themeData.length; i++) {
         // for each theme, see if any of the returned items match the prompts
         // mergedData[i].prompts.map(prompt => Object.assign(prompt, userData.find(userPrompt => userPrompt.prompt_id == prompt.prompt_id)));
@@ -123,10 +126,13 @@ export default function ThemeList() {
 
         const completedCount = mergedData[i].prompts.filter((obj) => obj.mediaItems.length > 0).length;
         const totalPrompts = mergedData[i].prompts.length;
+        grandTotalPrompts += totalPrompts;
+        grandCompletedCount += completedCount;
         mergedData[i].progress = (completedCount / totalPrompts) * 100;
       }
 
       setMergedData(mergedData);
+      setStoryProgress((grandCompletedCount / grandTotalPrompts) * 100);
     };
 
     let themeData = await fetchThemeData();
@@ -159,21 +165,26 @@ export default function ThemeList() {
 
   return (
     <Grid container spacing={4}>
-      {mergedData.length > 0 && mergedData.map((theme) => (
-        <Grid item xs={12} sm={12} md={12} lg={12} key={theme.theme_id}>
-          <Grid item xs={12}>
-            <ThemeHeader isLoading={isLoading} title={theme.theme_name} progress={theme.progress} />
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <StoryHeader isLoading={isLoading} progress={storyProgress} />
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        {mergedData.length > 0 && mergedData.map((theme) => (
+          <Grid container key={theme.theme_id}>
+            <Grid item xs={12}>
+              <ThemeHeader isLoading={isLoading} title={theme.theme_name} progress={theme.progress} />
+            </Grid>
+            <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
+              {theme.prompts && theme.prompts.map((prompt) => (
+                <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
+                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} prompt={prompt} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
-          <Grid container style={{ marginTop: 2 }} spacing={4}>
-            {theme.prompts && theme.prompts.map((prompt) => (
-              <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
-                <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} prompt={prompt} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      ))
-      }
+        ))
+        }
+      </Grid>
     </Grid >
   );
 }

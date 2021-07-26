@@ -11,15 +11,14 @@ import MainCard from '../ui-component/cards/MainCard';
 import SkeletonEarningCard from '../ui-component/cards/Skeleton/EarningCard';
 
 // assets
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PictureAsPdfTwoToneIcon from '@material-ui/icons/PictureAsPdfOutlined';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-
 
 // style constant
 const useStyles = makeStyles((theme) => ({
     card: {
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.dark,
         color: '#fff',
         overflow: 'hidden',
         position: 'relative',
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
             position: 'absolute',
             width: '210px',
             height: '210px',
-            background: theme.palette.secondary[800],
+            background: theme.palette.primary[800],
             borderRadius: '50%',
             top: '-85px',
             right: '-95px',
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
             position: 'absolute',
             width: '210px',
             height: '210px',
-            background: theme.palette.secondary[800],
+            background: theme.palette.primary[800],
             borderRadius: '50%',
             top: '-125px',
             right: '-15px',
@@ -59,13 +58,13 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         ...theme.typography.commonAvatar,
         ...theme.typography.largeAvatar,
-        backgroundColor: theme.palette.secondary[800],
+        backgroundColor: theme.palette.primary[800],
         marginTop: '8px'
     },
     avatarRight: {
         ...theme.typography.commonAvatar,
         ...theme.typography.mediumAvatar,
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.dark,
         color: theme.palette.secondary[200],
         zIndex: 1
     },
@@ -79,12 +78,12 @@ const useStyles = makeStyles((theme) => ({
     subHeading: {
         fontSize: '1rem',
         fontWeight: 500,
-        color: theme.palette.secondary[200]
+        color: theme.palette.primary[200]
     },
     avatarCircle: {
         cursor: 'pointer',
         ...theme.typography.smallAvatar,
-        backgroundColor: theme.palette.secondary[200],
+        backgroundColor: theme.palette.primary[200],
         color: theme.palette.secondary.dark
     },
     circleIcon: {
@@ -98,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const ThemeHeader = ({ isLoading, title, progress }) => {
+const StoryHeader = ({ isLoading, progress }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -121,7 +120,7 @@ const ThemeHeader = ({ isLoading, title, progress }) => {
                         <Grid item>
                             <Grid container justifyContent="space-between">
                                 <Grid item>
-                                    <BookmarkIcon />
+                                    <LocalLibraryIcon />
                                 </Grid>
                                 <Grid item>
                                     <Avatar
@@ -159,7 +158,7 @@ const ThemeHeader = ({ isLoading, title, progress }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>{title}</Typography>
+                                    <Typography className={classes.cardHeading}>The Whole Story..</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -173,8 +172,8 @@ const ThemeHeader = ({ isLoading, title, progress }) => {
     );
 };
 
-ThemeHeader.propTypes = {
+StoryHeader.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default ThemeHeader;
+export default StoryHeader;
