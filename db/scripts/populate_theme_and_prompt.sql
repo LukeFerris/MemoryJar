@@ -2,18 +2,105 @@ DELETE FROM prompt;
 DELETE FROM theme;
 
 -- themes
-INSERT INTO theme (theme_id, theme_name) VALUES ('51a39d89-5d86-477a-93f4-7a9fddb52975', 'School Years');
-INSERT INTO theme (theme_id, theme_name) VALUES ('144f22dd-d01e-4ad1-aa15-7628b9297daa', 'Children');
+INSERT INTO theme (theme_id, theme_name) VALUES ('144f22dd-d01e-4ad1-aa15-7628b9297daa', 'Parenthood');
+INSERT INTO theme (theme_id, theme_name) VALUES ('144f22dd-d01e-4ad1-aa15-7628b9297dab', 'Love & Romance');
+INSERT INTO theme (theme_id, theme_name) VALUES ('144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Young Adulthood');
+INSERT INTO theme (theme_id, theme_name) VALUES ('144f22dd-d01e-4ad1-aa15-7628b9297dad', 'Childhood');
+INSERT INTO theme (theme_id, theme_name) VALUES ('51a39d89-5d86-477a-93f4-7a9fddb52975', 'General');
 
 -- prompts
--- school years
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('c0b8aead-637a-46fa-9603-fa728ed37ecf', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What was your first school like?');
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('6005de42-ee70-45a5-8434-89a997d9a497', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'Can you remember your first day?');
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('a1377c10-7be2-484d-ad0b-af7dd274acef', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'Did anyone bully you?');
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('d7b5a477-a477-4be3-91df-6581ba5495bb', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What were the teachers like?');
+-- General
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297daa', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What is the best piece of advice you were ever given?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dab', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What is your idea of a perfect day? Where, with who, what?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dac', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'Do you have a favourite poem? What is it? Why do you like it so much?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dad', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What is your favourite song or piece of music? What does it remind you of?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dae', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'If you could have dinner with anyone in the world living or dead, who would it be and why?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297daf', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What do you consider one of your greatest achievements in life?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dag', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What are your top 3 favourite places on earth?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dah', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What have been some of your favourite restaurants through the years? What is your current favourite restaurant?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dai', '51a39d89-5d86-477a-93f4-7a9fddb52975', "Who is the wisest person you've ever known? What have you learned from them?");
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297daj', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What simple pleasures of life do you truly enjoy?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dak', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'Who have been your closest friends throughout the years? What are your fondest memories of time spent with them?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dal', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What qualities do you most value in your friends?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dam', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What do you admire most about your father?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dan', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What do you admire most about your mother?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dao', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'Do you have any notable ancestors?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dap', '51a39d89-5d86-477a-93f4-7a9fddb52975', "What's a small decision that you made that ended up having a big impact on your life?");
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297daq', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'The smells that bring back vivid memories for me are...');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297dar', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What is a fear you would like to conquer?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('244f22dd-d01e-4ad1-aa15-7628b9297das', '51a39d89-5d86-477a-93f4-7a9fddb52975', 'What is the thing you are most proud of?');
 
--- children
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('5342b2d4-80f1-461b-9b5f-cf8e9d72b219', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What was it like the day your child was born?');
-INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('64b5c787-061d-416b-ae92-4655e0233db3', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'How did you get to the hospital?');
+-- Childhood
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297daa', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What was your Mother like when you were a child? What is your fondest memory of her?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dab', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What was your Father like when you were a child? What is your fondest memory of him?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dac', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'How do you remember your childhood home? How do you remember your bedroom?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dad', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'Where did you go on holiday as a child? What do you remember about it?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dae', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What were your favourite toys as a child?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297daf', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What was the naughtiest thing you ever did? Did you get found out?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dag', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What song reminds you of your childhood? (Perhaps a nursery rhyme or lullabye). Can you sing it?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dah', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'How did your parents choose your name?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dai', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What were your weekend traditions when you were a kid?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297daj', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'Who was your favourite teacher at primary school? What do you remember about him/ her?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dak', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What did you want to be when you grew up? Why?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dal', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'Did you have any pets? How would you describe them? Do you remember any adventures with them?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dam', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'Who had the most positive influence on you as a child?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dan', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What is your earliest memory?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dao', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'How do you remember primary school?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('344f22dd-d01e-4ad1-aa15-7628b9297dap', '144f22dd-d01e-4ad1-aa15-7628b9297dad', 'What were your siblings like as children (if you had them)?');
+
+-- Young Adulthood
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297daa', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What was your signature look as a teenager?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dab', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Who was your first teenage crush?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dac', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What were your favourite songs?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dad', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Tell me about a song that brings back an interesting memory from your teenage years?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dae', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What was secondary school like?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297daf', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Who was you favourite teacher and why?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dag', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Who was you worst teacher and why?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dah', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Who was your best friend as a teenager?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dai', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What work/ career options did you think about before leaving school? ');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297daj', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Did you ever get into trouble at school? What happened?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dak', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What advice would you give to teenagers today?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dal', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'Whats the stupidest thing you did as a teenager?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('444f22dd-d01e-4ad1-aa15-7628b9297dam', '144f22dd-d01e-4ad1-aa15-7628b9297dac', 'What advice do you wish you had taken from your parents?');
+
+-- Love & Romance
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297daa', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'How did you meet your partner? What were your first impressions of them?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dab', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What was your first date with your partner like? Where did you go?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dac', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'How do you remember your partner when you first met?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dad', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'When did you fall in love with your partner? How did you know?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dae', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What was one of the most romantic moments in your life?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297daf', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What do you think are the secrets to a happy relationship?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dag', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What was your proposal story?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dah', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What was your wedding like?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dai', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What did you and your partner wear on your wedding day?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297daj', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What advice might you give to newly-weds?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dak', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What do you love most about your partner?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dal', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What is the best present your partner has ever given you?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('544f22dd-d01e-4ad1-aa15-7628b9297dam', '144f22dd-d01e-4ad1-aa15-7628b9297dab', 'What advice would you give on how to choose a partner for life?');
+
+-- Parenthood
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297daa', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'When you first found out you were going to become a parent, how did you feel?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dab', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What went through your mind when you saw your child for the first time?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dac', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'How do you remember leaving the hospital?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dad', '144f22dd-d01e-4ad1-aa15-7628b9297daa', "How did you choose your children's names?");
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dae', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'How would you describe your children as kids? What funny habits did they have?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297daf', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'Did you have plans for what kind of parent you wanted to be? Did things turn out that way?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dag', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'In what ways did your life change most after becoming a parent?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dah', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'Were there any made-up stories you told your children? Can you tell one now?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dai', '144f22dd-d01e-4ad1-aa15-7628b9297daa', "What were your children's favourite toys? What games would they play?");
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297daj', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'Do you remember a song you used to sing to your children? How does it go?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dak', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What books did you use to read to your children? What were they about?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dal', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What about your children makes you most proud?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dam', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What were some of your proudest parenting moments?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dan', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What is one of your favourite memories of your parent(s)?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dao', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'How did the way your parents raised you influence your own parenting philosophy?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dap', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'How did your parenting style differ from that of your parents?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297daq', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What is your best advice when it comes to raising children?');
+INSERT INTO prompt (prompt_id, theme_id, prompt_question) VALUES ('644f22dd-d01e-4ad1-aa15-7628b9297dar', '144f22dd-d01e-4ad1-aa15-7628b9297daa', 'What did you enjoy most about parenting?');
+
+
+
+
+
 
 
