@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const StoryHeader = ({ isLoading, progress }) => {
+const StoryHeader = ({ isLoading, progress, chapters }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -158,7 +158,8 @@ const StoryHeader = ({ isLoading, progress }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>The Whole Story..</Typography>
+                                    <Typography className={classes.cardHeading}>The Story..</Typography>
+                                    <p>In {chapters} chapters</p>
                                 </Grid>
                             </Grid>
                         </Grid>

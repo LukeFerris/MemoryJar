@@ -58,6 +58,7 @@ export default function ThemeList() {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [storyProgress, setStoryProgress] = useState(0);
+  const [chapterCount, setChapterCount] = useState(6);
 
   const { token } = useToken();
 
@@ -114,6 +115,7 @@ export default function ThemeList() {
 
       let grandTotalPrompts = 0;
       let grandCompletedCount = 0;
+      setChapterCount(themeData.length);
 
       for (let i = 0; i < themeData.length; i++) {
         // for each theme, see if any of the returned items match the prompts
@@ -166,7 +168,7 @@ export default function ThemeList() {
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <StoryHeader isLoading={isLoading} progress={storyProgress} />
+        <StoryHeader isLoading={isLoading} progress={storyProgress} chapters={chapterCount} />
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         {mergedData.length > 0 && mergedData.map((theme) => (
