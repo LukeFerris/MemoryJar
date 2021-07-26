@@ -26,20 +26,13 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: '50%',
             top: '-30px',
             right: '-180px'
-        },
-        '&:before': {
-            content: '""',
-            position: 'absolute',
-            width: '210px',
-            height: '210px',
-            // background: 'linear-gradient(140.9deg, ' + theme.palette.warning.dark + ' -14.02%, rgba(144, 202, 249, 0) 70.50%)',
-            borderRadius: '50%',
-            top: '-160px',
-            right: '-130px'
         }
     },
     content: {
-        padding: '16px !important'
+        paddingTop: '10px !important',
+        paddingBottom: '10px !important',
+        paddingLeft: '0px',
+        paddingRight: '0px',
     },
     avatar: {
         ...theme.typography.commonAvatar,
@@ -53,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: {
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
     }
 }));
 
@@ -67,7 +60,7 @@ const AudioItem = ({ isLoading, audioClipId }) => {
             {isLoading ? (
                 <TotalIncomeCard />
             ) : (
-                <MainCard className={classes.card} contentClass={classes.content}>
+                <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
                     <List className={classes.padding}>
                         <ListItem alignItems="center" disableGutters className={classes.padding}>
                             <ListItemAvatar>

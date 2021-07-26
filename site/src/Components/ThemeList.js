@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import AudioItem from './AudioItem';
 import Recorder from './Recorder';
 import useToken from './useToken';
 import ThemeHeader from './ThemeHeader';
-import PromptHeader from './PromptHeader';
+import Prompt from './Prompt';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
@@ -168,10 +167,7 @@ export default function ThemeList() {
           <Grid container style={{ marginTop: 2 }} spacing={4}>
             {theme.prompts && theme.prompts.map((prompt) => (
               <Grid item key={prompt.prompt_id} xs={12} sm={12} md={12}>
-                <PromptHeader uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} promptId={prompt.prompt_id} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
-                {
-                  prompt.mediaItems.map(item => <AudioItem isLoading={isLoading} key={item.audio_clip_id} audioClipId={item.audio_clip_id} />)
-                }
+                <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.prompt_question} prompt={prompt} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
               </Grid>
             ))}
           </Grid>

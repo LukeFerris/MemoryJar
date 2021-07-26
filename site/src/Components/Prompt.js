@@ -10,10 +10,10 @@ import Button from '@material-ui/core/Button';
 import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import Recorder from './Recorder';
+import AudioItem from './AudioItem';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
-import PictureAsPdfTwoToneIcon from '@material-ui/icons/PictureAsPdfOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import MicNoneIcon from '@material-ui/icons/MicNone';
 import AddAPhotoOutlinedIcon from '@material-ui/icons/AddAPhotoOutlined';
@@ -74,12 +74,15 @@ const useStyles = makeStyles((theme) => ({
     menuItem: {
         marginRight: '14px',
         fontSize: '1.25rem'
+    },
+    audioList: {
+        paddingTop: 20
     }
 }));
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptId, uploading }) => {
+const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [recordingEnabled, setRecordingEnabled] = useState(false);
@@ -132,7 +135,7 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
                         <Grid item style={{ paddingTop: 5 }}>
                             {
                                 recordingEnabled ?
-                                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(promptId, fileIdentifier)} />
+                                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt.promptId, fileIdentifier)} />
                                     :
                                     uploading ?
                                         <Button
@@ -186,6 +189,16 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
                             </Menu>
                         </Grid>
                     </Grid>
+                    {
+                        prompt.mediaItems.length > 0 &&
+                        <Grid container direction="column" spacing="0" className={classes.audioList}>
+                            {
+                                prompt.mediaItems.map(item =>
+                                    <AudioItem isLoading={isLoading} key={item.audio_clip_id} audioClipId={item.audio_clip_id} />
+                                )
+                            }
+                        </Grid>
+                    }
                 </MainCard>
             )
             }
@@ -193,4 +206,4 @@ const PromptHeader = ({ isLoading, addEnabled, question, onFileUploaded, promptI
     );
 };
 
-export default PromptHeader;
+export default Prompt;
