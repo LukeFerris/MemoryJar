@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
   };
 
   try {
-    body = await data.query("select row_to_json(art) as theme from (select a.theme_id, a.theme_name, (select json_agg(alb) from (select * from prompt where theme_id = a.theme_id) alb) as prompts from theme as a) art;");
+    body = await data.query("select row_to_json(art) as theme from (select a.themeId, a.themeName, (select json_agg(alb) from (select * from prompt where themeId = a.themeId) alb) as prompts from theme as a) art;");
 
     for (let i = 0; i < body.records.length; i++) {
       body.records[i] = JSON.parse(body.records[i]);

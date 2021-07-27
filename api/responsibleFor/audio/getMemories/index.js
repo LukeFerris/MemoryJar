@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
     else {
       const userId = event.requestContext.authorizer.jwt.claims.sub;
       console.log('user is: ' + userId);
-      body = await data.query("SELECT * from audio_clip where user_id='" + userId + "';");
+      body = await data.query("SELECT * from \"mediaItem\" where \"userId\"='" + userId + "';");
     }
   } catch (err) {
     statusCode = 400;

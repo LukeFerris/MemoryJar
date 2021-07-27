@@ -3,7 +3,7 @@ import React from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const AudioItem = ({ isLoading, audioClipId }) => {
+const AudioItem = ({ isLoading, mediaItemId }) => {
     const classes = useStyles();
 
     return (
@@ -74,7 +74,7 @@ const AudioItem = ({ isLoading, audioClipId }) => {
                                     mb: 0.45
                                 }}
                                 className={classes.padding}
-                                primary={<audio style={{ width: '100%' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + audioClipId + '.mp4'} controls />}
+                                primary={<audio style={{ width: '100%' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />}
 
                             />
                         </ListItem>

@@ -28,7 +28,7 @@ exports.handler = async (event, context) => {
       console.log('user is: ' + mediaItem.userId);
 
       // find the prompt associated with this media item
-      let promptResult = await data.query("SELECT * from prompt WHERE prompt_id = '" + mediaItem.promptId + "'");
+      let promptResult = await data.query("SELECT * from prompt WHERE \"promptId\" = '" + mediaItem.promptId + "'");
 
       if (promptResult.records.length == 0) {
         body = "No prompts with id: " + mediaItem.promptId + " could be found";
@@ -39,7 +39,7 @@ exports.handler = async (event, context) => {
         const prompt = promptResult.records[0];
 
         // see if the memory for this theme already exists for this user
-        let memoryResult = await data.query("SELECT * from memory WHERE theme_id = '" + prompt.theme_id + "' AND user_id='" + mediaItem.userId + "';");
+        let memoryResult = await data.query("SELECT * from memory WHERE \"themeId\" = '" + prompt.themeId + "' AND \"userId\"='" + mediaItem.userId + "';");
 
         let memory;
 
@@ -48,38 +48,39 @@ exports.handler = async (event, context) => {
 
           console.log('No memory found for this theme and user, creating..');
           memory = {
-            memory_id: context.awsRequestId,
-            theme_id: prompt.theme_id,
-            user_id: mediaItem.userId
+            memoryId: context.awsRequestId,
+            themeId: prompt.themeId,
+            userId: mediaItem.userId
           }
 
           // insert the memory first
           await data.query(
-            `INSERT INTO memory (memory_id, theme_id, user_id) VALUES(:memory_id::UUID, :theme_id::UUID, :user_id::UUID)`,
+            'INSERT INTO memory ("memoryId", "themeId", "userId") VALUES(:memoryId::UUID, :themeId::UUID, :userId::UUID)',
             memory
           )
         }
         else {
           console.log(memoryResult.records[0]);
-          console.log('found memory for theme: ' + prompt.theme_id + ' for user. Id is: ' + memoryResult.records[0].memory_id);
+          console.log('found memory for theme: ' + prompt.themeId + ' for user. Id is: ' + memoryResult.records[0].memoryId);
           memory = memoryResult.records[0];
         }
 
         // now insert the audio clip
         const newMediaItem =
         {
-          audio_clip_id: mediaItem.mediaItemId,
-          prompt_id: prompt.prompt_id,
-          memory_id: memory.memory_id,
-          user_id: mediaItem.userId
+          mediaItemId: mediaItem.mediaItemId,
+          promptId: prompt.promptId,
+          memoryId: memory.memoryId,
+          userId: mediaItem.userId,
+          mediaType: 0
         }
 
         await data.query(
-          `INSERT INTO audio_clip (memory_id, prompt_id, audio_clip_id, user_id) VALUES(:memory_id::UUID, :prompt_id::UUID, :audio_clip_id::UUID, :user_id::UUID)`,
+          'INSERT INTO "mediaItem" ("memoryId", "promptId", "mediaItemId", "userId", "mediaType") VALUES(:memoryId::UUID, :promptId::UUID, :mediaItemId::UUID, :userId::UUID, :mediaType::SMALLINT)',
           newMediaItem
         )
 
-        body = `Put media item ${newMediaItem.audio_clip_id}`;
+        body = `Put media item ${newMediaItem.mediaItemId}`;
       }
     }
   }

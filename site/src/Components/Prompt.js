@@ -98,9 +98,9 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         setAnchorEl(null);
     }
 
-    const handleEndAudioCapture = (promptId, fileIdentifier) => {
+    const handleEndAudioCapture = (prompt, fileIdentifier) => {
         setRecordingEnabled(false);
-        onFileUploaded(prompt.prompt_id, fileIdentifier);
+        onFileUploaded(prompt.promptId, fileIdentifier);
     }
 
     return (
@@ -192,7 +192,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             {
                                 prompt.mediaItems.map(item =>
-                                    <AudioItem isLoading={isLoading} key={item.audio_clip_id} audioClipId={item.audio_clip_id} />
+                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} />
                                 )
                             }
                         </Grid>

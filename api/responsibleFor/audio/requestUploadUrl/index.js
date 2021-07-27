@@ -3,15 +3,15 @@ AWS.config.update({ region: process.env.REGION || 'eu-central-1' })
 const s3 = new AWS.S3();
 
 exports.handler = async (event) => {
-  if (event && event.queryStringParameters && event.queryStringParameters.audio_clip_id) {
-    return await getUploadURL(event.queryStringParameters.audio_clip_id);
+  if (event && event.queryStringParameters && event.queryStringParameters.mediaItemId) {
+    return await getUploadURL(event.queryStringParameters.mediaItemId);
   }
 }
 
-const getUploadURL = async (audio_clip_id) => {
+const getUploadURL = async (mediaItemId) => {
   const s3Params = {
     Bucket: process.env.BUCKET_NAME,
-    Key: `${audio_clip_id}.mp4`,
+    Key: `${mediaItemId}.mp4`,
     ContentType: 'audio/webm',
     ACL: 'public-read',
   }
@@ -29,8 +29,8 @@ const getUploadURL = async (audio_clip_id) => {
       "headers": { "Access-Control-Allow-Origin": "*" },
       "body": JSON.stringify({
         "uploadURL": uploadURL,
-        "clipFilename": `${audio_clip_id}.mp4`,
-        "id": audio_clip_id
+        "clipFilename": `${mediaItemId}.mp4`,
+        "id": mediaItemId
       })
     })
   })
