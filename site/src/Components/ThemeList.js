@@ -119,7 +119,6 @@ export default function ThemeList() {
 
       for (let i = 0; i < themeData.length; i++) {
         // for each theme, see if any of the returned items match the prompts
-        // mergedData[i].prompts.map(prompt => Object.assign(prompt, userData.find(userPrompt => userPrompt.promptId == prompt.promptId)));
         mergedData[i].prompts.map(prompt => {
           prompt.mediaItems = userData.filter(userPrompt => userPrompt.promptId == prompt.promptId)
         });
@@ -144,15 +143,16 @@ export default function ThemeList() {
     setIsLoading(false);
   }, [uploadedFiles]);
 
-  const complete = async (promptId, mediaItemId) => {
+  const complete = async (promptId, mediaItemId, mediaItemType) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
     console.log('Prompt: ' + promptId);
+    console.log('Media type: ' + mediaItemType);
     setIsUploading(true);
 
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
-      "mediaItemId": mediaItemId, "mediaType": 1, "promptId": promptId
+      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType
     },
       {
         headers: {
@@ -161,7 +161,7 @@ export default function ThemeList() {
       })
 
     setUploadedFiles(uploadedFiles.concat({
-      "media_item_id": mediaItemId, "promptId": promptId
+      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType
     }));
   };
 
@@ -179,7 +179,7 @@ export default function ThemeList() {
             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
               {theme.prompts && theme.prompts.map((prompt) => (
                 <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier) => complete(promptId, fileIdentifier)} />
+                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType) => complete(promptId, fileIdentifier, mediaItemType)} />
                 </Grid>
               ))}
             </Grid>

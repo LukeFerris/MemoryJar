@@ -3,24 +3,32 @@ AWS.config.update({ region: process.env.REGION || 'eu-central-1' })
 const s3 = new AWS.S3();
 
 exports.handler = async (event) => {
-  if (event && event.queryStringParameters && event.queryStringParameters.mediaItemId) {
-    return await getUploadURL(event.queryStringParameters.mediaItemId);
+  if (event && event.queryStringParameters && event.queryStringParameters.mediaItemId && event.queryStringParameters.mediaItemType) {
+    return await getUploadURL(event.queryStringParameters.mediaItemId, event.queryStringParameters.mediaItemType);
+  }
+  else {
+    return "You must specify mediaItemType and mediaItemId";
   }
 }
 
-const getUploadURL = async (mediaItemId) => {
+const getUploadURL = async (mediaItemId, mediaItemType) => {
+
+  let itemType = 'mp4';
+  let contentType = 'audio/webm';
+  if (mediaItemType == 1) {
+    itemType = 'jpg';
+    contentType = 'image/jpeg'
+  }
+
+
   const s3Params = {
     Bucket: process.env.BUCKET_NAME,
-    Key: `${mediaItemId}.mp4`,
-    ContentType: 'audio/webm',
+    Key: `${mediaItemId}.${itemType}`,
+    ContentType: `${contentType}`,
     ACL: 'public-read',
   }
 
   return new Promise((resolve, reject) => {
-
-    // outrageous hack to get ios and safari to play recorded audio => make file ending mp4.
-    // Chrome will play webm audio even if it's downloaded as .mp4
-    // Safari will refuse to play (including ios) unless it's .mp4.
 
     let uploadURL = s3.getSignedUrl('putObject', s3Params)
     resolve({
@@ -29,7 +37,7 @@ const getUploadURL = async (mediaItemId) => {
       "headers": { "Access-Control-Allow-Origin": "*" },
       "body": JSON.stringify({
         "uploadURL": uploadURL,
-        "clipFilename": `${mediaItemId}.mp4`,
+        "clipFilename": `${mediaItemId}.${itemType}`,
         "id": mediaItemId
       })
     })

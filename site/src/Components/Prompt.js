@@ -9,7 +9,9 @@ import Button from '@material-ui/core/Button';
 import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import Recorder from './Recorder';
+import ImageSelector from './ImageSelector';
 import AudioItem from './AudioItem';
+import ImageList from './ImageList';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
@@ -84,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
-    const [recordingEnabled, setRecordingEnabled] = useState(false);
+    const [addMode, setAddMode] = useState(0);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -94,13 +96,18 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
     };
 
     const handleAudioClick = () => {
-        setRecordingEnabled(true);
+        setAddMode(1);
         setAnchorEl(null);
     }
 
-    const handleEndAudioCapture = (prompt, fileIdentifier) => {
-        setRecordingEnabled(false);
-        onFileUploaded(prompt.promptId, fileIdentifier);
+    const handleImageClick = () => {
+        setAddMode(2);
+        setAnchorEl(null);
+    }
+
+    const handleEndAudioCapture = (prompt, fileIdentifier, mediaItemType) => {
+        setAddMode(0);
+        onFileUploaded(prompt.promptId, fileIdentifier, mediaItemType);
     }
 
     return (
@@ -132,29 +139,36 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                             {
-                                recordingEnabled ?
-                                    <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier)} />
-                                    :
-                                    uploading ?
-                                        <Button
-                                            variant="contained"
-                                            disabled={true}
-                                            className={classes.button}
-                                            onClick={handleClick}
-                                            startIcon={<AddIcon />}
-                                        >
-                                            Uploading
-                                        </Button>
-                                        :
-                                        <Button
-                                            variant="contained"
-                                            disabled={!addEnabled}
-                                            className={classes.button}
-                                            onClick={handleClick}
-                                            startIcon={<AddIcon />}
-                                        >
-                                            Answer
-                                        </Button>
+                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 0)} />
+                            }
+                            {
+                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1)} />
+                            }
+                            {
+                                (addMode == 0 && !uploading) &&
+
+                                <Button
+                                    variant="contained"
+                                    disabled={!addEnabled}
+                                    className={classes.button}
+                                    onClick={handleClick}
+                                    startIcon={<AddIcon />}
+                                >
+                                    Answer
+                                </Button>
+                            }
+                            {
+                                (addMode == 0 && uploading) &&
+
+                                <Button
+                                    variant="contained"
+                                    disabled={true}
+                                    className={classes.button}
+                                    onClick={handleClick}
+                                    startIcon={<AddIcon />}
+                                >
+                                    Uploading
+                                </Button>
                             }
                             <Menu
                                 id="menu-earning-card"
@@ -175,7 +189,8 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 <MenuItem onClick={handleAudioClick}>
                                     <MicNoneIcon fontSize="inherit" className={classes.menuItem} /> Voice Note
                                 </MenuItem>
-                                <MenuItem disabled onClick={handleClose}>
+
+                                <MenuItem onClick={handleImageClick}>
                                     <AddAPhotoOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Image
                                 </MenuItem>
                                 <MenuItem disabled onClick={handleClose}>
@@ -191,9 +206,15 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             {
-                                prompt.mediaItems.map(item =>
+                                prompt.mediaItems.filter(item => item.mediaType == 0).map(item =>
                                     <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} />
+
+
                                 )
+                            }
+                            {
+                                prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
+                                <ImageList imageItems={prompt.mediaItems.filter(item => item.mediaType == 1)} />
                             }
                         </Grid>
                     }

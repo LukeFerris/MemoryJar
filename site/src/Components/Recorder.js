@@ -25,8 +25,8 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
     const [uploadUrl, setUploadUrl] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const getUploadUrl = async (audioClipId) => {
-        let uploadUrl = await API.get('/?mediaItemId=' + audioClipId).then((result) => {
+    const getUploadUrl = async (mediaItemId) => {
+        let uploadUrl = await API.get('/?mediaItemId=' + mediaItemId + '&mediaItemType=0').then((result) => {
             console.log('result is: ' + JSON.stringify(result.data));
             return result.data.uploadURL;
         });
