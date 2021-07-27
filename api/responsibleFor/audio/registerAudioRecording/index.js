@@ -72,7 +72,7 @@ exports.handler = async (event, context) => {
           promptId: prompt.promptId,
           memoryId: memory.memoryId,
           userId: mediaItem.userId,
-          mediaType: 0
+          mediaType: mediaItem.mediaType
         }
 
         await data.query(
