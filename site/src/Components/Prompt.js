@@ -214,7 +214,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList imageItems={prompt.mediaItems.filter(item => item.mediaType == 1)} />
+                                <ImageList imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg')} />
                             }
                         </Grid>
                     }

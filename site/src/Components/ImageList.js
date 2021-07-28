@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import { Avatar, imageListItemClasses, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
@@ -59,7 +59,7 @@ const ImageList = ({ isLoading, imageItems }) => {
         slide: 1
     });
 
-    let imageSource = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg');
+
 
     function openLightboxOnSlide(number) {
         setLightboxController({
@@ -89,11 +89,12 @@ const ImageList = ({ isLoading, imageItems }) => {
                                 className={classes.padding}
                                 primary={
                                     <div>
-                                        {imageItems.map((image, index) => <img key={image.mediaItemId} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />)}
+                                        {imageItems.map((image, index) => <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={image} />)}
 
                                         <FsLightbox
                                             toggler={lightboxController.toggler}
-                                            sources={imageSource}
+                                            sources={imageItems}
+                                            key={imageItems.length}
                                             slide={lightboxController.slide}
                                         />
                                     </div>
