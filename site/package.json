@@ -19,7 +19,7 @@
     "aws-sdk": "^2.931.0",
     "axios": "^0.21.1",
     "framer-motion": "^4.1.17",
-    "fslightbox-react": "^1.6.2",
+    "fslightbox-react": "file:src/lib/fslightbox-react-pro-1.5.1.tgz",
     "install": "^0.13.0",
     "material-ui-audio-player": "^1.6.2",
     "material-ui-popup-state": "^1.8.4",

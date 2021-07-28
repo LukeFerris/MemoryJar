@@ -93,7 +93,7 @@ const ImageList = ({ isLoading, imageItems }) => {
 
                                         <FsLightbox
                                             toggler={lightboxController.toggler}
-                                            sources={imageItems}
+                                            sources={imageItems.map(image => <div><img src={image.toString()} style={{ width: '100%' }} /><h4>RECORDER</h4></div>)}
                                             key={imageItems.length}
                                             slide={lightboxController.slide}
                                         />
