@@ -9,6 +9,8 @@ import { Avatar, imageListItemClasses, List, ListItem, ListItemAvatar, ListItemT
 import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import FsLightbox from 'fslightbox-react';
+import Recorder from './Recorder';
+import { v4 as uuidv4 } from 'uuid';
 
 // assets
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
@@ -52,14 +54,18 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const ImageList = ({ isLoading, imageItems }) => {
+const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
         slide: 1
     });
+    const [recordingDisabled, setRecordingDisabled] = useState(false);
 
-
+    const handleEndAudioCapture = async (fileIdentifier) => {
+        setRecordingDisabled(true);
+        await onAudioAddedToImage(fileIdentifier);
+    }
 
     function openLightboxOnSlide(number) {
         setLightboxController({
@@ -93,9 +99,10 @@ const ImageList = ({ isLoading, imageItems }) => {
 
                                         <FsLightbox
                                             toggler={lightboxController.toggler}
-                                            sources={imageItems.map(image => <div><img src={image.toString()} style={{ width: '100%' }} /><h4>RECORDER</h4></div>)}
+                                            sources={imageItems}
                                             key={imageItems.length}
                                             slide={lightboxController.slide}
+                                            captions={[<Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier)} fileIdentifier={uuidv4()} />]}
                                         />
                                     </div>
                                 }

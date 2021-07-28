@@ -110,6 +110,10 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         onFileUploaded(prompt.promptId, fileIdentifier, mediaItemType);
     }
 
+    const audioAddedToImage = (prompt, fileIdentifier) => {
+        onFileUploaded(prompt.promptId, fileIdentifier, 0);
+    }
+
     return (
         <React.Fragment>
             {isLoading ? (
@@ -189,7 +193,6 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 <MenuItem onClick={handleAudioClick}>
                                     <MicNoneIcon fontSize="inherit" className={classes.menuItem} /> Voice Note
                                 </MenuItem>
-
                                 <MenuItem onClick={handleImageClick}>
                                     <AddAPhotoOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Image
                                 </MenuItem>
@@ -214,7 +217,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg')} />
+                                <ImageList onAudioAddedToImage={(fileIdentifier) => audioAddedToImage(prompt, fileIdentifier)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg')} />
                             }
                         </Grid>
                     }

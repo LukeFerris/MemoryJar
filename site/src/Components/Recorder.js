@@ -15,9 +15,12 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2),
     },
+    disabledButton: {
+        backgroundColor: '#AAA !important'
+    }
 }));
 
-export default function Recorder({ onFileUploaded, fileIdentifier }) {
+export default function Recorder({ onFileUploaded, fileIdentifier, disabled }) {
 
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(false);
@@ -84,37 +87,41 @@ export default function Recorder({ onFileUploaded, fileIdentifier }) {
 
     return (
         <React.Fragment>
-            {isProcessing ?
-                <Button
-                    disabled={true}
-                    variant="contained"
-                    className={classes.button}
-                    onClick={record}
-                    startIcon={<KeyboardVoiceIcon />}
-                >
-                    Working..
-                </Button>
-                :
-                !isRecording ?
+            {
+                isProcessing ?
                     <Button
-                        disabled={isLoading}
+                        disabled={true}
                         variant="contained"
                         className={classes.button}
+                        classes={{ disabled: classes.disabledButton }}
                         onClick={record}
                         startIcon={<KeyboardVoiceIcon />}
                     >
-                        Record
+                        Working..
                     </Button>
                     :
-                    <Button
-                        variant="contained"
-                        disabled={isLoading}
-                        className={classes.button}
-                        onClick={record}
-                        startIcon={<StopIcon />}
-                    >
-                        Stop
-                    </Button>
+                    !isRecording ?
+                        <Button
+                            disabled={isLoading || disabled}
+                            variant="contained"
+                            className={classes.button}
+                            classes={{ disabled: classes.disabledButton }}
+                            onClick={record}
+                            startIcon={<KeyboardVoiceIcon />}
+                        >
+                            Record
+                        </Button>
+                        :
+                        <Button
+                            variant="contained"
+                            disabled={isLoading}
+                            className={classes.button}
+                            classes={{ disabled: classes.disabledButton }}
+                            onClick={record}
+                            startIcon={<StopIcon />}
+                        >
+                            Stop
+                        </Button>
             }
         </React.Fragment>
     );
