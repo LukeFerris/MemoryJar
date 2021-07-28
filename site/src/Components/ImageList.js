@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -8,6 +8,7 @@ import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
+import FsLightbox from 'fslightbox-react';
 
 // assets
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
@@ -53,6 +54,19 @@ const useStyles = makeStyles((theme) => ({
 
 const ImageList = ({ isLoading, imageItems }) => {
     const classes = useStyles();
+    const [lightboxController, setLightboxController] = useState({
+        toggler: false,
+        slide: 1
+    });
+
+    let imageSource = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg');
+
+    function openLightboxOnSlide(number) {
+        setLightboxController({
+            toggler: !lightboxController.toggler,
+            slide: number
+        });
+    }
 
     return (
         <React.Fragment>
@@ -74,7 +88,15 @@ const ImageList = ({ isLoading, imageItems }) => {
                                 }}
                                 className={classes.padding}
                                 primary={
-                                    imageItems.map(image => <img style={{ width: '100px', paddingRight: '15px' }} key={image.mediaItemId} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />)
+                                    <div>
+                                        {imageItems.map((image, index) => <img key={image.mediaItemId} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />)}
+
+                                        <FsLightbox
+                                            toggler={lightboxController.toggler}
+                                            sources={imageSource}
+                                            slide={lightboxController.slide}
+                                        />
+                                    </div>
                                 }
 
                             />
