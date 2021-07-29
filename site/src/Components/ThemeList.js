@@ -143,16 +143,17 @@ export default function ThemeList() {
     setIsLoading(false);
   }, [uploadedFiles]);
 
-  const complete = async (promptId, mediaItemId, mediaItemType) => {
+  const complete = async (promptId, mediaItemId, relatedMediaItemId, mediaItemType) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
     console.log('Prompt: ' + promptId);
     console.log('Media type: ' + mediaItemType);
+    console.log('Related media item:' + relatedMediaItemId);
     setIsUploading(true);
 
     // now register it
     await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
-      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType
+      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType, "relatedMediaItemId": relatedMediaItemId
     },
       {
         headers: {
@@ -161,7 +162,7 @@ export default function ThemeList() {
       })
 
     setUploadedFiles(uploadedFiles.concat({
-      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType
+      "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType, "relatedMediaItemId": relatedMediaItemId
     }));
   };
 
@@ -179,7 +180,7 @@ export default function ThemeList() {
             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
               {theme.prompts && theme.prompts.map((prompt) => (
                 <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType) => complete(promptId, fileIdentifier, mediaItemType)} />
+                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, relatedMediaItemId, mediaItemType) => complete(promptId, fileIdentifier, relatedMediaItemId, mediaItemType)} />
                 </Grid>
               ))}
             </Grid>

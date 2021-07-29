@@ -110,8 +110,8 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         onFileUploaded(prompt.promptId, fileIdentifier, mediaItemType);
     }
 
-    const audioAddedToImage = (prompt, fileIdentifier) => {
-        onFileUploaded(prompt.promptId, fileIdentifier, 0);
+    const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
+        onFileUploaded(prompt.promptId, fileIdentifier, relatedMediaItemId, 0);
     }
 
     return (
@@ -143,7 +143,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                             {
-                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 0)} />
+                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, null, 0)} />
                             }
                             {
                                 addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1)} />
@@ -217,7 +217,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList onAudioAddedToImage={(fileIdentifier) => audioAddedToImage(prompt, fileIdentifier)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg')} />
+                                <ImageList onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(item => item.mediaItemId)} />
                             }
                         </Grid>
                     }

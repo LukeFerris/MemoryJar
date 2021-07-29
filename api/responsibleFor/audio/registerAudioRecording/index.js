@@ -72,11 +72,12 @@ exports.handler = async (event, context) => {
           promptId: prompt.promptId,
           memoryId: memory.memoryId,
           userId: mediaItem.userId,
-          mediaType: mediaItem.mediaType
+          mediaType: mediaItem.mediaType,
+          relatedMediaItemId: mediaItem.relatedMediaItemId
         }
 
         await data.query(
-          'INSERT INTO "mediaItem" ("memoryId", "promptId", "mediaItemId", "userId", "mediaType") VALUES(:memoryId::UUID, :promptId::UUID, :mediaItemId::UUID, :userId::UUID, :mediaType::SMALLINT)',
+          'INSERT INTO "mediaItem" ("memoryId", "promptId", "mediaItemId", "userId", "mediaType", "relatedMediaItemId") VALUES(:memoryId::UUID, :promptId::UUID, :mediaItemId::UUID, :userId::UUID, :mediaType::SMALLINT, :relatedMediaItemId::UUID)',
           newMediaItem
         )
 
