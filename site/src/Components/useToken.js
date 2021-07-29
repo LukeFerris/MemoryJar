@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useToken() {
+export function useToken() {
     const getToken = () => {
         const tokenString = sessionStorage.getItem('token');
         const userToken = JSON.parse(tokenString);
@@ -19,4 +19,8 @@ export default function useToken() {
         setToken: saveToken,
         token
     }
+}
+
+export async function deleteToken() {
+    sessionStorage.removeItem('token');
 }

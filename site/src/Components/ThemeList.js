@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import useToken from './useToken';
+import { useToken } from './useToken';
 import ThemeHeader from './ThemeHeader';
 import StoryHeader from './StoryHeader';
 import Prompt from './Prompt';

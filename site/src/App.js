@@ -1,6 +1,6 @@
 import './App.css';
 import SignIn from './Components/SignIn';
-import useToken from './Components/useToken';
+import { useToken } from './Components/useToken';
 import { CssBaseline, StyledEngineProvider } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import config from './config';

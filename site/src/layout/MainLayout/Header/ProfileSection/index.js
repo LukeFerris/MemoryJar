@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { deleteToken } from '../../../../Components/useToken';
+
 // import { useSelector } from 'react-redux';
 
 // material-ui
@@ -135,7 +136,8 @@ const ProfileSection = () => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const handleLogout = async () => {
-        console.error('Logout');
+        await deleteToken();
+        window.location = "/";
     };
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
@@ -218,9 +220,9 @@ const ProfileSection = () => {
                                             </Grid>
                                         </Grid>
                                         <PerfectScrollbar className={classes.ScrollHeight}>
-                                            <UpgradePlanCard />
-                                            <Divider />
-                                            <Card className={classes.card}>
+                                            {/* <UpgradePlanCard /> */}
+                                            {/* <Divider /> */}
+                                            {/* <Card className={classes.card}>
                                                 <CardContent>
                                                     <Grid container spacing={3} direction="column">
                                                         <Grid item>
@@ -241,9 +243,9 @@ const ProfileSection = () => {
                                                     </Grid>
                                                 </CardContent>
                                             </Card>
-                                            <Divider />
+                                            <Divider /> */}
                                             <List component="nav" className={classes.navContainer}>
-                                                <ListItemButton
+                                                {/* <ListItemButton
                                                     className={classes.listItem}
                                                     sx={{ borderRadius: customization.borderRadius + 'px' }}
                                                     selected={selectedIndex === 0}
@@ -256,7 +258,7 @@ const ProfileSection = () => {
                                                         <IconSettings stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
                                                     <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                                                </ListItemButton>
+                                                </ListItemButton> */}
                                                 <ListItemButton
                                                     className={classes.listItem}
                                                     sx={{ borderRadius: customization.borderRadius + 'px' }}
