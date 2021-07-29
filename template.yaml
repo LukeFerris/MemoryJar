@@ -445,6 +445,8 @@ Resources:
               responses: {}
             get:
               responses: {}
+            delete:
+              responses: {}
       FailOnWarnings: true
       CorsConfiguration:
         AllowOrigins:
@@ -613,6 +615,49 @@ Resources:
             Path: /
             Method: GET
             ApiId: !Ref DownloadAPI
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          DB_ID: !Ref memoryjarDatabase
+          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
+          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+  deleteMediaItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-deleteMediaItem
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: deleteMediaItem
+      CodeUri: api/responsibleFor/mediaItems/deleteMediaItem
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref memoryjarDatabaseRootUserSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:ExecuteStatement
+                - rds-data:RollbackTransaction
+              Resource:
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+      Events:
+        UserDataAPIDELETE:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: DELETE
+            ApiId: !Ref UserDataAPI
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
       Environment:
