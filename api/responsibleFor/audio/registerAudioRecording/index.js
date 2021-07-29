@@ -81,6 +81,13 @@ exports.handler = async (event, context) => {
           newMediaItem
         )
 
+        // if a related media item was present - update the partner mediaitem
+        if (newMediaItem.relatedMediaItemId) {
+          await data.query(
+            `UPDATE "mediaItem" SET "relatedMediaItemId"=\'${newMediaItem.mediaItemId}\' WHERE "mediaItemId"=\'${newMediaItem.relatedMediaItemId}\';`
+          )
+        }
+
         body = `Put media item ${newMediaItem.mediaItemId}`;
       }
     }

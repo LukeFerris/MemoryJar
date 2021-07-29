@@ -143,7 +143,7 @@ export default function ThemeList() {
     setIsLoading(false);
   }, [uploadedFiles]);
 
-  const complete = async (promptId, mediaItemId, relatedMediaItemId, mediaItemType) => {
+  const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
     console.log('Prompt: ' + promptId);

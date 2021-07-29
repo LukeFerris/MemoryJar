@@ -111,7 +111,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
-        onFileUploaded(prompt.promptId, fileIdentifier, relatedMediaItemId, 0);
+        onFileUploaded(prompt.promptId, fileIdentifier, 0, relatedMediaItemId);
     }
 
     return (
