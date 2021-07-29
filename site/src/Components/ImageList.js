@@ -12,6 +12,7 @@ import FsLightbox from 'fslightbox-react';
 import Recorder from './Recorder';
 import AudioItem from './AudioItem';
 import { v4 as uuidv4 } from 'uuid';
+import GraphicEqOutlinedIcon from '@material-ui/icons/GraphicEqOutlined';
 
 // assets
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
@@ -50,6 +51,18 @@ const useStyles = makeStyles((theme) => ({
     padding: {
         paddingTop: 0,
         paddingBottom: 0,
+    },
+    imageContainer: {
+        display: "inline-block",
+        position: "relative"
+    },
+    audioImageIconOverlay: {
+        position: 'absolute',
+        right: 20,
+        top: 5,
+        backgroundColor: 'white',
+        width: 30,
+        height: 30
     }
 }));
 
@@ -102,9 +115,16 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
                                 className={classes.padding}
                                 primary={
                                     <div>
-                                        {imageItems.map((image, index) => <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />)}
-
-                                        <FsLightbox
+                                        {imageItems.map((image, index) =>
+                                            <div className={classes.imageContainer}>
+                                                <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />
+                                                {image.relatedMediaItemId &&
+                                                    <Avatar variant="rounded" className={classes.audioImageIconOverlay}>
+                                                        <GraphicEqOutlinedIcon />
+                                                    </Avatar>
+                                                }
+                                            </div>)}
+                                        < FsLightbox
                                             toggler={lightboxController.toggler}
                                             sources={imageSrc}
                                             key={imageItems.length + imageItems.filter(item => item.relatedMediaItemId).length}
