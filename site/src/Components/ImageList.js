@@ -82,7 +82,8 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
         setRecordingDisabled(true);
         onAudioAddedToImage(fileIdentifier, relatedMediaItemId);
         setLightboxController({
-            toggler: false
+            toggler: false,
+            slide: 1
         });
         setRecordingDisabled(false);
     }
