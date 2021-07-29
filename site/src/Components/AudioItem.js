@@ -60,7 +60,7 @@ const AudioItem = ({ isLoading, mediaItemId }) => {
             {isLoading ? (
                 <TotalIncomeCard />
             ) : (
-                <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
+                <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none', backgroundColor: 'transparent' }}>
                     <List className={classes.padding}>
                         <ListItem alignItems="center" disableGutters className={classes.padding}>
                             <ListItemAvatar>

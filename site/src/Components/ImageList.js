@@ -10,6 +10,7 @@ import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import FsLightbox from 'fslightbox-react';
 import Recorder from './Recorder';
+import AudioItem from './AudioItem';
 import { v4 as uuidv4 } from 'uuid';
 
 // assets
@@ -62,11 +63,15 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
     });
     const [recordingDisabled, setRecordingDisabled] = useState(false);
 
-    const imageSrc = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image + '.jpg');
+    const imageSrc = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg');
 
     const handleEndAudioCapture = async (fileIdentifier, relatedMediaItemId) => {
         setRecordingDisabled(true);
-        await onAudioAddedToImage(fileIdentifier, relatedMediaItemId);
+        onAudioAddedToImage(fileIdentifier, relatedMediaItemId);
+        setLightboxController({
+            toggler: false
+        });
+        setRecordingDisabled(false);
     }
 
     function openLightboxOnSlide(number) {
@@ -97,14 +102,19 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
                                 className={classes.padding}
                                 primary={
                                     <div>
-                                        {imageItems.map((image, index) => <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image + '.jpg'} />)}
+                                        {imageItems.map((image, index) => <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />)}
 
                                         <FsLightbox
                                             toggler={lightboxController.toggler}
                                             sources={imageSrc}
-                                            key={imageItems.length}
+                                            key={imageItems.length + imageItems.filter(item => item.relatedMediaItemId).length}
                                             slide={lightboxController.slide}
-                                            captions={imageItems.map(image => <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image)} fileIdentifier={uuidv4()} />)}
+                                            captions={imageItems.map(image =>
+                                                image.relatedMediaItemId ?
+                                                    <AudioItem mediaItemId={image.relatedMediaItemId} />
+                                                    :
+                                                    <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />
+                                            )}
                                         />
                                     </div>
                                 }

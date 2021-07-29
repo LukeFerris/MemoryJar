@@ -105,9 +105,9 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         setAnchorEl(null);
     }
 
-    const handleEndAudioCapture = (prompt, fileIdentifier, mediaItemType) => {
+    const handleEndAudioCapture = (prompt, fileIdentifier, mediaType) => {
         setAddMode(0);
-        onFileUploaded(prompt.promptId, fileIdentifier, mediaItemType);
+        onFileUploaded(prompt.promptId, fileIdentifier, mediaType);
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
@@ -143,7 +143,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                             {
-                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, null, 0)} />
+                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 0)} />
                             }
                             {
                                 addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1)} />
@@ -209,15 +209,13 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             {
-                                prompt.mediaItems.filter(item => item.mediaType == 0).map(item =>
+                                prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
                                     <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} />
-
-
                                 )
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(item => item.mediaItemId)} />
+                                <ImageList onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(item => ({ mediaItemId: item.mediaItemId, relatedMediaItemId: item.relatedMediaItemId }))} />
                             }
                         </Grid>
                     }

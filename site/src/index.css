@@ -15,3 +15,7 @@ code {
 .fslightbox-caption-active {
     z-index: 10000 !important
 }
+
+.fslightbox-caption-inner {
+  width: 90%;
+}
