@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading }) => {
+const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading, openAfterRefreshId, autoImageOpened }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addMode, setAddMode] = useState(0);
@@ -105,9 +105,20 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         setAnchorEl(null);
     }
 
-    const handleEndAudioCapture = (prompt, fileIdentifier, mediaType) => {
+    const handleImageWithNoteClick = () => {
+        setAddMode(3);
+        setAnchorEl(null);
+    }
+
+    const autoItemOpened = () => {
+        // ask the parent to remove the request as it's now open
+        autoImageOpened();
+    }
+
+    const handleEndAudioCapture = (prompt, fileIdentifier, mediaType, autoOpen) => {
         setAddMode(0);
-        onFileUploaded(prompt.promptId, fileIdentifier, mediaType);
+        console.log('Autoopen is set to: ' + autoOpen);
+        onFileUploaded(prompt.promptId, fileIdentifier, mediaType, null, autoOpen);
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
@@ -146,7 +157,10 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 0)} />
                             }
                             {
-                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1)} />
+                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1, false)} />
+                            }
+                            {
+                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1, true)} />
                             }
                             {
                                 (addMode == 0 && !uploading) &&
@@ -196,7 +210,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 <MenuItem onClick={handleImageClick}>
                                     <AddAPhotoOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Image
                                 </MenuItem>
-                                <MenuItem disabled onClick={handleClose}>
+                                <MenuItem onClick={handleImageWithNoteClick}>
                                     <PermCameraMicOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Voice note over Image
                                 </MenuItem>
                                 <MenuItem disabled onClick={handleClose}>
@@ -215,7 +229,8 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={prompt.mediaItems.filter(item => item.mediaType == 1).map(item => ({ mediaItemId: item.mediaItemId, relatedMediaItemId: item.relatedMediaItemId }))} />
+                                <ImageList onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={
+                                    prompt.mediaItems.filter(item => item.mediaType == 1).map(item => ({ mediaItemId: item.mediaItemId, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
                             }
                         </Grid>
                     }

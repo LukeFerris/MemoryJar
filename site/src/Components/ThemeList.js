@@ -54,7 +54,7 @@ export default function ThemeList() {
     ],
     "progress": 100
   }]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState({ openAfterRefreshId: null });
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [storyProgress, setStoryProgress] = useState(0);
@@ -123,7 +123,7 @@ export default function ThemeList() {
           prompt.mediaItems = userData.filter(userPrompt => userPrompt.promptId == prompt.promptId)
         });
 
-        console.log(mergedData);
+        // console.log(mergedData);
 
         const completedCount = mergedData[i].prompts.filter((obj) => obj.mediaItems.length > 0).length;
         const totalPrompts = mergedData[i].prompts.length;
@@ -143,7 +143,11 @@ export default function ThemeList() {
     setIsLoading(false);
   }, [uploadedFiles]);
 
-  const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null) => {
+  const autoImageOpened = () => {
+    setUploadedFiles({ openAfterRefreshId: null });
+  };
+
+  const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null, autoOpen = false) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
     console.log('Prompt: ' + promptId);
@@ -161,9 +165,16 @@ export default function ThemeList() {
         }
       })
 
-    setUploadedFiles(uploadedFiles.concat({
+    let uploadedFiles = {
       "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType, "relatedMediaItemId": relatedMediaItemId
-    }));
+    };
+
+    if (autoOpen) {
+      console.log('Autoopen reuquested');
+      uploadedFiles.openAfterRefreshId = mediaItemId;
+    }
+
+    setUploadedFiles(uploadedFiles);
   };
 
   return (
@@ -180,7 +191,7 @@ export default function ThemeList() {
             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
               {theme.prompts && theme.prompts.map((prompt) => (
                 <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                  <Prompt uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, relatedMediaItemId, mediaItemType) => complete(promptId, fileIdentifier, relatedMediaItemId, mediaItemType)} />
+                  <Prompt autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => complete(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
                 </Grid>
               ))}
             </Grid>

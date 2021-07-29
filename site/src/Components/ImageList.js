@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -68,12 +68,30 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
+const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpened }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
         slide: 1
     });
+
+    useEffect(async () => {
+
+        // look for items that might need autoopening
+        let index = imageItems.findIndex(image => image.autoOpen);
+        if (index >= 0) {
+
+            // an image to be auto opened exists
+            setLightboxController({
+                toggler: !lightboxController.toggler,
+                slide: index + 1
+            })
+
+            onItemAutoOpened();
+        }
+
+    }, [imageItems]);
+
     const [recordingDisabled, setRecordingDisabled] = useState(false);
 
     const imageSrc = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg');
@@ -117,7 +135,7 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage }) => {
                                 primary={
                                     <div>
                                         {imageItems.map((image, index) =>
-                                            <div className={classes.imageContainer}>
+                                            <div key={index} className={classes.imageContainer}>
                                                 <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />
                                                 {image.relatedMediaItemId &&
                                                     <Avatar variant="rounded" className={classes.audioImageIconOverlay}>
