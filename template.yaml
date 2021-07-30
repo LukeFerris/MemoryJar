@@ -659,6 +659,15 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+      Events:
+        UserDataAPIDELETEmediaItemId:
+          Type: HttpApi
+          Properties:
+            Path: /{mediaItemId}
+            Method: DELETE
+            ApiId: !Ref UserDataAPI
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
 Parameters:
   SourceLocation:
     Type: String
