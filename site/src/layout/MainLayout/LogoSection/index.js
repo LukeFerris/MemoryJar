@@ -7,14 +7,16 @@ import { ButtonBase } from '@material-ui/core';
 
 // project imports
 import config from './../../../config';
-import Logo from './../../../ui-component/Logo';
+import Leaf from '../../../assets/images/Leaf.png';
+import Logo from '../../../assets/images/MemoryJarLogo.png';
 
 //-----------------------|| MAIN LOGO ||-----------------------//
 
 const LogoSection = () => {
     return (
         <ButtonBase disableRipple component={Link} to={config.defaultPath}>
-            <Typography>Memory Jar</Typography>
+            <img src={Leaf} />  
+            {/* <img src={Logo} />   */}
         </ButtonBase>
     );
 };
