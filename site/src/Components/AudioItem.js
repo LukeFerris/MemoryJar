@@ -88,9 +88,9 @@ const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
                                 primary={
                                     <div style={{display:'flex'}}>
                                 <audio style={{ width: '100%', flexGrow: 1, paddingRight:0 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />
-                                <IconButton disabled={!isDeleteEnabled} color="secondary" style={{padding:0, margin:0}}>
+                                {/* <IconButton disabled={!isDeleteEnabled} color="secondary" style={{padding:0, margin:0}}>
                                     <DeleteIcon onClick={onDeleted} />
-                                </IconButton>
+                                </IconButton> */}
                             </div>
                             }
 
