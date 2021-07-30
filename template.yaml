@@ -445,6 +445,7 @@ Resources:
               responses: {}
             get:
               responses: {}
+          /{mediaItemId}:
             delete:
               responses: {}
       FailOnWarnings: true
@@ -651,15 +652,6 @@ Resources:
                 - rds-data:RollbackTransaction
               Resource:
                 - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
-      Events:
-        UserDataAPIDELETE:
-          Type: HttpApi
-          Properties:
-            Path: /
-            Method: DELETE
-            ApiId: !Ref UserDataAPI
-            PayloadFormatVersion: '2.0'
-            TimeoutInMillis: 29000
       Environment:
         Variables:
           DB_ID: !Ref memoryjarDatabase
