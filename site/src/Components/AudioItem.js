@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import IconButton from '@material-ui/core/Button';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
@@ -11,6 +12,7 @@ import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
 import GraphicEqIcon from '@material-ui/icons/GraphicEq';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -52,8 +54,14 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const AudioItem = ({ isLoading, mediaItemId }) => {
+const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
     const classes = useStyles();
+    const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
+
+    const onDeleted = () => {
+        onItemDeleted(mediaItemId);
+        setIsDeleteEnabled(false);
+    }
 
     return (
         <React.Fragment>
@@ -74,7 +82,14 @@ const AudioItem = ({ isLoading, mediaItemId }) => {
                                     mb: 0.45
                                 }}
                                 className={classes.padding}
-                                primary={<audio style={{ width: '100%' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />}
+                                primary={
+                                    <div style={{display:'flex'}}>
+                                <audio style={{ width: '90%', flexGrow: 1, paddingRight:10 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />
+                                <IconButton disabled={!isDeleteEnabled} color="secondary">
+                                    <DeleteIcon onClick={onDeleted} />
+                                </IconButton>
+                            </div>
+                            }
 
                             />
                         </ListItem>

@@ -78,12 +78,15 @@ const useStyles = makeStyles((theme) => ({
     },
     audioList: {
         paddingTop: 20
+    },
+    button: {
+        color: 'white'
     }
 }));
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading, openAfterRefreshId, autoImageOpened }) => {
+const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading, openAfterRefreshId, autoImageOpened, onItemDeleted }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addMode, setAddMode] = useState(0);
@@ -123,6 +126,11 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
         onFileUploaded(prompt.promptId, fileIdentifier, 0, relatedMediaItemId);
+    }
+
+    const onAudioItemDeleted = (mediaItemId) => 
+    {
+        onItemDeleted(mediaItemId);
     }
 
     return (
@@ -224,7 +232,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
-                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} />
+                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onAudioItemDeleted} />
                                 )
                             }
                             {

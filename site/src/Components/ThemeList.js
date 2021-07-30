@@ -147,6 +147,22 @@ export default function ThemeList() {
     setUploadedFiles({ openAfterRefreshId: null });
   };
 
+  const itemDeleted = async (mediaItemId) =>
+  {
+    console.log('deleting item: ' + mediaItemId);
+   
+   
+    await axios.delete(process.env.REACT_APP_REGISTER_AUDIO_API + '/' + mediaItemId,
+      {
+        headers: {
+          Authorization: token.jwtToken
+        }
+      })
+
+    uploadedFiles.mediaItemId = mediaItemId;
+    setUploadedFiles(uploadedFiles);
+  }
+
   const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null, autoOpen = false) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
@@ -191,7 +207,7 @@ export default function ThemeList() {
             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
               {theme.prompts && theme.prompts.map((prompt) => (
                 <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                  <Prompt autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => complete(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
+                  <Prompt onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => complete(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
                 </Grid>
               ))}
             </Grid>
