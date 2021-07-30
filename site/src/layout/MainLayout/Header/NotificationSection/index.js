@@ -36,7 +36,7 @@ import { IconBell } from '@tabler/icons';
 // style constant
 const useStyles = makeStyles((theme) => ({
     ScrollHeight: {
-        height: '100%',
+        height: '30%',
         maxHeight: 'calc(100vh - 205px)',
         overflowX: 'hidden'
     },

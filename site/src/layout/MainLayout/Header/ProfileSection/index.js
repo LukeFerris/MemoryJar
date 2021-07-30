@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400
     },
     ScrollHeight: {
-        height: '100%',
+        height: '50%',
         maxHeight: 'calc(100vh - 250px)',
         overflowX: 'hidden'
     },
