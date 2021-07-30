@@ -59,8 +59,11 @@ const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
     const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
     const onDeleted = () => {
-        onItemDeleted(mediaItemId);
-        setIsDeleteEnabled(false);
+        if (window.confirm("Are you sure you want to delete this item?"))
+        {
+            onItemDeleted(mediaItemId);
+            setIsDeleteEnabled(false);
+        }
     }
 
     return (

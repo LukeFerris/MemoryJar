@@ -128,11 +128,6 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         onFileUploaded(prompt.promptId, fileIdentifier, 0, relatedMediaItemId);
     }
 
-    const onAudioItemDeleted = (mediaItemId) => 
-    {
-        onItemDeleted(mediaItemId);
-    }
-
     return (
         <React.Fragment>
             {isLoading ? (
@@ -232,12 +227,12 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
-                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onAudioItemDeleted} />
+                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onItemDeleted} />
                                 )
                             }
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={
+                                <ImageList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={
                                     prompt.mediaItems.filter(item => item.mediaType == 1).map(item => ({ mediaItemId: item.mediaItemId, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
                             }
                         </Grid>

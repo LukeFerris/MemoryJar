@@ -21,16 +21,19 @@ exports.handler = async (event, context) => {
       statusCode = 400;
     }
     else {
-      let mediaItem = JSON.parse(event.body);
+      const { mediaItemId } = event.pathParameters;
 
       // force user on clip to be the authorised user
-      mediaItem.userId = event.requestContext.authorizer.jwt.claims.sub;
-      console.log('user is: ' + mediaItem.userId);
+      const userId = event.requestContext.authorizer.jwt.claims.sub;
+      console.log('user is: ' + userId);
 
+      // clear any references
+      await data.query("UPDATE \"mediaItem\" SET \"relatedMediaItemId\"=NULL WHERE \"relatedMediaItemId\"='" + mediaItemId + "' AND \"userId\" = '" + userId + "'");
+      
       // find the prompt associated with this media item
-      let deleteResult = await data.query("DELETE FROM \"mediaItem\" WHERE \"mediaItemId\" = '" + mediaItem.mediaItemId + "'");
+      await data.query("DELETE FROM \"mediaItem\" WHERE \"mediaItemId\" = '" + mediaItemId + "' AND \"userId\" = '" + userId + "'");
 
-      body = `Deleted media item ${mediaItem.mediaItemId}`;
+      body = `Deleted media item ${mediaItemId}`;
     }
   }
   catch (err) {

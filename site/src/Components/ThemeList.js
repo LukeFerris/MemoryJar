@@ -5,6 +5,7 @@ import { useToken } from './useToken';
 import ThemeHeader from './ThemeHeader';
 import StoryHeader from './StoryHeader';
 import Prompt from './Prompt';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
 
@@ -159,8 +160,12 @@ export default function ThemeList() {
         }
       })
 
-    uploadedFiles.mediaItemId = mediaItemId;
+    let uploadedFiles = {
+      "mediaItemId": mediaItemId, "changed": uuidv4()
+    };
+  
     setUploadedFiles(uploadedFiles);
+    
   }
 
   const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null, autoOpen = false) => {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // material-ui
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, imageListItemClasses, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import IconButton from '@material-ui/core/Button';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
@@ -13,6 +14,7 @@ import Recorder from './Recorder';
 import AudioItem from './AudioItem';
 import { v4 as uuidv4 } from 'uuid';
 import GraphicEqOutlinedIcon from '@material-ui/icons/GraphicEqOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // assets
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
@@ -68,12 +70,13 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpened }) => {
+const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
         slide: 1
     });
+    const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
     useEffect(async () => {
 
@@ -113,6 +116,15 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
         });
     }
 
+    const onDeleted = (mediaItemId) =>
+    {
+        if (window.confirm("Are you sure you want to delete this item?"))
+        {
+        onItemDeleted(mediaItemId);
+        setIsDeleteEnabled(false);
+        };
+    }
+
     return (
         <React.Fragment>
             {isLoading ? (
@@ -150,9 +162,15 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
                                             slide={lightboxController.slide}
                                             captions={imageItems.map(image =>
                                                 image.relatedMediaItemId ?
-                                                    <AudioItem mediaItemId={image.relatedMediaItemId} />
+                                                    <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
                                                     :
+                                                    <div>
+                                                    
                                                     <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />
+                                                    <IconButton disabled={!isDeleteEnabled} color="secondary">
+                                                        <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
+                                                    </IconButton>
+                                                    </div>
                                             )}
                                         />
                                     </div>
