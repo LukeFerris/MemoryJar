@@ -1,5 +1,5 @@
 import React from 'react';
-import { deleteToken } from '../../../../Components/useToken';
+import { deleteToken, useToken } from '../../../../Components/useToken';
 
 // import { useSelector } from 'react-redux';
 
@@ -132,9 +132,11 @@ const ProfileSection = () => {
     const [value, setValue] = React.useState('');
     const [notification, setNotification] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const { token } = useToken();
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
+    
     const handleLogout = async () => {
         await deleteToken();
         window.location = "/";
@@ -155,6 +157,7 @@ const ProfileSection = () => {
     };
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
+
         if (prevOpen.current === true && open === false) {
             anchorRef.current.focus();
         }
@@ -210,9 +213,9 @@ const ProfileSection = () => {
                                     <CardContent className={classes.cardContent}>
                                         <Grid container direction="column" spacing={0}>
                                             <Grid item className={classes.flex}>
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">Good Morning,&nbsp;</Typography>
                                                 <Typography component="span" variant="h4" className={classes.name}>
-                                                    User
+                                                    {token.payload['cognito:username']}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
