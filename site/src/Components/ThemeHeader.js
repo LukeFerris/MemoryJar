@@ -116,7 +116,7 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
             {isLoading ? (
                 <SkeletonEarningCard />
             ) : (
-                <MainCard border={false} className={classes.card} contentClass={classes.content}>
+                <MainCard border={false} onClick={onExpand} className={classes.card} contentClass={classes.content}>
                     <Grid container direction="column">
                         <Grid item>
                             <Grid container justifyContent="space-between">
@@ -156,7 +156,7 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <Grid container alignItems="center">
                                 <Grid item>
                                     <Typography className={classes.cardHeading}>{title}</Typography>

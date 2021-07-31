@@ -77,7 +77,7 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
             {isLoading ? (
                 <TotalIncomeCard />
             ) : (
-                <MainCard className={classes.card} onClick={expand} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
+                <MainCard className={classes.card} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
                     <Grid container key={theme.themeId}>
                         <Grid item xs={12}>
                             <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={expand} />
