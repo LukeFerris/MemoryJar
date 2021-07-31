@@ -131,21 +131,7 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
                 <TotalIncomeCard />
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
-                    <List className={classes.padding}>
-                        <ListItem alignItems="center" disableGutters className={classes.padding}>
-                            <ListItemAvatar>
-                                <Avatar variant="rounded" className={classes.avatar}>
-                                    <CropOriginalIcon fontSize="inherit" />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                sx={{
-                                    mt: 0.45,
-                                    mb: 0.45
-                                }}
-                                className={classes.padding}
-                                primary={
-                                    <div>
+                    <div>
                                         {imageItems.map((image, index) =>
                                             <div key={index} className={classes.imageContainer}>
                                                 <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ width: 100, paddingRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />
@@ -174,11 +160,26 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
                                             )}
                                         />
                                     </div>
+                    {/* <List className={classes.padding}>
+                        <ListItem alignItems="center" disableGutters className={classes.padding}>
+                            <ListItemAvatar>
+                                <Avatar variant="rounded" className={classes.avatar}>
+                                    <CropOriginalIcon fontSize="inherit" />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                sx={{
+                                    mt: 0.45,
+                                    mb: 0.45
+                                }}
+                                className={classes.padding}
+                                primary={
+                                    
                                 }
 
                             />
                         </ListItem>
-                    </List>
+                    </List> */}
                 </MainCard>
             )}
         </React.Fragment>
