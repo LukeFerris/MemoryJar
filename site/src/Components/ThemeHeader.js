@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState} from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Grid, Menu, MenuItem, Typography } from '@material-ui/core';
 import LinearWithValueLabel from './LineProgressWithLabel';
+import Button from '@material-ui/core/Button';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
@@ -14,6 +15,8 @@ import SkeletonEarningCard from '../ui-component/cards/Skeleton/EarningCard';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PictureAsPdfTwoToneIcon from '@material-ui/icons/PictureAsPdfOutlined';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 
 // style constant
@@ -93,6 +96,18 @@ const useStyles = makeStyles((theme) => ({
     menuItem: {
         marginRight: '14px',
         fontSize: '1.25rem'
+    },
+    expandButton: {
+        backgroundColor: 'transparent',
+        border: 'none',
+        color: 'white',
+        boxShadow: 'none',
+        '&:hover': {
+            backgroundColor: 'transparent',
+        border: 'none',
+        color: 'white',
+        boxShadow: 'none',
+        },
     }
 }));
 
@@ -100,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
     const classes = useStyles();
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -111,12 +127,16 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
         setAnchorEl(null);
     };
 
+    const expand = (event) => {
+        setIsExpanded(!isExpanded);
+        onExpand(event);
+    }
     return (
         <React.Fragment>
             {isLoading ? (
                 <SkeletonEarningCard />
             ) : (
-                <MainCard border={false} onClick={onExpand} className={classes.card} contentClass={classes.content}>
+                <MainCard border={false} onClick={(event) => expand(event)} className={classes.card} contentClass={classes.content}>
                     <Grid container direction="column">
                         <Grid item>
                             <Grid container justifyContent="space-between">
@@ -165,6 +185,18 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
                         </Grid>
                         <Grid item sx={{ mb: 1.25 }}>
                             <LinearWithValueLabel value={progress} />
+                        </Grid>
+                        <Grid justifyContent="center" container sx={{ mb: 1.25 }}>
+                                    
+                            <Button
+                                disabled={false}
+                                variant="contained"
+                                className={classes.expandButton}
+                                startIcon={isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                            >
+                                    { isExpanded ? <span>Collapse</span> : <span>Expand Chapter</span> }
+                            </Button>
+                                
                         </Grid>
                     </Grid>
                 </MainCard>
