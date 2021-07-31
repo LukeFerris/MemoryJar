@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import { useToken } from './useToken';
-import ThemeHeader from './ThemeHeader';
 import StoryHeader from './StoryHeader';
-import Prompt from './Prompt';
+import Theme from './Theme';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function ThemeList() {
@@ -205,18 +204,19 @@ export default function ThemeList() {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         {mergedData.length > 0 && mergedData.map((theme) => (
-          <Grid container key={theme.themeId}>
-            <Grid item xs={12}>
-              <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} />
-            </Grid>
-            <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
-              {theme.prompts && theme.prompts.map((prompt) => (
-                <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                  <Prompt onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => complete(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
+          <Theme theme={theme} isLoading={isLoading} onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} onFileUploaded={complete}  />
+          // <Grid container key={theme.themeId}>
+          //   <Grid item xs={12}>
+          //     <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} />
+          //   </Grid>
+          //   <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
+          //     {theme.prompts && theme.prompts.map((prompt) => (
+          //       <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
+          //         <Prompt onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => complete(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
+          //       </Grid>
+          //     ))}
+          //   </Grid>
+          // </Grid>
         ))
         }
       </Grid>
