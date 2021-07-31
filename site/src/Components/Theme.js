@@ -55,24 +55,42 @@ const useStyles = makeStyles((theme) => ({
 
 const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefreshId, isUploading, onFileUploaded }) => {
     const classes = useStyles();
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const expand = (event) =>
+    {
+        var x = event.clientX, y = event.clientY,
+        elementMouseIsOver = document.elementFromPoint(x, y);
+        if (elementMouseIsOver.className.toString().indexOf('SVGAnimatedString') == -1)
+        {
+            if (elementMouseIsOver.className.toString().indexOf('MuiBackdrop-invisible') == -1 && 
+            elementMouseIsOver.className.toString().indexOf('MuiMenuItem-root') == -1)
+            {
+            console.log('not primary menu button click')
+            setIsExpanded(!isExpanded);
+            }
+        }
+    }
 
     return (
         <React.Fragment>
             {isLoading ? (
                 <TotalIncomeCard />
             ) : (
-                <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none', backgroundColor: 'transparent' }}>
+                <MainCard className={classes.card} onClick={expand} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
                     <Grid container key={theme.themeId}>
                         <Grid item xs={12}>
-                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} />
+                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={expand} />
                         </Grid>
-                        <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
-                            {theme.prompts && theme.prompts.map((prompt) => (
-                                <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                                    <Prompt onItemDeleted={onItemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => onFileUploaded(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
-                                </Grid>
-                            ))}
-                        </Grid>
+                        { isExpanded &&
+                            <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
+                                {theme.prompts && theme.prompts.map((prompt) => (
+                                    <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
+                                        <Prompt onItemDeleted={onItemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => onFileUploaded(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        }
                     </Grid>
                 </MainCard>
             )}

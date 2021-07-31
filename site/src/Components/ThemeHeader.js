@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const ThemeHeader = ({ isLoading, title, progress }) => {
+const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
