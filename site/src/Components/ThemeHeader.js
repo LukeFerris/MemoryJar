@@ -128,15 +128,26 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
     };
 
     const expand = (event) => {
-        setIsExpanded(!isExpanded);
-        onExpand(event);
+
+        var x = event.clientX, y = event.clientY,
+        elementMouseIsOver = document.elementFromPoint(x, y);
+        if (elementMouseIsOver.className.toString().indexOf('SVGAnimatedString') == -1)
+        {
+            if (elementMouseIsOver.className.toString().indexOf('MuiBackdrop-invisible') == -1 && 
+            elementMouseIsOver.className.toString().indexOf('MuiMenuItem-root') == -1)
+            {
+            console.log('not primary menu button click')
+                setIsExpanded(!isExpanded);
+                onExpand();
+            }
+        }
     }
     return (
         <React.Fragment>
             {isLoading ? (
                 <SkeletonEarningCard />
             ) : (
-                <MainCard border={false} onClick={(event) => expand(event)} className={classes.card} contentClass={classes.content}>
+                <MainCard border={false} onClick={expand} className={classes.card} contentClass={classes.content}>
                     <Grid container direction="column">
                         <Grid item>
                             <Grid container justifyContent="space-between">
