@@ -31,11 +31,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from '../../../../ui-component/cards/MainCard';
 import Transitions from '../../../../ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
-import User1 from './../../../../assets/images/users/user-round.svg';
 import config from '../../../../config';
 
 // style const
@@ -60,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         borderRadius: '27px',
         transition: 'all .2s ease-in-out',
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.secondary.light,
         backgroundColor: theme.palette.primary.light,
         '&[aria-controls="menu-list-grow"], &:hover': {
             borderColor: theme.palette.primary.main,
@@ -185,7 +183,7 @@ const ProfileSection = () => {
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
-                color="primary"
+                color="secondary"
             />
             <Popper
                 placement="bottom-end"
