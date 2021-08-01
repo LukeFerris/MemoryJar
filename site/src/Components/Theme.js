@@ -57,23 +57,6 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
     const classes = useStyles();
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const expand = () =>
-    {
-        // var x = event.clientX, y = event.clientY,
-        // elementMouseIsOver = document.elementFromPoint(x, y);
-        // if (elementMouseIsOver.className.toString().indexOf('SVGAnimatedString') == -1)
-        // {
-        //     if (elementMouseIsOver.className.toString().indexOf('MuiBackdrop-invisible') == -1 && 
-        //     elementMouseIsOver.className.toString().indexOf('MuiMenuItem-root') == -1)
-        //     {
-        //     console.log('not primary menu button click')
-            
-        //     }
-        // }
-
-        setIsExpanded(!isExpanded);
-    }
-
     return (
         <React.Fragment>
             {isLoading ? (
@@ -82,7 +65,7 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
                 <MainCard className={classes.card} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
                     <Grid container key={theme.themeId}>
                         <Grid item xs={12}>
-                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={expand} />
+                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={() => setIsExpanded(!isExpanded)} />
                         </Grid>
                         { isExpanded &&
                             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
