@@ -17,7 +17,11 @@ const useStyles = makeStyles((theme) => ({
     },
     disabledButton: {
         backgroundColor: '#AAA !important'
+    },
+    stopButton: {
+        backgroundColor: '#c62828'
     }
+
 }));
 
 export default function Recorder({ onFileUploaded, fileIdentifier, disabled }) {
@@ -92,7 +96,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier, disabled }) {
                     <Button
                         disabled={true}
                         variant="contained"
-                        className={classes.button}
+                        
                         classes={{ disabled: classes.disabledButton }}
                         onClick={record}
                         startIcon={<KeyboardVoiceIcon />}
@@ -104,7 +108,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier, disabled }) {
                         <Button
                             disabled={isLoading || disabled}
                             variant="contained"
-                            className={classes.button}
+                            
                             classes={{ disabled: classes.disabledButton }}
                             onClick={record}
                             startIcon={<KeyboardVoiceIcon />}
@@ -115,7 +119,7 @@ export default function Recorder({ onFileUploaded, fileIdentifier, disabled }) {
                         <Button
                             variant="contained"
                             disabled={isLoading}
-                            className={classes.button}
+                            className={classes.stopButton}
                             classes={{ disabled: classes.disabledButton }}
                             onClick={record}
                             startIcon={<StopIcon />}

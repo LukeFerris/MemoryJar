@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     padding: {
         paddingTop: 0,
         paddingBottom: 0,
+    },
+    deleteButton: {
+        color: '#507bc7'
     }
 }));
 
@@ -73,31 +76,11 @@ const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none', backgroundColor: 'transparent' }}>
                     <div style={{display:'flex'}}>
-                                <audio style={{ width: '100%', flexGrow: 1, paddingRight:0 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />
-                                <IconButton disabled={!isDeleteEnabled} color="secondary" style={{padding:0, margin:0}}>
-                                    <DeleteIcon onClick={onDeleted} />
-                                </IconButton>
-                            </div>
-                    {/* <List className={classes.padding}>
-                        <ListItem alignItems="center" disableGutters className={classes.padding}>
-                            <ListItemAvatar>
-                                <Avatar variant="rounded" className={classes.avatar}>
-                                    <GraphicEqIcon fontSize="inherit" />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                sx={{
-                                    mt: 0.45,
-                                    mb: 0.45
-                                }}
-                                className={classes.padding}
-                                primary={
-                                    
-                            }
-
-                            />
-                        </ListItem>
-                    </List> */}
+                        <audio style={{ width: '100%', flexGrow: 1, paddingRight:0 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />
+                        <IconButton disabled={!isDeleteEnabled} color="secondary" style={{padding:0, margin:0}}>
+                            <DeleteIcon className={classes.deleteButton} onClick={onDeleted} />
+                        </IconButton>
+                    </div>
                 </MainCard>
             )}
         </React.Fragment>
