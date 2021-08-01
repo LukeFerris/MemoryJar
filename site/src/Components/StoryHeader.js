@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 1
     },
     cardHeading: {
-        fontSize: '2.125rem',
+        fontSize: '1.9rem',
         fontWeight: 500,
         marginRight: '8px',
         marginTop: '14px',
@@ -79,15 +79,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1rem',
         fontWeight: 500,
         color: theme.palette.primary[200]
-    },
-    avatarCircle: {
-        cursor: 'pointer',
-        ...theme.typography.smallAvatar,
-        backgroundColor: theme.palette.primary[200],
-        color: theme.palette.secondary.dark
-    },
-    circleIcon: {
-        transform: 'rotate3d(1, 1, 1, 45deg)'
     },
     menuItem: {
         marginRight: '14px',

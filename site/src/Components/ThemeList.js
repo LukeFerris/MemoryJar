@@ -202,7 +202,7 @@ export default function ThemeList() {
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <StoryHeader isLoading={isLoading} progress={storyProgress} chapters={chapterCount} />
       </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
+      <Grid item xs={12} sm={12} md={12} lg={12} style={{paddingTop:10}}>
         {mergedData.length > 0 && mergedData.map((theme) => (
           <Theme key={theme.themeId} theme={theme} isLoading={isLoading} onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} onFileUploaded={complete}  />
         ))

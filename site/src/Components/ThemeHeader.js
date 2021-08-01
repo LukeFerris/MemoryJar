@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
         '&:after': {
             content: '""',
             position: 'absolute',
-            width: '210px',
-            height: '210px',
+            width: '190px',
+            height: '190px',
             background: theme.palette.secondary[800],
             borderRadius: '50%',
             top: '-85px',
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
         '&:before': {
             content: '""',
             position: 'absolute',
-            width: '210px',
-            height: '210px',
+            width: '190px',
+            height: '190px',
             background: theme.palette.secondary[800],
             borderRadius: '50%',
             top: '-125px',
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 1
     },
     cardHeading: {
-        fontSize: '2.125rem',
+        fontSize: '1.9rem',
         fontWeight: 500,
         marginRight: '8px',
         marginTop: '14px',
@@ -83,15 +83,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1rem',
         fontWeight: 500,
         color: theme.palette.secondary[200]
-    },
-    avatarCircle: {
-        cursor: 'pointer',
-        ...theme.typography.smallAvatar,
-        backgroundColor: theme.palette.secondary[200],
-        color: theme.palette.secondary.dark
-    },
-    circleIcon: {
-        transform: 'rotate3d(1, 1, 1, 45deg)'
     },
     menuItem: {
         marginRight: '14px',
@@ -187,7 +178,7 @@ const ThemeHeader = ({ isLoading, title, progress, onExpand }) => {
                         <Grid item sx={{ mb: 1.25 }}>
                             <LinearWithValueLabel value={progress} />
                         </Grid>
-                        <Grid justifyContent="center" container sx={{ mb: 1.25 }}>
+                        <Grid justifyContent="center" container>
                                     
                             <Button
                                 disabled={false}
