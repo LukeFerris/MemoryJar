@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, Grid, Menu, MenuItem, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
+import { Avatar, Grid, Menu, MenuItem, List, ListItem, ListItemAvatar, ListItemText, Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 // project imports
@@ -81,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         color: 'white'
+    },
+    divider: {
+        marginBottom: 10
     }
 }));
 
@@ -225,6 +228,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                     {
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
+                            <Divider className={classes.divider} />
                             {
                                 prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
                                     <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onItemDeleted} />

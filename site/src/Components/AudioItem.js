@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import IconButton from '@material-ui/core/Button';
 
 // project imports
