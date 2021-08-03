@@ -146,6 +146,7 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
                                             sources={imageSrc}
                                             key={imageItems.length + imageItems.filter(item => item.relatedMediaItemId).length}
                                             slide={lightboxController.slide}
+                                            disableThumbs={true}
                                             captions={imageItems.map(image =>
                                                 image.relatedMediaItemId ?
                                                     <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
