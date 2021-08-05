@@ -11,8 +11,7 @@ import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import Recorder from './Recorder';
 import ImageSelector from './ImageSelector';
 import VideoSelector from './VideoSelector';
-import AudioItem from './AudioItem';
-import MediaItemList from './ImageList';
+import MediaItemList from './MediaItemList';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
@@ -228,7 +227,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 <MenuItem onClick={handleImageWithNoteClick}>
                                     <PermCameraMicOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Voice note over Image
                                 </MenuItem>
-                                <MenuItem disabled onClick={handleVideoClick}>
+                                <MenuItem onClick={handleVideoClick}>
                                     <VideocamOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Video
                                 </MenuItem>
                             </Menu>
@@ -237,16 +236,13 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                     {
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
-                            <Divider className={classes.divider} />
-                            {/* {
-                                prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
-                                    <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onItemDeleted} />
-                                )
-                            } */}
                             {
                                 prompt.mediaItems &&
-                                <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
-                                    prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
+                                <div>
+                                    <Divider className={classes.divider} />
+                                    <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
+                                        prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
+                                </div>
                             }
                         </Grid>
                     }

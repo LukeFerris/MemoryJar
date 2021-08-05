@@ -184,11 +184,11 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                         :
                         item.mediaType == 0 ?
                         <li key={index} className={classes.mediaContainer}>
-                            <img src={AudioIcon} className={classes.mediaItem} />
+                            <img onClick={() => openLightboxOnSlide(index+1)} src={AudioIcon} className={classes.mediaItem} />
                         </li>
                         :
                         <li key={index} className={classes.mediaContainer}>
-                            <img src={VideoIcon} className={classes.mediaItem} />
+                            <img onClick={() => openLightboxOnSlide(index+1)} src={VideoIcon} className={classes.mediaItem} />
                         </li>
                     )}
                     < FsLightbox
