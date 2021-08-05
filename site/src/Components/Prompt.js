@@ -20,6 +20,7 @@ import MicNoneIcon from '@material-ui/icons/MicNone';
 import AddAPhotoOutlinedIcon from '@material-ui/icons/AddAPhotoOutlined';
 import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
 import PermCameraMicOutlinedIcon from '@material-ui/icons/PermCameraMicOutlined';
+import CommentIcon from '@material-ui/icons/Comment';
 import { v4 as uuidv4 } from 'uuid';
 
 // style constant
@@ -229,6 +230,9 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 </MenuItem>
                                 <MenuItem onClick={handleVideoClick}>
                                     <VideocamOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Video
+                                </MenuItem>
+                                <MenuItem disabled onClick={handleVideoClick}>
+                                    <CommentIcon fontSize="inherit" className={classes.menuItem} /> Text
                                 </MenuItem>
                             </Menu>
                         </Grid>
