@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         position: 'relative',
         // minWidth: '10vh'
+        maxWidth: '20vh'
     },
     mediaItem: {
         maxHeight: '100%',
@@ -171,7 +172,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
                     <ul className={classes.mediaList}>
-                    {mediaItems.map((item, index) =>
+                    {mediaItems.filter(item => item.relatedMediaItemId == null).map((item, index) =>
                         item.mediaType == 1 ?
                         <li key={index} className={classes.mediaContainer}>
                             <img onClick={() => openLightboxOnSlide(index+1)} className={classes.mediaItem} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.jpg'} />
