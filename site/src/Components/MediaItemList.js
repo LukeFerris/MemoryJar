@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         position: 'relative',
         // minWidth: '10vh'
-        maxWidth: '20vh'
+        maxWidth: '10vh'
     },
     mediaItem: {
         maxHeight: '100%',
