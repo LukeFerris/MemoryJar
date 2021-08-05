@@ -60,7 +60,7 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
     return (
         <React.Fragment>
             {isLoading ? (
-                <TotalIncomeCard />
+                theme.prompts.map(item => <TotalIncomeCard />)
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
                     <Grid container key={theme.themeId}>
