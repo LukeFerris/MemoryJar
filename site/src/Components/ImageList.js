@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, imageListItemClasses, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
 import IconButton from '@material-ui/core/Button';
 
 // project imports
@@ -15,8 +15,6 @@ import AudioItem from './AudioItem';
 import { v4 as uuidv4 } from 'uuid';
 import GraphicEqOutlinedIcon from '@material-ui/icons/GraphicEqOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
-import VideocamIcon from '@material-ui/icons/Videocam';
-import MicNoneIcon from '@material-ui/icons/MicNone';
 import AudioIcon from '../assets/images/audioIcon.png';
 import VideoIcon from '../assets/images/videoIcon.png';
 
