@@ -15,9 +15,10 @@ import AudioItem from './AudioItem';
 import { v4 as uuidv4 } from 'uuid';
 import GraphicEqOutlinedIcon from '@material-ui/icons/GraphicEqOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-// assets
-import CropOriginalIcon from '@material-ui/icons/CropOriginal';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import MicNoneIcon from '@material-ui/icons/MicNone';
+import AudioIcon from '../assets/images/audioIcon.png';
+import VideoIcon from '../assets/images/videoIcon.png';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -58,19 +59,46 @@ const useStyles = makeStyles((theme) => ({
         display: "inline-block",
         position: "relative"
     },
+    mediaContainer: {
+        height: '20vh',
+        flexGrow: 1,
+        position: 'relative',
+        minWidth: '20vh'
+    },
+    mediaItem: {
+        maxHeight: '100%',
+        minWidth: '100%',
+        objectFit: 'cover',
+        verticalAlign: 'bottom',
+        borderRadius: '10%',
+        padding: 5
+    },
     audioImageIconOverlay: {
         position: 'absolute',
         right: 20,
-        top: 5,
+        top: 20,
         backgroundColor: 'white',
-        width: 30,
-        height: 30
+        width: 40,
+        height: 40
+    },
+    mediaList: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        listStyleType: 'none',
+        paddingLeft: 0,
+        marginLeft: 0
+    },
+    audioItem: {
+        border: 'solid 1px',
+        minHeight: '95%',
+        borderRadius: '10%',
+        padding: 10
     }
 }));
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted }) => {
+const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
@@ -81,7 +109,7 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
     useEffect(async () => {
 
         // look for items that might need autoopening
-        let index = imageItems.findIndex(image => image.autoOpen);
+        let index = mediaItems.findIndex(image => image.autoOpen);
         if (index >= 0) {
 
             // an image to be auto opened exists
@@ -93,11 +121,24 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
             onItemAutoOpened();
         }
 
-    }, [imageItems]);
+    }, [mediaItems]);
 
     const [recordingDisabled, setRecordingDisabled] = useState(false);
-
-    const imageSrc = imageItems.map(image => 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg');
+    const getFileType = (mediaType) => 
+    {
+        if (mediaType == 0) return '.mp4';
+        if (mediaType == 1) return '.jpg';
+        return '.mp4';
+    }
+    
+    const imageSrc = mediaItems.map(item => 
+        item.mediaType == 1 ? 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + getFileType(item.mediaType)
+        :
+        item.mediaType == 0 ?
+        <audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.mp4'} controls />
+        :
+        <video src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.mp4'} controls />
+        );
 
     const handleEndAudioCapture = async (fileIdentifier, relatedMediaItemId) => {
         setRecordingDisabled(true);
@@ -131,40 +172,50 @@ const ImageList = ({ isLoading, imageItems, onAudioAddedToImage, onItemAutoOpene
                 <TotalIncomeCard />
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
-                    <div>
-                                        {imageItems.map((image, index) =>
-                                            <div key={index} className={classes.imageContainer}>
-                                                <img key={index} onClick={() => openLightboxOnSlide(index + 1)} style={{ borderRadius: '10%', width: 100, marginRight: 15, cursor: 'pointer' }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + image.mediaItemId + '.jpg'} />
-                                                {image.relatedMediaItemId &&
-                                                    <Avatar variant="rounded" className={classes.audioImageIconOverlay}>
-                                                        <GraphicEqOutlinedIcon />
-                                                    </Avatar>
-                                                }
-                                            </div>)}
-                                        < FsLightbox
-                                            toggler={lightboxController.toggler}
-                                            sources={imageSrc}
-                                            key={imageItems.length + imageItems.filter(item => item.relatedMediaItemId).length}
-                                            slide={lightboxController.slide}
-                                            disableThumbs={true}
-                                            captions={imageItems.map(image =>
-                                                image.relatedMediaItemId ?
-                                                    <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
-                                                    :
-                                                    <div>
-                                                    
-                                                    <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />
-                                                    <IconButton disabled={!isDeleteEnabled} color="secondary">
-                                                        <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
-                                                    </IconButton>
-                                                    </div>
-                                            )}
-                                        />
-                                    </div>
+                    <ul className={classes.mediaList}>
+                    {mediaItems.map((item, index) =>
+                        item.mediaType == 1 ?
+                        <li key={index} className={classes.mediaContainer}>
+                            <img onClick={() => openLightboxOnSlide(index+1)} className={classes.mediaItem} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.jpg'} />
+                            {item.relatedMediaItemId &&
+                                <Avatar variant="rounded" className={classes.audioImageIconOverlay}>
+                                    <GraphicEqOutlinedIcon />
+                                </Avatar>
+                             }
+                        </li>
+                        :
+                        item.mediaType == 0 ?
+                        <li key={index} className={classes.mediaContainer}>
+                            <img src={AudioIcon} className={classes.mediaItem} />
+                        </li>
+                        :
+                        <li key={index} className={classes.mediaContainer}>
+                            <img src={VideoIcon} className={classes.mediaItem} />
+                        </li>
+                    )}
+                    < FsLightbox
+                        toggler={lightboxController.toggler}
+                        sources={imageSrc}
+                        key={mediaItems.length + mediaItems.filter(item => item.relatedMediaItemId).length}
+                        slide={lightboxController.slide}
+                        disableThumbs={true}
+                        captions={mediaItems.map(image =>
+                            image.relatedMediaItemId ?
+                                <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
+                                :
+                                <div>
+                                    {image.mediaType != 0 && <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
+                                    <IconButton disabled={!isDeleteEnabled} color="secondary">
+                                        <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
+                                    </IconButton>
+                                </div>
+                        )}
+                    />
+                </ul>
                 </MainCard>
             )}
         </React.Fragment>
     );
 };
 
-export default ImageList;
+export default MediaItemList;

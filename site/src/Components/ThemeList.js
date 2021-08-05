@@ -123,7 +123,7 @@ export default function ThemeList() {
           prompt.mediaItems = userData.filter(userPrompt => userPrompt.promptId == prompt.promptId)
         });
 
-        // console.log(mergedData);
+        console.log(mergedData);
 
         const completedCount = mergedData[i].prompts.filter((obj) => obj.mediaItems.length > 0).length;
         const totalPrompts = mergedData[i].prompts.length;

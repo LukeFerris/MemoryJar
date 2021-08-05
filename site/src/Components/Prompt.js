@@ -10,8 +10,9 @@ import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import Recorder from './Recorder';
 import ImageSelector from './ImageSelector';
+import VideoSelector from './VideoSelector';
 import AudioItem from './AudioItem';
-import ImageList from './ImageList';
+import MediaItemList from './ImageList';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
@@ -111,6 +112,11 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         setAnchorEl(null);
     }
 
+    const handleVideoClick = () => {
+        setAddMode(4);
+        setAnchorEl(null);
+    }
+
     const handleImageWithNoteClick = () => {
         setAddMode(3);
         setAnchorEl(null);
@@ -121,7 +127,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         autoImageOpened();
     }
 
-    const handleEndAudioCapture = (prompt, fileIdentifier, mediaType, autoOpen) => {
+    const handleEndMediaCapture = (prompt, fileIdentifier, mediaType, autoOpen) => {
         setAddMode(0);
         console.log('Autoopen is set to: ' + autoOpen);
         onFileUploaded(prompt.promptId, fileIdentifier, mediaType, null, autoOpen);
@@ -160,13 +166,16 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                             {
-                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 0)} />
+                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
                             }
                             {
-                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1, false)} />
+                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
                             }
                             {
-                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(prompt, fileIdentifier, 1, true)} />
+                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
+                            }
+                            {
+                                addMode == 4 && <VideoSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
                             }
                             {
                                 (addMode == 0 && !uploading) &&
@@ -219,7 +228,7 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                                 <MenuItem onClick={handleImageWithNoteClick}>
                                     <PermCameraMicOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Voice note over Image
                                 </MenuItem>
-                                <MenuItem disabled onClick={handleClose}>
+                                <MenuItem disabled onClick={handleVideoClick}>
                                     <VideocamOutlinedIcon fontSize="inherit" className={classes.menuItem} /> Video
                                 </MenuItem>
                             </Menu>
@@ -229,15 +238,15 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
                             <Divider className={classes.divider} />
-                            {
+                            {/* {
                                 prompt.mediaItems.filter(item => item.mediaType == 0 && !item.relatedMediaItemId).map(item =>
                                     <AudioItem isLoading={isLoading} key={item.mediaItemId} mediaItemId={item.mediaItemId} onItemDeleted={onItemDeleted} />
                                 )
-                            }
+                            } */}
                             {
-                                prompt.mediaItems.filter(item => item.mediaType == 1).length > 0 &&
-                                <ImageList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} imageItems={
-                                    prompt.mediaItems.filter(item => item.mediaType == 1).map(item => ({ mediaItemId: item.mediaItemId, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
+                                prompt.mediaItems &&
+                                <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
+                                    prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
                             }
                         </Grid>
                     }
