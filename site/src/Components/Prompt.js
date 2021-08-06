@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, Grid, Menu, MenuItem, List, ListItem, ListItemAvatar, ListItemText, Divider } from '@material-ui/core';
+import { Avatar, Grid, Menu, MenuItem, List, ListItem, ListItemAvatar, ListItemText, Divider, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 // project imports
@@ -12,6 +12,7 @@ import Recorder from './Recorder';
 import ImageSelector from './ImageSelector';
 import VideoSelector from './VideoSelector';
 import MediaItemList from './MediaItemList';
+import LinearWithValueLabel from './LineProgressWithLabel';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
@@ -90,10 +91,16 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploading, openAfterRefreshId, autoImageOpened, onItemDeleted }) => {
+const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshId, autoImageOpened, onItemDeleted }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addMode, setAddMode] = useState(0);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+
+    const uploadProgressRef = useRef(uploadProgress);
+    uploadProgressRef.current = uploadProgress;
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -127,14 +134,34 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
         autoImageOpened();
     }
 
-    const handleEndMediaCapture = (prompt, fileIdentifier, mediaType, autoOpen) => {
+    const handleEndMediaCapture = async (prompt, fileIdentifier, mediaType, autoOpen) => {
         setAddMode(0);
         console.log('Autoopen is set to: ' + autoOpen);
-        onFileUploaded(prompt.promptId, fileIdentifier, mediaType, null, autoOpen);
+        setUploadProgress(80);
+        await onFileUploaded(prompt.promptId, fileIdentifier, mediaType, null, autoOpen);
+        setIsUploading(false);
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
         onFileUploaded(prompt.promptId, fileIdentifier, 0, relatedMediaItemId);
+    }
+
+    const startUploadProgress = () =>
+    {
+        setAddMode(0);
+        console.log('starting upload progress');
+        setIsUploading(true);
+        setUploadProgress(0);
+        updateUploadProgress(0);
+    }
+
+    const updateUploadProgress = () =>
+    {
+        setTimeout(() => {
+            let newProgress = uploadProgressRef.current + 10;
+            setUploadProgress(newProgress);
+            if (newProgress < 100) updateUploadProgress();
+        }, 2000);
     }
 
     return (
@@ -166,41 +193,28 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                             {
-                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
+                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
                             }
                             {
-                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
+                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
                             }
                             {
-                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
+                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
                             }
                             {
-                                addMode == 4 && <VideoSelector fileIdentifier={uuidv4()} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
+                                addMode == 4 && <VideoSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
                             }
                             {
-                                (addMode == 0 && !uploading) &&
+                                (addMode == 0) &&
 
                                 <Button
                                     variant="contained"
-                                    disabled={!addEnabled}
+                                    disabled={isUploading}
                                     className={classes.button}
                                     onClick={handleClick}
                                     startIcon={<AddIcon />}
                                 >
                                     Answer
-                                </Button>
-                            }
-                            {
-                                (addMode == 0 && uploading) &&
-
-                                <Button
-                                    variant="contained"
-                                    disabled={true}
-                                    className={classes.button}
-                                    onClick={handleClick}
-                                    startIcon={<AddIcon />}
-                                >
-                                    Uploading
                                 </Button>
                             }
                             <Menu
@@ -238,15 +252,22 @@ const Prompt = ({ isLoading, addEnabled, question, onFileUploaded, prompt, uploa
                         </Grid>
                     </Grid>
                     {
+                        isUploading ?
+                            <Grid container direction="column" spacing="0" className={classes.audioList}>
+                                    <Typography>Uploading:</Typography>
+                                    <LinearWithValueLabel value={uploadProgress} />
+                            </Grid>
+                        :
                         prompt.mediaItems.length > 0 &&
                         <Grid container direction="column" spacing="0" className={classes.audioList}>
-                            {
-                                prompt.mediaItems &&
-                                <div>
-                                    <Divider className={classes.divider} />
-                                    <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
-                                        prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
-                                </div>
+                            {           
+                                    (prompt.mediaItems && prompt.mediaItems.length > 0) &&
+                                        <div>
+                                            <Divider className={classes.divider} />
+                                                <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
+                                                    prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
+                                        </div>
+                    
                             }
                         </Grid>
                     }

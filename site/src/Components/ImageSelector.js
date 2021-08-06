@@ -11,12 +11,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ImageSelector({ onFileUploaded, fileIdentifier }) {
+export default function ImageSelector({ onStartUpload, onFileUploaded, fileIdentifier }) {
 
     const classes = useStyles();
-    const [isLoading, setIsLoading] = useState(false);
     const [uploadUrl, setUploadUrl] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     const getUploadUrl = async (mediaItemId) => {
         let uploadUrl = await API.get('/?mediaItemId=' + mediaItemId + '&mediaItemType=1').then((result) => {
@@ -42,42 +40,28 @@ export default function ImageSelector({ onFileUploaded, fileIdentifier }) {
 
     const handleImageClick = async (file) => {
 
-        setIsProcessing(true);
+        onStartUpload();
         let uploadUrl = await getUploadUrl(fileIdentifier);
-        console.log('image added');
         await upload(uploadUrl, file[0]);
-        setIsLoading(false);
-        setIsProcessing(false);
         onFileUploaded(fileIdentifier);
     }
 
     return (
         <React.Fragment>
-            {isProcessing ?
-                <Button
-                    disabled={true}
-                    variant="contained"
-                    className={classes.button}
-                    startIcon={<AddAPhotoOutlinedIcon />}
-                >
-                    Working..
-                </Button>
-                :
-                <Button
-                    variant="contained"
-                    component="label"
-                    className={classes.button}
-                    startIcon={<AddAPhotoOutlinedIcon />}
-                >
-                    Upload
-                    <input
-                        accept="image/*"
-                        type="file"
-                        hidden
-                        onChange={(e) => handleImageClick(e.target.files)}
-                    />
-                </Button>
-            }
+            <Button
+                variant="contained"
+                component="label"
+                className={classes.button}
+                startIcon={<AddAPhotoOutlinedIcon />}
+            >
+                Upload
+                <input
+                    accept="image/*"
+                    type="file"
+                    hidden
+                    onChange={(e) => handleImageClick(e.target.files)}
+                />
+            </Button>
         </React.Fragment>
     );
 }

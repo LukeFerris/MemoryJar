@@ -11,12 +11,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function VideoSelector({ onFileUploaded, fileIdentifier }) {
+export default function VideoSelector({ onStartUpload, onFileUploaded, fileIdentifier }) {
 
     const classes = useStyles();
-    const [isLoading, setIsLoading] = useState(false);
     const [uploadUrl, setUploadUrl] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
 
     const getUploadUrl = async (mediaItemId) => {
         let uploadUrl = await API.get('/?mediaItemId=' + mediaItemId + '&mediaItemType=2').then((result) => {
@@ -42,41 +40,28 @@ export default function VideoSelector({ onFileUploaded, fileIdentifier }) {
 
     const handleVideoClick = async (file) => {
 
-        setIsProcessing(true);
+        onStartUpload();
         let uploadUrl = await getUploadUrl(fileIdentifier);
         await upload(uploadUrl, file[0]);
-        setIsLoading(false);
-        setIsProcessing(false);
         onFileUploaded(fileIdentifier);
     }
 
     return (
         <React.Fragment>
-            {isProcessing ?
-                <Button
-                    disabled={true}
-                    variant="contained"
-                    className={classes.button}
-                    startIcon={<VideocamOutlinedIcon />}
-                >
-                    Working..
-                </Button>
-                :
-                <Button
-                    variant="contained"
-                    component="label"
-                    className={classes.button}
-                    startIcon={<VideocamOutlinedIcon />}
-                >
-                    Upload
-                    <input
-                        accept="video/*"
-                        type="file"
-                        hidden
-                        onChange={(e) => handleVideoClick(e.target.files)}
-                    />
-                </Button>
-            }
+            <Button
+                variant="contained"
+                component="label"
+                className={classes.button}
+                startIcon={<VideocamOutlinedIcon />}
+            >
+                Upload
+                <input
+                    accept="video/*"
+                    type="file"
+                    hidden
+                    onChange={(e) => handleVideoClick(e.target.files)}
+                />
+            </Button>
         </React.Fragment>
     );
 }

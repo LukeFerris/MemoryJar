@@ -155,7 +155,7 @@ const StoryHeader = ({ isLoading, progress, chapters }) => {
                             </Grid>
                         </Grid>
                         <Grid item sx={{ mb: 1.25 }}>
-                            <LinearWithValueLabel value={progress} />
+                            <LinearWithValueLabel value={progress} colour="white" />
                         </Grid>
                     </Grid>
                 </MainCard>

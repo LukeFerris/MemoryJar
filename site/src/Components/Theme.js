@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
-import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import ThemeHeader from './ThemeHeader';
 import Prompt from './Prompt';
 
@@ -75,7 +74,7 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
                             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
                                 {theme.prompts && theme.prompts.map((prompt) => (
                                     <Grid item key={prompt.promptId} xs={12} sm={12} md={12}>
-                                        <Prompt onItemDeleted={onItemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={openAfterRefreshId} uploading={isUploading} isLoading={isLoading} addEnabled="true" question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => onFileUploaded(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
+                                        <Prompt onItemDeleted={onItemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={openAfterRefreshId} isLoading={isLoading} question={prompt.promptQuestion} prompt={prompt} onFileUploaded={(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen) => onFileUploaded(promptId, fileIdentifier, mediaItemType, relatedMediaItemId, autoOpen)} />
                                     </Grid>
                                 ))}
                             </Grid>
