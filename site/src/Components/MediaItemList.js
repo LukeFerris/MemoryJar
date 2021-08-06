@@ -172,7 +172,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none' }}>
                     <ul className={classes.mediaList}>
-                    {mediaItems.filter(item => item.relatedMediaItemId == null).map((item, index) =>
+                    {mediaItems.map((item, index) =>
                         item.mediaType == 1 ?
                         <li key={index} className={classes.mediaContainer}>
                             <img onClick={() => openLightboxOnSlide(index+1)} className={classes.mediaItem} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.jpg'} />
