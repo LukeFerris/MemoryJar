@@ -62,12 +62,14 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         position: 'relative',
         // minWidth: '10vh'
-        maxWidth: '10vh'
+        maxWidth: '10vh',
+        width: '10vh'
     },
     mediaItem: {
-        maxHeight: '100%',
-        minWidth: '100%',
+        height: '100%',
         objectFit: 'cover',
+        maxWidth: '100%',
+        minWidth: '100%',
         verticalAlign: 'bottom',
         borderRadius: '10%',
         padding: 5
