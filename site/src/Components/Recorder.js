@@ -19,12 +19,23 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#AAA !important'
     },
     stopButton: {
-        backgroundColor: '#c62828'
-    }
+        backgroundColor: '#c62828',
+        marginTop: 5,
+        '&:hover': {
+            backgroundColor: '#AC2222'
+        }
+    },
+    cancelButton: {
+        backgroundColor: '#c62828',
+        marginTop: 5,
+        '&:hover': {
+            backgroundColor: '#AC2222'
+        }
+    },
 
 }));
 
-export default function Recorder({ onStartUpload, onFileUploaded, fileIdentifier, disabled }) {
+export default function Recorder({ onStartUpload, onFileUploaded, onCancel, fileIdentifier, disabled }) {
 
     const classes = useStyles();
     const [isRecording, setIsRecording] = useState(false);
@@ -66,12 +77,14 @@ export default function Recorder({ onStartUpload, onFileUploaded, fileIdentifier
 
             try {
 
+                setIsRecording(true);
+
                 await recorder.initAudio();
                 await recorder.initWorker();
                 await getUploadUrl(fileIdentifier);
 
                 recorder.startRecording();
-                setIsRecording(true);
+                
             } catch (e) {
                 console.error(e);
             }
@@ -81,26 +94,38 @@ export default function Recorder({ onStartUpload, onFileUploaded, fileIdentifier
     return (
         <React.Fragment>
             {
-                !isRecording ?
+                <div style={{display: "flex", flexDirection: "column"}} >
+                    { !isRecording ?
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            classes={{ disabled: classes.disabledButton }}
+                            onClick={record}
+                            startIcon={<KeyboardVoiceIcon />}
+                        >
+                            Record
+                        </Button>
+                        :
+                        <Button
+                            variant="contained"
+                            className={classes.stopButton}
+                            classes={{ disabled: classes.disabledButton }}
+                            onClick={record}
+                            startIcon={<StopIcon />}
+                        >
+                            Stop
+                        </Button>
+                    }
                     <Button
-                        variant="contained"
-                        disabled={disabled}
-                        classes={{ disabled: classes.disabledButton }}
-                        onClick={record}
-                        startIcon={<KeyboardVoiceIcon />}
+                    variant="contained"
+                    disabled={isRecording}
+                    className={classes.cancelButton}
+                    onClick={onCancel}
+                    startIcon={<StopIcon />}
                     >
-                        Record
+                        Cancel
                     </Button>
-                    :
-                    <Button
-                        variant="contained"
-                        className={classes.stopButton}
-                        classes={{ disabled: classes.disabledButton }}
-                        onClick={record}
-                        startIcon={<StopIcon />}
-                    >
-                        Stop
-                    </Button>
+                </div>
             }
         </React.Fragment>
     );

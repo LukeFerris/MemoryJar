@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
+import StopIcon from '@material-ui/icons/Stop';
 import { makeStyles } from '@material-ui/styles';
 import axios from 'axios';
 import API from '../Utils/API';
@@ -9,9 +10,16 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2),
     },
+    cancelButton: {
+        backgroundColor: '#c62828',
+        marginTop: 5,
+        '&:hover': {
+            backgroundColor: '#AC2222'
+        }
+    },
 }));
 
-export default function VideoSelector({ onStartUpload, onFileUploaded, fileIdentifier }) {
+export default function VideoSelector({ onStartUpload, onFileUploaded, onCancel, fileIdentifier }) {
 
     const classes = useStyles();
     const [uploadUrl, setUploadUrl] = useState(null);
@@ -48,20 +56,30 @@ export default function VideoSelector({ onStartUpload, onFileUploaded, fileIdent
 
     return (
         <React.Fragment>
-            <Button
+            <div style={{display: "flex", flexDirection: "column"}} >
+                <Button
+                    variant="contained"
+                    component="label"
+                    className={classes.button}
+                    startIcon={<VideocamOutlinedIcon />}
+                >
+                    Upload
+                    <input
+                        accept="video/*"
+                        type="file"
+                        hidden
+                        onChange={(e) => handleVideoClick(e.target.files)}
+                    />
+                </Button>
+                <Button
                 variant="contained"
-                component="label"
-                className={classes.button}
-                startIcon={<VideocamOutlinedIcon />}
-            >
-                Upload
-                <input
-                    accept="video/*"
-                    type="file"
-                    hidden
-                    onChange={(e) => handleVideoClick(e.target.files)}
-                />
-            </Button>
+                className={classes.cancelButton}
+                onClick={onCancel}
+                startIcon={<StopIcon />}
+                >
+                    Cancel
+                </Button>
+            </div>
         </React.Fragment>
     );
 }

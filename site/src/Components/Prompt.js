@@ -84,6 +84,10 @@ const useStyles = makeStyles((theme) => ({
     button: {
         color: 'white'
     },
+    cancelButton: {
+        backgroundColor: '#c62828',
+        marginTop: 5
+    },
     divider: {
         marginBottom: 10
     }
@@ -121,6 +125,11 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
 
     const handleVideoClick = () => {
         setAddMode(4);
+        setAnchorEl(null);
+    }
+
+    const handleCancelClick = () => {
+        setAddMode(0);
         setAnchorEl(null);
     }
 
@@ -192,31 +201,31 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
                             </List>
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
-                            {
-                                addMode == 1 && <Recorder fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
-                            }
-                            {
-                                addMode == 2 && <ImageSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
-                            }
-                            {
-                                addMode == 3 && <ImageSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
-                            }
-                            {
-                                addMode == 4 && <VideoSelector fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
-                            }
-                            {
-                                (addMode == 0) &&
+                                {
+                                    addMode == 1 && <Recorder onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
+                                }
+                                {
+                                    addMode == 2 && <ImageSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
+                                }
+                                {
+                                    addMode == 3 && <ImageSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
+                                }
+                                {
+                                    addMode == 4 && <VideoSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
+                                }
+                                {
+                                    (addMode == 0) &&
 
-                                <Button
-                                    variant="contained"
-                                    disabled={isUploading}
-                                    className={classes.button}
-                                    onClick={handleClick}
-                                    startIcon={<AddIcon />}
-                                >
-                                    Answer
-                                </Button>
-                            }
+                                    <Button
+                                        variant="contained"
+                                        disabled={isUploading}
+                                        className={classes.button}
+                                        onClick={handleClick}
+                                        startIcon={<AddIcon />}
+                                    >
+                                        Answer
+                                    </Button>
+                                }
                             <Menu
                                 id="menu-earning-card"
                                 anchorEl={anchorEl}
