@@ -108,7 +108,6 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
         toggler: false,
         slide: 1
     });
-    const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
     useEffect(async () => {
 
@@ -165,8 +164,8 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
     {
         if (window.confirm("Are you sure you want to delete this item?"))
         {
-        onItemDeleted(mediaItemId);
-        setIsDeleteEnabled(false);
+            setLightboxController({ toggler: !lightboxController.toggler});
+            onItemDeleted(mediaItemId);
         };
     }
 
@@ -216,7 +215,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                                 :
                                 <div>
                                     {image.mediaType != 0 && <Recorder callToAction='Add a voice note' onStartUpload={onStartVoiceOverUpload} cancelable={false} disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
-                                    <IconButton disabled={!isDeleteEnabled} color="secondary">
+                                    <IconButton color="secondary">
                                         <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
                                     </IconButton>
                                 </div>
