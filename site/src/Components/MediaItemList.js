@@ -188,11 +188,12 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                              }
                         </li>
                         :
-                        item.mediaType == 0 ?
+                        (item.mediaType == 0 && item.relatedMediaItemId == null) ?
                         <li key={index} className={classes.mediaContainer}>
                             <img onClick={() => openLightboxOnSlide(index+1)} src={AudioIcon} className={classes.mediaItem} />
                         </li>
                         :
+                        item.mediaType == 2 &&
                         <li key={index} className={classes.mediaContainer}>
                             <img onClick={() => openLightboxOnSlide(index+1)} src={VideoIcon} className={classes.mediaItem} />
                         </li>
