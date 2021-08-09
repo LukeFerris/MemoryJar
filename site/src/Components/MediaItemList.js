@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted }) => {
+const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted, onStartUpload }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
@@ -170,6 +170,12 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
         };
     }
 
+    const onStartVoiceOverUpload = () => 
+    {
+        setLightboxController({ toggler: !lightboxController.toggler});
+        onStartUpload();
+    }
+
     return (
         <React.Fragment>
             {isLoading ? (
@@ -209,7 +215,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                                 <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
                                 :
                                 <div>
-                                    {image.mediaType != 0 && <Recorder callToAction='Add a voice note' cancelable={false} disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
+                                    {image.mediaType != 0 && <Recorder callToAction='Add a voice note' onStartUpload={onStartVoiceOverUpload} cancelable={false} disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
                                     <IconButton disabled={!isDeleteEnabled} color="secondary">
                                         <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
                                     </IconButton>

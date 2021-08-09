@@ -143,16 +143,16 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
         autoImageOpened();
     }
 
-    const handleEndMediaCapture = async (prompt, fileIdentifier, mediaType, autoOpen) => {
+    const handleEndMediaCapture = async (prompt, fileIdentifier, mediaType, autoOpen, relatedMediaItemid = null) => {
         setAddMode(0);
         console.log('Autoopen is set to: ' + autoOpen);
         setUploadProgress(80);
-        await onFileUploaded(prompt.promptId, fileIdentifier, mediaType, null, autoOpen);
+        await onFileUploaded(prompt.promptId, fileIdentifier, mediaType, relatedMediaItemid, autoOpen);
         setIsUploading(false);
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
-        onFileUploaded(prompt.promptId, fileIdentifier, 0, relatedMediaItemId);
+        handleEndMediaCapture(prompt, fileIdentifier, 0, false, relatedMediaItemId);
     }
 
     const startUploadProgress = () =>
@@ -273,7 +273,7 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
                                     (prompt.mediaItems && prompt.mediaItems.length > 0) &&
                                         <div>
                                             <Divider className={classes.divider} />
-                                                <MediaItemList onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
+                                                <MediaItemList onStartUpload={startUploadProgress} onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
                                                     prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
                                         </div>
                     
