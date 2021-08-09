@@ -58,12 +58,12 @@ const useStyles = makeStyles((theme) => ({
         position: "relative"
     },
     mediaContainer: {
-        height: '10vh',
+        height: '12vh',
         flexGrow: 1,
         position: 'relative',
         // minWidth: '10vh'
-        maxWidth: '10vh',
-        width: '10vh'
+        maxWidth: '14vh',
+        width: '12vh'
     },
     mediaItem: {
         height: '100%',
