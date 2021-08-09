@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Recorder({ onStartUpload, onFileUploaded, onCancel, fileIdentifier, disabled }) {
+export default function Recorder({ onStartUpload = () => {}, onFileUploaded, onCancel, fileIdentifier, disabled, callToAction = 'Record', cancelable = true }) {
 
     const classes = useStyles();
     const [isRecording, setIsRecording] = useState(false);
@@ -103,7 +103,7 @@ export default function Recorder({ onStartUpload, onFileUploaded, onCancel, file
                             onClick={record}
                             startIcon={<KeyboardVoiceIcon />}
                         >
-                            Record
+                            {callToAction}
                         </Button>
                         :
                         <Button
@@ -116,15 +116,17 @@ export default function Recorder({ onStartUpload, onFileUploaded, onCancel, file
                             Stop
                         </Button>
                     }
-                    <Button
-                    variant="contained"
-                    disabled={isRecording}
-                    className={classes.cancelButton}
-                    onClick={onCancel}
-                    startIcon={<StopIcon />}
-                    >
-                        Cancel
-                    </Button>
+                    {cancelable &&
+                        <Button
+                        variant="contained"
+                        disabled={isRecording}
+                        className={classes.cancelButton}
+                        onClick={onCancel}
+                        startIcon={<StopIcon />}
+                        >
+                            Cancel
+                        </Button>
+                    }
                 </div>
             }
         </React.Fragment>

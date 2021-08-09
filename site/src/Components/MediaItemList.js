@@ -76,8 +76,11 @@ const useStyles = makeStyles((theme) => ({
     },
     audioImageIconOverlay: {
         position: 'absolute',
-        right: 20,
-        top: 20,
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        margin: 'auto',
         backgroundColor: 'white',
         width: 40,
         height: 40
@@ -205,7 +208,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                                 <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
                                 :
                                 <div>
-                                    {image.mediaType != 0 && <Recorder disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
+                                    {image.mediaType != 0 && <Recorder callToAction='Add a voice note' cancelable={false} disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
                                     <IconButton disabled={!isDeleteEnabled} color="secondary">
                                         <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
                                     </IconButton>
