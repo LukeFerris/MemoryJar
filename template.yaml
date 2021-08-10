@@ -59,7 +59,7 @@ Resources:
           - Name: REACT_APP_DOWNLOAD_API
             Value: !Sub https://${DownloadAPI}.execute-api.${AWS::Region}.amazonaws.com
           - Name: SENTRY_ENVIRONMENT
-            Value: development
+            Value: !Ref EnvConfigsentryEnvironmentAsString
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -689,3 +689,9 @@ Parameters:
   DefaultVPCSubnets:
     Type: List<AWS::EC2::Subnet::Id>
     Description: AWS account-specific default VPC subnets (injected by Stackery at deployment time)
+  EnvConfigsentryEnvironmentAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/sentryEnvironment
+Metadata:
+  EnvConfigParameters:
+    EnvConfigsentryEnvironmentAsString: sentryEnvironment
