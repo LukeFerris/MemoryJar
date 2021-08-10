@@ -25,6 +25,7 @@
     "install": "^0.13.0",
     "material-ui-audio-player": "^1.6.2",
     "material-ui-popup-state": "^1.8.4",
+    "mixpanel-browser": "^2.41.0",
     "npm": "^7.19.1",
     "react": "^17.0.2",
     "react-device-detect": "^1.17.0",
