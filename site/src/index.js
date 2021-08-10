@@ -3,6 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom'
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: 'https://89456055e6e94307887e13da8973c28a@o402039.ingest.sentry.io/5900350',
+  integrations: [new Integrations.BrowserTracing()],
+  environment: process.env.SENTRY_ENVIRONMENT,
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 ReactDOM.render((
   <BrowserRouter>
