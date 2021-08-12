@@ -62,6 +62,10 @@ Resources:
             Value: !Ref EnvConfigsentryEnvironmentAsString
           - Name: REACT_APP_MIXPANEL_TOKEN
             Value: !Ref EnvConfigmixPanelKeyAsString
+          - Name: REACT_APP_HOTJAR_ID
+            Value: !Ref EnvConfighotjarDevIDAsString
+          - Name: REACT_APP_HOTJAR_SV
+            Value: !Ref EnvConfighotjarSVAsString
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -712,8 +716,16 @@ Parameters:
   EnvConfigsentryLambdaDSNAsString:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /<EnvironmentName>/sentryLambdaDSN
+  EnvConfighotjarDevIDAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/hotjarDevID
+  EnvConfighotjarSVAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/hotjarSV
 Metadata:
   EnvConfigParameters:
     EnvConfigsentryEnvironmentAsString: sentryEnvironment
     EnvConfigmixPanelKeyAsString: mixPanelKey
     EnvConfigsentryLambdaDSNAsString: sentryLambdaDSN
+    EnvConfighotjarDevIDAsString: hotjarDevID
+    EnvConfighotjarSVAsString: hotjarSV
