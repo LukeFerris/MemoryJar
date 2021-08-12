@@ -239,6 +239,8 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
       Events:
         UserDataAPIPUT:
           Type: HttpApi
@@ -346,6 +348,8 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref AudioLibrary
           BUCKET_ARN: !GetAtt AudioLibrary.Arn
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
   AudioLibrary:
     Type: AWS::S3::Bucket
     Properties:
@@ -435,6 +439,8 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
   UserDataAPI:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -557,6 +563,8 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
   DownloadAPI:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -629,6 +637,8 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
   deleteMediaItem:
     Type: AWS::Serverless::Function
     Properties:
@@ -663,6 +673,8 @@ Resources:
           DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
           DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
       Events:
         UserDataAPIDELETEmediaItemId:
           Type: HttpApi
@@ -697,7 +709,11 @@ Parameters:
   EnvConfigmixPanelKeyAsString:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /<EnvironmentName>/mixPanelKey
+  EnvConfigsentryLambdaDSNAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/sentryLambdaDSN
 Metadata:
   EnvConfigParameters:
     EnvConfigsentryEnvironmentAsString: sentryEnvironment
     EnvConfigmixPanelKeyAsString: mixPanelKey
+    EnvConfigsentryLambdaDSNAsString: sentryLambdaDSN
