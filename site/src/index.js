@@ -5,6 +5,9 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom'
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import { hotjar } from 'react-hotjar';
+
+hotjar.initialize(process.env.REACT_APP_HOTJAR_ID, process.env.REACT_APP_HOTJAR_SV);
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,

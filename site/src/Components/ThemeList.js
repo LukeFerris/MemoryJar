@@ -96,8 +96,6 @@ export default function ThemeList() {
           prompt.mediaItems = userData.filter(userPrompt => userPrompt.promptId == prompt.promptId)
         });
 
-        // console.log(mergedData);
-
         const completedCount = mergedData[i].prompts.filter((obj) => obj.mediaItems.length > 0).length;
         const totalPrompts = mergedData[i].prompts.length;
         grandTotalPrompts += totalPrompts;
@@ -108,8 +106,6 @@ export default function ThemeList() {
       setMergedData(mergedData);
       setStoryProgress((grandCompletedCount / grandTotalPrompts) * 100);
 
-      console.log(mixpanel);
-      console.log(mixpanel.get_distinct_id());
       mixpanel.track('Theme View', {
         'Total prompts': grandTotalPrompts,
         'Completed prompts': grandCompletedCount,
