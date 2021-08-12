@@ -6,16 +6,21 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import config from './config';
 import Routes from './routes';
 import NavigationScroll from './layout/NavigationScroll';
+import { MixpanelProvider } from 'react-mixpanel-browser';
 
 // defaultTheme
 import theme from './themes';
 
-function App() {
+const App = () => {
 
   const { token, setToken } = useToken();
 
   if (!token) {
-    return <SignIn onSuccess={setToken} />
+    return (
+      <MixpanelProvider>
+        <SignIn onSuccess={setToken} />
+      </MixpanelProvider>
+      )
   }
 
   const customization = {
@@ -26,14 +31,16 @@ function App() {
   };
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme(customization)}>
-        <CssBaseline />
-        <NavigationScroll>
-          <Routes />
-        </NavigationScroll>
-      </ThemeProvider>
-    </StyledEngineProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme(customization)}>
+        <MixpanelProvider>
+          <CssBaseline />
+          <NavigationScroll>
+            <Routes />
+          </NavigationScroll>
+          </MixpanelProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
   );
 }
 

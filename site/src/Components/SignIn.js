@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Container from '@material-ui/core/Container';
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import { useMixpanel } from 'react-mixpanel-browser';
 
 function Copyright() {
     return (
@@ -53,6 +54,7 @@ export default function SignIn({ onSuccess }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const mixpanel = useMixpanel();
 
     function onSubmit(event) {
         event.preventDefault();
@@ -73,13 +75,18 @@ export default function SignIn({ onSuccess }) {
         user.authenticateUser(authDetails, {
             onSuccess: data => {
                 onSuccess(data.idToken);
+                mixpanel.identify(data.idToken.payload.sub);
+                mixpanel.track('Login Success');
             },
             onFailure: err => {
                 console.error('Failure:' + err);
+                mixpanel.track('Login Failure');
             },
             newPasswordRequired: (userAttributes, requiredAttributed) => {
 
                 console.log('attempting new password skip');
+
+                mixpanel.track('Login Password Reset');
 
                 // User was signed up by an admin and must provide new
                 // password and required attributes, if any, to complete

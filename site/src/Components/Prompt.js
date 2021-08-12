@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useMixpanel } from 'react-mixpanel-browser';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -101,7 +102,7 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
     const [addMode, setAddMode] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
-
+    const mixpanel = useMixpanel();
     const uploadProgressRef = useRef(uploadProgress);
     uploadProgressRef.current = uploadProgress;
 
@@ -116,16 +117,28 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
     const handleAudioClick = () => {
         setAddMode(1);
         setAnchorEl(null);
+
+        mixpanel.track('MediaAdd:Start:Audio', {
+            'PromptId': prompt.promptId,
+        });
     }
 
     const handleImageClick = () => {
         setAddMode(2);
         setAnchorEl(null);
+
+        mixpanel.track('MediaAdd:Start:Image', {
+            'PromptId': prompt.promptId,
+        });
     }
 
     const handleVideoClick = () => {
         setAddMode(4);
         setAnchorEl(null);
+
+        mixpanel.track('MediaAdd:Start:Video', {
+            'PromptId': prompt.promptId,
+        });
     }
 
     const handleCancelClick = () => {
@@ -136,6 +149,10 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
     const handleImageWithNoteClick = () => {
         setAddMode(3);
         setAnchorEl(null);
+
+        mixpanel.track('MediaAdd:Start:ImageWithNote', {
+            'PromptId': prompt.promptId,
+        });
     }
 
     const autoItemOpened = () => {
@@ -149,6 +166,11 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
         setUploadProgress(80);
         await onFileUploaded(prompt.promptId, fileIdentifier, mediaType, relatedMediaItemid, autoOpen);
         setIsUploading(false);
+
+        mixpanel.track('MediaAdd:Complete', {
+            'PromptId': prompt.promptId,
+            'MediaType': mediaType
+        });
     }
 
     const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
@@ -157,6 +179,10 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
 
     const startUploadProgress = () =>
     {
+        mixpanel.track('MediaAdd:Upload', {
+            'PromptId': prompt.promptId,
+        });
+
         setAddMode(0);
         console.log('starting upload progress');
         setIsUploading(true);

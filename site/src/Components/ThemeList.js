@@ -5,12 +5,14 @@ import { useToken } from './useToken';
 import StoryHeader from './StoryHeader';
 import Theme from './Theme';
 import { v4 as uuidv4 } from 'uuid';
+import { useMixpanel } from 'react-mixpanel-browser';
 
 export default function ThemeList() {
 
   // const [themeData, setThemeData] = useState([{ "themeId": "51a39d89-5d86-477a-93f4-7a9fddb52975", "themeName": "School Years", "prompts": [{ "promptId": "c0b8aead-637a-46fa-9603-fa728ed37ecf", "themeId": "51a39d89-5d86-477a-93f4-7a9fddb52975", "promptQuestion": "What was your first school like?", "createdTimeStamp": "2021-07-19T12:27:24.751905" }, { "promptId": "6005de42-ee70-45a5-8434-89a997d9a497", "themeId": "51a39d89-5d86-477a-93f4-7a9fddb52975", "promptQuestion": "Can you remember your first day?", "createdTimeStamp": "2021-07-19T12:27:24.909986" }, { "promptId": "a1377c10-7be2-484d-ad0b-af7dd274acef", "themeId": "51a39d89-5d86-477a-93f4-7a9fddb52975", "promptQuestion": "Did anyone bully you?", "createdTimeStamp": "2021-07-19T12:27:25.115664" }, { "promptId": "d7b5a477-a477-4be3-91df-6581ba5495bb", "themeId": "51a39d89-5d86-477a-93f4-7a9fddb52975", "promptQuestion": "What were the teachers like?", "createdTimeStamp": "2021-07-19T12:27:25.334788" }] }, { "themeId": "144f22dd-d01e-4ad1-aa15-7628b9297daa", "themeName": "Children", "prompts": [{ "promptId": "5342b2d4-80f1-461b-9b5f-cf8e9d72b219", "themeId": "144f22dd-d01e-4ad1-aa15-7628b9297daa", "promptQuestion": "What was it like the day your child was born?", "createdTimeStamp": "2021-07-19T12:27:25.545259" }, { "promptId": "64b5c787-061d-416b-ae92-4655e0233db3", "themeId": "144f22dd-d01e-4ad1-aa15-7628b9297daa", "promptQuestion": "How did you get to the hospital?", "createdTimeStamp": "2021-07-19T12:27:25.741267" }] }]);
   const [themeData, setThemeData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const mixpanel = useMixpanel();
   const [mergedData, setMergedData] = useState([
   {
     "themeId": "144f22dd-d01e-4ad1-aa15-7628b9297daa",
@@ -105,6 +107,14 @@ export default function ThemeList() {
 
       setMergedData(mergedData);
       setStoryProgress((grandCompletedCount / grandTotalPrompts) * 100);
+
+      console.log(mixpanel);
+      console.log(mixpanel.get_distinct_id());
+      mixpanel.track('Theme View', {
+        'Total prompts': grandTotalPrompts,
+        'Completed prompts': grandCompletedCount,
+        'Total themes': themeData.length
+      });
     };
 
     let themeData = await fetchThemeData();
@@ -112,6 +122,8 @@ export default function ThemeList() {
     mergeData(themeData, userData);
     setIsUploading(false);
     setIsLoading(false);
+
+    
   }, [uploadedFiles]);
 
   const autoImageOpened = () => {

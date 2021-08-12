@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { useMixpanel } from 'react-mixpanel-browser';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -52,10 +53,22 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefreshId, isUploading, onFileUploaded }) => {
+const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefreshId, onFileUploaded }) => {
     const classes = useStyles();
     const [isExpanded, setIsExpanded] = useState(false);
+    const mixpanel = useMixpanel();
+    const expand = () =>
+    {
+        if (!isExpanded)
+        {
+            mixpanel.track('Expands Theme', {
+                'ThemeId': theme.themeId,
+                'ThemeName': theme.themeName
+            });
+        }
 
+        setIsExpanded(!isExpanded);
+    }
     return (
         <React.Fragment>
             {isLoading ? (
@@ -68,7 +81,7 @@ const Theme = ({ isLoading, theme, onItemDeleted, autoImageOpened, openAfterRefr
                 <MainCard className={classes.card} contentClass={classes.content} style={{ cursor: 'pointer', border: 'none', backgroundColor: 'transparent' }}>
                     <Grid container key={theme.themeId}>
                         <Grid item xs={12}>
-                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={() => setIsExpanded(!isExpanded)} />
+                            <ThemeHeader isLoading={isLoading} title={theme.themeName} progress={theme.progress} onExpand={expand} />
                         </Grid>
                         { isExpanded &&
                             <Grid container style={{ marginTop: 2, marginBottom: 30 }} spacing={4}>
