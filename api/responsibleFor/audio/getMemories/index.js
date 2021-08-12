@@ -5,7 +5,17 @@ const data = require('data-api-client')({
   database: 'memoryjar'
 })
 
-exports.handler = async (event, context) => {
+const Sentry = require("@sentry/serverless");
+
+Sentry.AWSLambda.init({
+  dsn: process.env.SENTRY_LAMBDA_DSN,
+  environment: process.env.SENTRY_ENVIRONMENT,
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
+
+exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
 
   let body;
   let statusCode = 200;
@@ -38,4 +48,4 @@ exports.handler = async (event, context) => {
     headers
   };
 
-}
+})
