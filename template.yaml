@@ -60,6 +60,8 @@ Resources:
             Value: !Sub https://${DownloadAPI}.execute-api.${AWS::Region}.amazonaws.com
           - Name: SENTRY_ENVIRONMENT
             Value: !Ref EnvConfigsentryEnvironmentAsString
+          - Name: REACT_APP_MIXPANEL_TOKEN
+            Value: !Ref EnvConfigmixPanelKeyAsString
       ServiceRole: !GetAtt WebsiteRole.Arn
       Source:
         Type: NO_SOURCE
@@ -692,6 +694,10 @@ Parameters:
   EnvConfigsentryEnvironmentAsString:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /<EnvironmentName>/sentryEnvironment
+  EnvConfigmixPanelKeyAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/mixPanelKey
 Metadata:
   EnvConfigParameters:
     EnvConfigsentryEnvironmentAsString: sentryEnvironment
+    EnvConfigmixPanelKeyAsString: mixPanelKey
