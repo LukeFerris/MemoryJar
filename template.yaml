@@ -705,8 +705,20 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
-        - S3CrudPolicy:
-            BucketName: !Ref AudioLibrary
+        - LambdaInvokePolicy:
+            FunctionName: !Ref processAndUploadToS3
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Ref memoryjarDatabaseRootUserSecret
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:ExecuteStatement
+                - rds-data:RollbackTransaction
+              Resource:
+                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
       Events:
         UserDataAPIPOST:
           Type: HttpApi
@@ -718,10 +730,36 @@ Resources:
             TimeoutInMillis: 29000
       Environment:
         Variables:
-          BUCKET_NAME: !Ref AudioLibrary
-          BUCKET_ARN: !GetAtt AudioLibrary.Arn
           SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
           SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
+          FUNCTION_NAME: !Ref processAndUploadToS3
+          FUNCTION_ARN: !GetAtt processAndUploadToS3.Arn
+          DB_ID: !Ref memoryjarDatabase
+          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
+          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
+          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
+  processAndUploadToS3:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-processAndUploadToS3
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: processAndUploadToS3
+      CodeUri: api/responsibleFor/storage/processAndUploadToS3
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref AudioLibrary
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref AudioLibrary
+          BUCKET_ARN: !GetAtt AudioLibrary.Arn
 Parameters:
   SourceLocation:
     Type: String
