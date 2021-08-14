@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "devDependencies": {
     "aws-sdk": "~2"
+  },
+  "dependencies": {
+    "image-thumbnail": "^1.0.13",
+    "video-thumbnail-generator": "^1.1.3"
   }
 }
