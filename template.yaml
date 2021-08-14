@@ -459,6 +459,8 @@ Resources:
               responses: {}
             get:
               responses: {}
+            post:
+              responses: {}
           /{mediaItemId}:
             delete:
               responses: {}
@@ -688,6 +690,38 @@ Resources:
             ApiId: !Ref UserDataAPI
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
+  uploadMediaItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-uploadMediaItem
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: uploadMediaItem
+      CodeUri: api/responsibleFor/mediaItems/uploadMediaItem
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - S3CrudPolicy:
+            BucketName: !Ref AudioLibrary
+      Events:
+        UserDataAPIPOST:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: POST
+            ApiId: !Ref UserDataAPI
+            PayloadFormatVersion: '2.0'
+            TimeoutInMillis: 29000
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref AudioLibrary
+          BUCKET_ARN: !GetAtt AudioLibrary.Arn
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
 Parameters:
   SourceLocation:
     Type: String
