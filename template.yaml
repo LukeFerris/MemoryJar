@@ -760,6 +760,8 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref AudioLibrary
           BUCKET_ARN: !GetAtt AudioLibrary.Arn
+          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
+          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
 Parameters:
   SourceLocation:
     Type: String
