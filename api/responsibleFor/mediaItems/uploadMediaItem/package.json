@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "devDependencies": {
     "aws-sdk": "~2"
+  },
+  "dependencies": {
+    "@sentry/serverless": "^6.11.0",
+    "data-api-client": "^1.2.0"
   }
 }
