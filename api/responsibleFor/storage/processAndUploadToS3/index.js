@@ -1,7 +1,6 @@
 var AWS = require('aws-sdk');
 AWS.config.region = 'eu-west-1';
 
-const imageThumbnail = require('image-thumbnail');
 const ThumbnailGenerator = require('video-thumbnail-generator').default;
 
 const Sentry = require("@sentry/serverless");
@@ -23,23 +22,11 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
   };
 
   try {
-
-    if (typeof event.requestContext == 'undefined') {
-      console.log('No valid user supplied');
-      body = "No valid user supplied";
-      statusCode = 400;
-    }
-    else {
       
-      let file = JSON.parse(event.body);
+    let file = JSON.parse(event.body);
 
-      // force user on clip to be the authorised user - this will also be used as the folder structure in AWS
-      let userId = event.requestContext.authorizer.jwt.claims.sub;
-      console.log('user is: ' + userId);
-
-      body = 'Item with id: ' + file.fileId + ' for user: ' + userId + 'uploaded successfully'; 
+    body = 'Processed item'; 
   
-    }
   }
   catch (err) {
     statusCode = 400;
