@@ -5,6 +5,7 @@
     "aws-sdk": "~2"
   },
   "dependencies": {
+    "@sentry/serverless": "^6.11.0",
     "video-thumbnail-generator": "^1.1.3"
   }
 }

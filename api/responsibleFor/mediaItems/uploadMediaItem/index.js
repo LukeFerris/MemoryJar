@@ -37,17 +37,23 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
     else {
       
       let mediaItem = JSON.parse(event.body);
-
+      
       // force user on clip to be the authorised user - this will also be used as the folder structure in AWS
       mediaItem.userId = event.requestContext.authorizer.jwt.claims.sub;
       console.log('user is: ' + mediaItem.userId);
+
+      let payload = {
+        mediaItemBase64: mediaItem.base64Item,
+        userId: mediaItem.userId,
+        mediaItemId: mediaItem.mediaItemId
+      };
 
       // await process and upload files to S3 using separate lambda
       var params = {
         FunctionName: process.env.FUNCTION_NAME, // the lambda function we are going to invoke
         InvocationType: 'RequestResponse',
         LogType: 'Tail',
-        Payload: '{"image" : "XXX", "mediaItemId": "YYY" }'
+        Payload: JSON.parse(payload)
       };
     
       lambda.invoke(params, function(err, data) {

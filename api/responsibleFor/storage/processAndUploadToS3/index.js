@@ -1,7 +1,6 @@
 var AWS = require('aws-sdk');
 AWS.config.region = 'eu-west-1';
-
-const ThumbnailGenerator = require('video-thumbnail-generator').default;
+var s3 = new AWS.S3();
 
 const Sentry = require("@sentry/serverless");
 
@@ -22,11 +21,22 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
   };
 
   try {
-      
-    let file = JSON.parse(event.body);
+   
+    let request = JSON.parse(event.body);
+    let encodedImage = request.image;
+    let decodedImage = Buffer.from(encodedImage, 'base64');
+    let path = request.userId + '/' + request.mediaItemId + '.jpg';
 
-    body = 'Processed item'; 
-  
+    var params = {
+      "Body": decodedImage,
+      "Bucket": process.env.BUCKET_NAME,
+      "Key": path,
+      "ContentType " : "mime/jpeg"
+    };
+
+    await s3.upload(params);
+    
+    body = 'Processed item with id: ' + request.mediaItemid;
   }
   catch (err) {
     statusCode = 400;
