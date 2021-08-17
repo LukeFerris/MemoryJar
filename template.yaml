@@ -762,6 +762,16 @@ Resources:
           BUCKET_ARN: !GetAtt AudioLibrary.Arn
           SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
           SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
+      Layers:
+        - !Ref ImageProcessingLayer
+  ImageProcessingLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Layer ${ResourceName}
+        - ResourceName: ImageProcessingLayer
+      ContentUri: api/layers/imageProcessingLayer
+      RetentionPolicy: Retain
 Parameters:
   SourceLocation:
     Type: String
