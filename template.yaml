@@ -771,7 +771,9 @@ Resources:
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Layer ${ResourceName}
         - ResourceName: ImageProcessingLayer
       ContentUri: api/layers/imageProcessingLayer
-      RetentionPolicy: Retain
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: nodejs14.x
 Parameters:
   SourceLocation:
     Type: String
