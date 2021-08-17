@@ -2,6 +2,8 @@ var AWS = require('aws-sdk');
 AWS.config.region = 'eu-west-1';
 var s3 = new AWS.S3();
 
+const sharp = require('sharp');
+
 const Sentry = require("@sentry/serverless");
 
 Sentry.AWSLambda.init({
@@ -26,7 +28,9 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
     let encodedImage = request.image;
     let decodedImage = Buffer.from(encodedImage, 'base64');
     let path = request.userId + '/' + request.mediaItemId + '.jpg';
+    let thumbPath = request.userId + '/' + request.mediaItemId + '-thumb.jpg';
 
+    // put main object
     await s3.putObject({
       Body: decodedImage,
       Key: path,
@@ -34,6 +38,21 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
       Bucket: process.env.BUCKET_NAME,
       ACL: 'public-read'
     }).promise();
+    
+    console.log('Main object uploaded');
+    
+    // put thumbnail
+    await s3.putObject({
+      Body: sharp(decodedImage)
+        .resize(200)
+        .toBuffer(),
+      Key: thumbPath,
+      ContentType: 'image/jpeg',
+      Bucket: process.env.BUCKET_NAME,
+      ACL: 'public-read'
+    }).promise();
+    
+    console.log('Thumbnail uploaded');
     
     body = 'Processed item with id: ' + request.mediaItemId;
   }
