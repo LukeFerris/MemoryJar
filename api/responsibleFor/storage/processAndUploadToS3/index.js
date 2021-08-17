@@ -12,7 +12,7 @@ Sentry.AWSLambda.init({
   tracesSampleRate: 1.0,
 });
 
-exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
+exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
 
   let body;
   let statusCode = 200;
@@ -27,16 +27,15 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
     let decodedImage = Buffer.from(encodedImage, 'base64');
     let path = request.userId + '/' + request.mediaItemId + '.jpg';
 
-    var params = {
-      "Body": decodedImage,
-      "Bucket": process.env.BUCKET_NAME,
-      "Key": path,
-      "ContentType " : "mime/jpeg"
-    };
-
-    await s3.upload(params);
+    await s3.putObject({
+      Body: decodedImage,
+      Key: path,
+      ContentType: 'image/jpeg',
+      Bucket: process.env.BUCKET_NAME,
+      ACL: 'public-read'
+    }).promise();
     
-    body = 'Processed item with id: ' + request.mediaItemid;
+    body = 'Processed item with id: ' + request.mediaItemId;
   }
   catch (err) {
     statusCode = 400;
