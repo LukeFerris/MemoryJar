@@ -25,27 +25,35 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
   try {
    
     let request = JSON.parse(event.body);
-    let encodedImage = request.image;
-    let decodedImage = Buffer.from(encodedImage, 'base64');
-    let path = request.userId + '/' + request.mediaItemId + '.jpg';
-    let thumbPath = request.userId + '/' + request.mediaItemId + '-thumb.jpg';
-
+    let encodedMediaItem = request.image;
+    let decodedMediaItem = Buffer.from(encodedMediaItem, 'base64');
+    
+    let extension = 'jpg';
+    if (request.mimeType == "video/mp4" || request.mimeType == "audio/mp4") extension = 'mp4';
+    let path = request.userId + '/' + request.mediaItemId + '.' + extension;
+  
     // put main object
     await s3.putObject({
-      Body: decodedImage,
+      Body: decodedMediaItem,
       Key: path,
-      ContentType: 'image/jpeg',
+      ContentType: request.mimeType,
       Bucket: process.env.BUCKET_NAME,
       ACL: 'public-read'
     }).promise();
     
     console.log('Main object uploaded');
     
-    // put thumbnail
-    await s3.putObject({
-      Body: sharp(decodedImage)
+    if (extension == "jpg")
+    {
+      let thumbPath = request.userId + '/' + request.mediaItemId + '-thumb.jpg';
+      
+      // put thumbnail
+    let thumbnail = await sharp(decodedMediaItem)
         .resize(200)
-        .toBuffer(),
+        .toBuffer();
+        
+    await s3.putObject({
+      Body: thumbnail,
       Key: thumbPath,
       ContentType: 'image/jpeg',
       Bucket: process.env.BUCKET_NAME,
@@ -53,6 +61,7 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
     }).promise();
     
     console.log('Thumbnail uploaded');
+    }
     
     body = 'Processed item with id: ' + request.mediaItemId;
   }
