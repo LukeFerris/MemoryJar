@@ -25,7 +25,7 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event) => {
   try {
    
     let request = JSON.parse(event.body);
-    let encodedMediaItem = request.image;
+    let encodedMediaItem = request.mediaItem;
     let decodedMediaItem = Buffer.from(encodedMediaItem, 'base64');
     
     let extension = 'jpg';
