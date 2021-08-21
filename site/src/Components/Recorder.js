@@ -4,8 +4,6 @@ import Button from '@material-ui/core/Button';
 import StopIcon from '@material-ui/icons/Stop';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'axios';
-import API from '../Utils/API';
 
 const recorder = new vmsg.Recorder({
     wasmURL: "https://unpkg.com/vmsg@0.3.0/vmsg.wasm"
@@ -35,32 +33,10 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Recorder({ onStartUpload = () => {}, onFileUploaded, onCancel, fileIdentifier, disabled, callToAction = 'Record', cancelable = true }) {
+export default function Recorder({ onAudioSelected, onCancel, disabled, callToAction = 'Record', cancelable = true }) {
 
     const classes = useStyles();
     const [isRecording, setIsRecording] = useState(false);
-    const [uploadUrl, setUploadUrl] = useState(null);
-
-    const getUploadUrl = async (mediaItemId) => {
-        let uploadUrl = await API.get('/?mediaItemId=' + mediaItemId + '&mediaItemType=0').then((result) => {
-            console.log('result is: ' + JSON.stringify(result.data));
-            return result.data.uploadURL;
-        });
-        setUploadUrl(uploadUrl);
-    }
-
-    const upload = async (uploadUrl, blob) => {
-        console.log('uploading to S3 using uploadUrl: ' + uploadUrl);
-
-        var options = {
-            headers: {
-                'Content-Type': 'audio/mp3'
-            }
-        };
-
-        // upload the file
-        await axios.put(uploadUrl, blob, options);
-    }
 
     const record = async () => {
 
@@ -68,10 +44,8 @@ export default function Recorder({ onStartUpload = () => {}, onFileUploaded, onC
 
             const blob = await recorder.stopRecording();
             setIsRecording(false);
-            onStartUpload();
-
-            await upload(uploadUrl, blob);
-            onFileUploaded(fileIdentifier);
+            
+            onAudioSelected(blob);
 
         } else {
 
@@ -81,8 +55,6 @@ export default function Recorder({ onStartUpload = () => {}, onFileUploaded, onC
 
                 await recorder.initAudio();
                 await recorder.initWorker();
-                await getUploadUrl(fileIdentifier);
-
                 recorder.startRecording();
                 
             } catch (e) {

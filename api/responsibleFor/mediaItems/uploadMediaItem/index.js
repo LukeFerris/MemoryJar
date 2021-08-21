@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-AWS.config.region = 'eu-west-1';
+// AWS.config.region = 'eu-central-1';
 var lambda = new AWS.Lambda();
 
 // require data-api
@@ -42,10 +42,18 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
       mediaItem.userId = event.requestContext.authorizer.jwt.claims.sub;
       console.log('user is: ' + mediaItem.userId);
 
+      let mimeType = 'image/jpeg';
+      if (mediaItem.mediaType == 0) mimeType = 'audio/mp4';
+      if (mediaItem.mediaType == 2) mimeType = 'video/mp4';
+      
+      console.log('mime type is: ' + mimeType);
+      // console.log('item is: ' + mediaItem.base64Item);
+      
       let payload = {
-        mediaItemBase64: mediaItem.base64Item,
         userId: mediaItem.userId,
-        mediaItemId: mediaItem.mediaItemId
+        mediaItemId: mediaItem.mediaItemId,
+        mimeType: mimeType,
+        mediaItem: mediaItem.base64Item
       };
 
       // await process and upload files to S3 using separate lambda
@@ -53,16 +61,25 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
         FunctionName: process.env.FUNCTION_NAME, // the lambda function we are going to invoke
         InvocationType: 'RequestResponse',
         LogType: 'Tail',
-        Payload: JSON.parse(payload)
+        Payload: JSON.stringify(payload)
       };
     
-      lambda.invoke(params, function(err, data) {
+      console.log('Invoking processing and upload');
+      
+      let processingResult = await lambda.invoke(params).promise();
 
-          // now that it's successfully uploaded, check if the item already exists
-        let mediaItemResult = await data.query("SELECT * from \"mediaItem\" WHERE \"mediaItemId\" = '" + mediaItem.mediaItemId + "'");
+      console.log('Finished invoking processing and upload');
+      console.log(processingResult);
+      
+      if (processingResult.StatusCode != 200) throw ('processing of the image failed');
+      
+      console.log('Successfully invoked processing and upload');
+      
+      // now that it's successfully uploaded, check if the item already exists
+      let mediaItemResult = await data.query("SELECT * from \"mediaItem\" WHERE \"mediaItemId\" = '" + mediaItem.mediaItemId + "'");
 
-        if (mediaItemResult.records.length == 0) {
-
+      if (mediaItemResult.records.length == 0) {
+  
           // item does not exist so register it
           // find the prompt associated with this media item
           let promptResult = await data.query("SELECT * from prompt WHERE \"promptId\" = '" + mediaItem.promptId + "'");
@@ -88,13 +105,13 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
                 memoryId: context.awsRequestId,
                 themeId: prompt.themeId,
                 userId: mediaItem.userId
-              }
+              };
 
               // insert the memory first
               await data.query(
                 'INSERT INTO memory ("memoryId", "themeId", "userId") VALUES(:memoryId::UUID, :themeId::UUID, :userId::UUID)',
                 memory
-              )
+              );
             }
             else {
               console.log(memoryResult.records[0]);
@@ -111,18 +128,18 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
               userId: mediaItem.userId,
               mediaType: mediaItem.mediaType,
               relatedMediaItemId: mediaItem.relatedMediaItemId
-            }
+            };
 
             await data.query(
               'INSERT INTO "mediaItem" ("memoryId", "promptId", "mediaItemId", "userId", "mediaType", "relatedMediaItemId") VALUES(:memoryId::UUID, :promptId::UUID, :mediaItemId::UUID, :userId::UUID, :mediaType::SMALLINT, :relatedMediaItemId::UUID)',
               newMediaItem
-            )
+            );
 
             // if a related media item was present - update the partner mediaitem
             if (newMediaItem.relatedMediaItemId) {
               await data.query(
                 `UPDATE "mediaItem" SET "relatedMediaItemId"=\'${newMediaItem.mediaItemId}\' WHERE "mediaItemId"=\'${newMediaItem.relatedMediaItemId}\';`
-              )
+              );
             }
           }
 
@@ -133,8 +150,7 @@ exports.handler = Sentry.AWSLambda.wrapHandler(async (event, context) => {
           body = "MediaItem with id: " + mediaItem.mediaItemId + " already exists.";
           statusCode = 400;
         }
-      })
-    }
+      }
   }
   catch (err) {
     statusCode = 400;

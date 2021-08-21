@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useMixpanel } from 'react-mixpanel-browser';
+import axios from "axios";
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -14,6 +15,7 @@ import ImageSelector from './ImageSelector';
 import VideoSelector from './VideoSelector';
 import MediaItemList from './MediaItemList';
 import LinearWithValueLabel from './LineProgressWithLabel';
+import { useToken } from './useToken';
 
 // assets
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
@@ -24,6 +26,8 @@ import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
 import PermCameraMicOutlinedIcon from '@material-ui/icons/PermCameraMicOutlined';
 import CommentIcon from '@material-ui/icons/Comment';
 import { v4 as uuidv4 } from 'uuid';
+
+import base64Converter from '../Utils/base64Converter';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -96,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshId, autoImageOpened, onItemDeleted }) => {
+const Prompt = ({ isLoading, onPromptUpdated, question, onFileUploaded, prompt, openAfterRefreshId, autoImageOpened, onItemDeleted }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [addMode, setAddMode] = useState(0);
@@ -104,6 +108,7 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
     const [uploadProgress, setUploadProgress] = useState(0);
     const mixpanel = useMixpanel();
     const uploadProgressRef = useRef(uploadProgress);
+    const { token } = useToken();
     uploadProgressRef.current = uploadProgress;
 
     const handleClick = (event) => {
@@ -155,28 +160,6 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
         });
     }
 
-    const autoItemOpened = () => {
-        // ask the parent to remove the request as it's now open
-        autoImageOpened();
-    }
-
-    const handleEndMediaCapture = async (prompt, fileIdentifier, mediaType, autoOpen, relatedMediaItemid = null) => {
-        setAddMode(0);
-        console.log('Autoopen is set to: ' + autoOpen);
-        setUploadProgress(80);
-        await onFileUploaded(prompt.promptId, fileIdentifier, mediaType, relatedMediaItemid, autoOpen);
-        setIsUploading(false);
-
-        mixpanel.track('MediaAdd:Complete', {
-            'PromptId': prompt.promptId,
-            'MediaType': mediaType
-        });
-    }
-
-    const audioAddedToImage = (prompt, fileIdentifier, relatedMediaItemId) => {
-        handleEndMediaCapture(prompt, fileIdentifier, 0, false, relatedMediaItemId);
-    }
-
     const startUploadProgress = () =>
     {
         mixpanel.track('MediaAdd:Upload', {
@@ -197,6 +180,47 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
             setUploadProgress(newProgress);
             if (newProgress < 100) updateUploadProgress();
         }, 2000);
+    }
+
+    const handleItemSelected = async (blob, itemType, autoOpen = false, relatedMediaItemId = null) =>
+    {
+        startUploadProgress();
+
+        // convert to base 64
+        let itemBase64 = await base64Converter(blob);
+        console.log('Media item converted to base64 string');
+    
+        // construct mediaItem
+        let mediaItem = {
+            mediaItemId: uuidv4(),
+            promptId: prompt.promptId,
+            mediaType: itemType,
+            base64Item: itemBase64,
+            relatedMediaItemId: relatedMediaItemId
+        };
+
+        console.log('Media item assigned id: ' + mediaItem.mediaItemId);
+
+        // post to API
+        console.log('Commencing upload, processing and registration');
+
+        await axios.post(process.env.REACT_APP_MEDIAITEM_API, mediaItem,
+        {
+            headers: {Authorization: token.jwtToken}
+        })
+
+        console.log('Upload is complete for mediaItem: ' + mediaItem.mediaItemId);
+
+        setIsUploading(false);
+        setUploadProgress(100);
+
+        mixpanel.track('MediaAdd:Complete', {
+            'PromptId': prompt.promptId,
+            'MediaItemId': mediaItem.mediaItemId,
+            'MediaType': mediaItem.mediaItemType
+        });
+
+        onPromptUpdated(mediaItem.mediaItemId, autoOpen);
     }
 
     return (
@@ -228,16 +252,16 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
                         </Grid>
                         <Grid item style={{ paddingTop: 5 }}>
                                 {
-                                    addMode == 1 && <Recorder onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 0)} />
+                                    addMode == 1 && <Recorder onAudioSelected={(blob) => handleItemSelected(blob, 0)} onCancel={handleCancelClick} />
                                 }
                                 {
-                                    addMode == 2 && <ImageSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, false)} />
+                                    addMode == 2 && <ImageSelector onImageSelected={(blob) => handleItemSelected(blob, 1)} onCancel={handleCancelClick} />
                                 }
                                 {
-                                    addMode == 3 && <ImageSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 1, true)} />
+                                    addMode == 3 && <ImageSelector onImageSelected={(blob) => handleItemSelected(blob, 1, true)} onCancel={handleCancelClick} />
                                 }
                                 {
-                                    addMode == 4 && <VideoSelector onCancel={handleCancelClick} fileIdentifier={uuidv4()} onStartUpload={startUploadProgress} onFileUploaded={(fileIdentifier) => handleEndMediaCapture(prompt, fileIdentifier, 2, false)} />
+                                    addMode == 4 && <VideoSelector onVideoSelected={(blob) => handleItemSelected(blob, 2)} onCancel={handleCancelClick} />
                                 }
                                 {
                                     (addMode == 0) &&
@@ -299,7 +323,7 @@ const Prompt = ({ isLoading, question, onFileUploaded, prompt, openAfterRefreshI
                                     (prompt.mediaItems && prompt.mediaItems.length > 0) &&
                                         <div>
                                             <Divider className={classes.divider} />
-                                                <MediaItemList onStartUpload={startUploadProgress} onItemDeleted={onItemDeleted} onItemAutoOpened={autoItemOpened} key={prompt.promptId} onAudioAddedToImage={(fileIdentifier, relatedMediaItemId) => audioAddedToImage(prompt, fileIdentifier, relatedMediaItemId)} mediaItems={
+                                                <MediaItemList onItemDeleted={onItemDeleted} key={prompt.promptId} onAudioAddedToImage={(blob, relatedMediaItemId) => handleItemSelected(blob, 0, false, relatedMediaItemId)} mediaItems={
                                                     prompt.mediaItems.map(item => ({ mediaItemId: item.mediaItemId, mediaType: item.mediaType, relatedMediaItemId: item.relatedMediaItemId, autoOpen: item.mediaItemId == openAfterRefreshId }))} />
                                         </div>
                     

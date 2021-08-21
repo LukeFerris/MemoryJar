@@ -8,9 +8,9 @@ import IconButton from '@material-ui/core/Button';
 // project imports
 import MainCard from '../ui-component/cards/MainCard';
 import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
+import { useToken } from './useToken';
 
 // assets
-import GraphicEqIcon from '@material-ui/icons/GraphicEq';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 // style constant
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
     const classes = useStyles();
     const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
+    const { token } = useToken();
 
     const onDeleted = () => {
         if (window.confirm("Are you sure you want to delete this item?"))
@@ -75,7 +76,7 @@ const AudioItem = ({ isLoading, mediaItemId, onItemDeleted }) => {
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content} style={{ border: 'none', backgroundColor: 'transparent' }}>
                     <div style={{display:'flex'}}>
-                        <audio style={{ width: '100%', flexGrow: 1, paddingRight:0 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + mediaItemId + '.mp4'} controls />
+                        <audio style={{ width: '100%', flexGrow: 1, paddingRight:0 }} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + token.payload.sub + '/' + mediaItemId + '.mp4'} controls />
                         <IconButton disabled={!isDeleteEnabled} color="secondary" style={{padding:0, margin:0}}>
                             <DeleteIcon className={classes.deleteButton} onClick={onDeleted} />
                         </IconButton>

@@ -32,11 +32,9 @@ export default function ThemeList() {
   const [isUploading, setIsUploading] = useState(false);
   const [storyProgress, setStoryProgress] = useState(0);
   const [chapterCount, setChapterCount] = useState(6);
-
   const { token } = useToken();
 
   useEffect(async () => {
-
 
     const fetchThemeData = async () => {
       console.log('fetching theme data');
@@ -146,6 +144,13 @@ export default function ThemeList() {
     
   }
 
+  const onThemeUpdated = (mediaItemId, autoOpen) =>
+  {
+      console.log('Theme updated');
+      if (autoOpen) console.log('Auto opening item: ' + mediaItemId);
+      setUploadedFiles({ mediaItemId: mediaItemId, openAfterRefreshId: autoOpen ? mediaItemId : null});
+  }
+
   const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null, autoOpen = false) => {
 
     console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
@@ -183,7 +188,7 @@ export default function ThemeList() {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} style={{paddingTop:10}}>
         {mergedData.length > 0 && mergedData.map((theme) => (
-          <Theme key={theme.themeId} theme={theme} isLoading={isLoading} onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} onFileUploaded={complete}  />
+          <Theme onThemeUpdated={onThemeUpdated} key={theme.themeId} theme={theme} isLoading={isLoading} onItemDeleted={itemDeleted} autoImageOpened={autoImageOpened} openAfterRefreshId={uploadedFiles.openAfterRefreshId} uploading={isUploading} onFileUploaded={complete}  />
         ))
         }
       </Grid>

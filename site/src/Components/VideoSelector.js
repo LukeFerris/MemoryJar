@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
 import StopIcon from '@material-ui/icons/Stop';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'axios';
-import API from '../Utils/API';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -19,39 +17,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function VideoSelector({ onStartUpload, onFileUploaded, onCancel, fileIdentifier }) {
+export default function VideoSelector({ onVideoSelected, onCancel }) {
 
     const classes = useStyles();
-    const [uploadUrl, setUploadUrl] = useState(null);
-
-    const getUploadUrl = async (mediaItemId) => {
-        let uploadUrl = await API.get('/?mediaItemId=' + mediaItemId + '&mediaItemType=2').then((result) => {
-            console.log('result is: ' + JSON.stringify(result.data));
-            return result.data.uploadURL;
-        });
-        setUploadUrl(uploadUrl);
-        return uploadUrl;
-    }
-
-    const upload = async (uploadUrl, blob) => {
-        console.log('uploading to S3 using uploadUrl: ' + uploadUrl);
-
-        var options = {
-            headers: {
-                'Content-Type': 'image/jpeg'
-            }
-        };
-
-        // upload the file
-        await axios.put(uploadUrl, blob, options);
-    }
 
     const handleVideoClick = async (file) => {
 
-        onStartUpload();
-        let uploadUrl = await getUploadUrl(fileIdentifier);
-        await upload(uploadUrl, file[0]);
-        onFileUploaded(fileIdentifier);
+        onVideoSelected(file[0])
     }
 
     return (

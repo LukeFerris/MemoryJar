@@ -12,11 +12,11 @@ import TotalIncomeCard from '../ui-component/cards/Skeleton/TotalIncomeCard';
 import FsLightbox from 'fslightbox-react';
 import Recorder from './Recorder';
 import AudioItem from './AudioItem';
-import { v4 as uuidv4 } from 'uuid';
 import GraphicEqOutlinedIcon from '@material-ui/icons/GraphicEqOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AudioIcon from '../assets/images/audioIcon.png';
 import VideoIcon from '../assets/images/videoIcon.png';
+import { useToken } from './useToken';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -102,13 +102,13 @@ const useStyles = makeStyles((theme) => ({
 
 //-----------------------|| DASHBOARD - TOTAL INCOME LIGHT CARD ||-----------------------//
 
-const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoOpened, onItemDeleted, onStartUpload }) => {
+const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemDeleted }) => {
     const classes = useStyles();
     const [lightboxController, setLightboxController] = useState({
         toggler: false,
         slide: 1
     });
-
+    const { token } = useToken();
     useEffect(async () => {
 
         // look for items that might need autoopening
@@ -121,12 +121,11 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                 slide: index + 1
             })
 
-            onItemAutoOpened();
+            // onItemAutoOpened();
         }
 
     }, [mediaItems]);
 
-    const [recordingDisabled, setRecordingDisabled] = useState(false);
     const getFileType = (mediaType) => 
     {
         if (mediaType == 0) return '.mp4';
@@ -135,23 +134,13 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
     }
     
     const imageSrc = mediaItems.map(item => 
-        item.mediaType == 1 ? 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + getFileType(item.mediaType)
+        item.mediaType == 1 ? 'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + token.payload.sub + '/' + item.mediaItemId + getFileType(item.mediaType)
         :
         item.mediaType == 0 ?
-        <audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.mp4'} controls />
+        <audio src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + token.payload.sub + '/' + item.mediaItemId + '.mp4'} controls />
         :
-        <video src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.mp4'} controls />
+        <video src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + token.payload.sub + '/' + item.mediaItemId + '.mp4'} controls />
         );
-
-    const handleEndAudioCapture = async (fileIdentifier, relatedMediaItemId) => {
-        setRecordingDisabled(true);
-        onAudioAddedToImage(fileIdentifier, relatedMediaItemId);
-        setLightboxController({
-            toggler: false,
-            slide: 1
-        });
-        setRecordingDisabled(false);
-    }
 
     function openLightboxOnSlide(number) {
         setLightboxController({
@@ -169,12 +158,6 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
         };
     }
 
-    const onStartVoiceOverUpload = () => 
-    {
-        setLightboxController({ toggler: !lightboxController.toggler});
-        onStartUpload();
-    }
-
     return (
         <React.Fragment>
             {isLoading ? (
@@ -185,7 +168,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                     {mediaItems.map((item, index) =>
                         item.mediaType == 1 ?
                         <li key={index} className={classes.mediaContainer}>
-                            <img onClick={() => openLightboxOnSlide(index+1)} className={classes.mediaItem} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + item.mediaItemId + '.jpg'} />
+                            <img onClick={() => openLightboxOnSlide(index+1)} className={classes.mediaItem} src={'https://' + process.env.REACT_APP_AUDIO_LIBRARY_URL + '/' + token.payload.sub + '/' + item.mediaItemId + '-thumb.jpg'} />
                             {item.relatedMediaItemId &&
                                 <Avatar variant="rounded" className={classes.audioImageIconOverlay}>
                                     <GraphicEqOutlinedIcon />
@@ -214,7 +197,7 @@ const MediaItemList = ({ isLoading, mediaItems, onAudioAddedToImage, onItemAutoO
                                 <AudioItem onItemDeleted={onItemDeleted} mediaItemId={image.relatedMediaItemId} />
                                 :
                                 <div>
-                                    {image.mediaType != 0 && <Recorder callToAction='Add a voice note' onStartUpload={onStartVoiceOverUpload} cancelable={false} disabled={recordingDisabled} onFileUploaded={(fileIdentifier) => handleEndAudioCapture(fileIdentifier, image.mediaItemId)} fileIdentifier={uuidv4()} />}
+                                    {image.mediaType != 0 && <Recorder onAudioSelected={(blob) => onAudioAddedToImage(blob, image.mediaItemId)} callToAction='Add a voice note' cancelable={false} />}
                                     <IconButton color="secondary">
                                         <DeleteIcon onClick={() => onDeleted(image.mediaItemId)} />
                                     </IconButton>
