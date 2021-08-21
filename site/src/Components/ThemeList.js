@@ -62,7 +62,7 @@ export default function ThemeList() {
     const fetchUserData = async () => {
       console.log('fetching user data');
       const result = await axios(
-        process.env.REACT_APP_REGISTER_AUDIO_API,
+        process.env.REACT_APP_MEDIAITEM_API,
         {
           headers: {
             Authorization: token.jwtToken
@@ -129,7 +129,7 @@ export default function ThemeList() {
     console.log('deleting item: ' + mediaItemId);
    
    
-    await axios.delete(process.env.REACT_APP_REGISTER_AUDIO_API + '/' + mediaItemId,
+    await axios.delete(process.env.REACT_APP_MEDIAITEM_API + '/' + mediaItemId,
       {
         headers: {
           Authorization: token.jwtToken
@@ -153,14 +153,14 @@ export default function ThemeList() {
 
   const complete = async (promptId, mediaItemId, mediaItemType, relatedMediaItemId = null, autoOpen = false) => {
 
-    console.log('making registration request to: ' + process.env.REACT_APP_REGISTER_AUDIO_API);
+    console.log('making registration request to: ' + process.env.REACT_APP_MEDIAITEM_API);
     console.log('Prompt: ' + promptId);
     console.log('Media type: ' + mediaItemType);
     console.log('Related media item:' + relatedMediaItemId);
     setIsUploading(true);
 
     // now register it
-    await axios.put(process.env.REACT_APP_REGISTER_AUDIO_API, {
+    await axios.put(process.env.REACT_APP_MEDIAITEM_API, {
       "mediaItemId": mediaItemId, "promptId": promptId, "mediaType": mediaItemType, "relatedMediaItemId": relatedMediaItemId
     },
       {
