@@ -790,13 +790,8 @@ Resources:
       DomainName: !Ref EnvConfigcustomDomainAsString
       DomainValidationOptions:
         - DomainName: !Ref EnvConfigcustomDomainAsString
-          ValidationDomain: null
+          ValidationDomain: thememoryjar.co
     Condition: CdnCustomDomain
-  '?(@.Type === ''Custom::StackeryUsEast1SSLCertificate'' &&  (@.Properties.DomainName ?(@.Properties.DomainName === ''[object Object]'' || @.Properties.DomainName.Ref === ''EnvConfigcustomDomainAsString'') :(@.Properties.DomainName === ''[object Object]'')))':
-    Properties:
-      DomainValidationOptions:
-        '?(@.DomainName === ''[object Object]'')':
-          ValidationDomain: !Ref EnvConfigcustomDomainAsString
 Parameters:
   SourceLocation:
     Type: String
