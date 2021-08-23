@@ -783,20 +783,6 @@ Resources:
       RetentionPolicy: Delete
     Metadata:
       BuildMethod: nodejs14.x
-  CdnSSLCertificate:
-    Type: Custom::StackeryUsEast1SSLCertificate
-    Properties:
-      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stackery-agent-commander
-      DomainName: !Ref EnvConfigcustomDomainAsString
-      DomainValidationOptions:
-        - DomainName: !Ref EnvConfigcustomDomainAsString
-          ValidationDomain: !Ref EnvConfigcustomDomainAsString
-    Condition: CdnCustomDomain
-  '?(@.Type === ''Custom::StackeryUsEast1SSLCertificate'' &&  (@.Properties.DomainName ?(@.Properties.DomainName === ''[object Object]'' || @.Properties.DomainName.Ref === ''EnvConfigcustomDomainAsString'') :(@.Properties.DomainName === ''[object Object]'')))':
-    Properties:
-      DomainValidationOptions:
-        '?(@.DomainName === ''[object Object]'')':
-          ValidationDomain: !Ref EnvConfigcustomDomainAsString
 Parameters:
   SourceLocation:
     Type: String
