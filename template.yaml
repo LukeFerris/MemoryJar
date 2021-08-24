@@ -30,7 +30,7 @@ Resources:
           - !Ref AWS::NoValue
         ViewerCertificate: !If
           - CdnCustomDomain
-          - AcmCertificateArn: !Ref CdnSSLCertificate
+          - AcmCertificateArn: aws:acm:eu-central-1:360520317360:certificate/befbf29f-b6fd-4aee-882f-d1905341900c
             SslSupportMethod: sni-only
           - !Ref AWS::NoValue
   Website:
