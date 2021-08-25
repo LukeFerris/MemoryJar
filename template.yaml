@@ -4,7 +4,7 @@ Resources:
   Cdn:
     Type: AWS::CloudFront::Distribution
     Properties:
-      DistributionConfig:
+      DistributionCcdnonfig:
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 404
@@ -24,15 +24,13 @@ Resources:
               OriginAccessIdentity: !Sub
                 - origin-access-identity/cloudfront/${OriginAccessIdentity}
                 - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
-        Aliases: !If
-          - CdnCustomDomain
-          - - !Ref EnvConfigcustomDomainAsString
-          - !Ref AWS::NoValue
-        ViewerCertificate: !If
-          - CdnCustomDomain
+        Aliases:
+          - !Ref EnvConfigcustomDomainAsString
+        ViewerCertificate:
+          - CloudFrontDefaultCertificate: false
           - AcmCertificateArn: aws:acm:eu-central-1:360520317360:certificate/befbf29f-b6fd-4aee-882f-d1905341900c
-            SslSupportMethod: sni-only
-          - !Ref AWS::NoValue
+          - SslSupportMethod: sni-only
+          - MinimumProtocolVersion: TLSv1
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
@@ -783,15 +781,6 @@ Resources:
       RetentionPolicy: Delete
     Metadata:
       BuildMethod: nodejs14.x
-  CdnSSLCertificate:
-    Type: Custom::StackeryUsEast1SSLCertificate
-    Properties:
-      ServiceToken: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stackery-agent-commander
-      DomainName: !Ref EnvConfigcustomDomainAsString
-      DomainValidationOptions:
-        - DomainName: !Ref EnvConfigcustomDomainAsString
-          ValidationDomain: thememoryjar.co
-    Condition: CdnCustomDomain
 Parameters:
   SourceLocation:
     Type: String
