@@ -4,7 +4,7 @@ Resources:
   Cdn:
     Type: AWS::CloudFront::Distribution
     Properties:
-      DistributionCcdnonfig:
+      DistributionConfig:
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 404
@@ -31,14 +31,6 @@ Resources:
           - AcmCertificateArn: aws:acm:eu-central-1:360520317360:certificate/befbf29f-b6fd-4aee-882f-d1905341900c
           - SslSupportMethod: sni-only
           - MinimumProtocolVersion: TLSv1
-      DistributionConfig:
-        Origins:
-          - DomainName: !GetAtt memoryjarbucket.RegionalDomainName
-            Id: StackeryCDN
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub
-                - origin-access-identity/cloudfront/${OriginAccessIdentity}
-                - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
