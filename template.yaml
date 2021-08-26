@@ -27,7 +27,6 @@ Resources:
         Aliases:
           - !Ref EnvConfigcustomDomainAsString
         ViewerCertificate:
-          CloudFrontDefaultCertificate: false
           AcmCertificateArn: aws:acm:eu-central-1:360520317360:certificate/befbf29f-b6fd-4aee-882f-d1905341900c
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1
