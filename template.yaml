@@ -324,7 +324,7 @@ Resources:
           - AllowedHeaders:
               - '*'
             AllowedMethods:
-              - PUT
+              - GET
             AllowedOrigins:
               - '*'
             Id: myCORSRuleId1
