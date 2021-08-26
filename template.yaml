@@ -31,6 +31,14 @@ Resources:
           - AcmCertificateArn: aws:acm:eu-central-1:360520317360:certificate/befbf29f-b6fd-4aee-882f-d1905341900c
           - SslSupportMethod: sni-only
           - MinimumProtocolVersion: TLSv1
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt memoryjarbucket.RegionalDomainName
+            Id: StackeryCDN
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub
+                - origin-access-identity/cloudfront/${OriginAccessIdentity}
+                - OriginAccessIdentity: !Ref CdnOriginAccessIdentity
   Website:
     Type: AWS::CodeBuild::Project
     Metadata:
@@ -216,51 +224,6 @@ Resources:
     Properties:
       CloudFrontOriginAccessIdentityConfig:
         Comment: Stackery
-  registerAudioRecording:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-registerAudioRecording
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: registerAudioRecording
-      CodeUri: api/responsibleFor/audio/registerAudioRecording
-      Handler: index.handler
-      Runtime: nodejs14.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-        - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: !Ref memoryjarDatabaseRootUserSecret
-        - Statement:
-            - Effect: Allow
-              Action:
-                - rds-data:BatchExecuteStatement
-                - rds-data:BeginTransaction
-                - rds-data:CommitTransaction
-                - rds-data:ExecuteStatement
-                - rds-data:RollbackTransaction
-              Resource:
-                - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
-      Environment:
-        Variables:
-          DB_ID: !Ref memoryjarDatabase
-          DB_ADDRESS: !GetAtt memoryjarDatabase.Endpoint.Address
-          DB_PORT: !GetAtt memoryjarDatabase.Endpoint.Port
-          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${memoryjarDatabase}
-          DB_ROOT_USER_SECRET_ARN: !Ref memoryjarDatabaseRootUserSecret
-          SENTRY_ENVIRONMENT: !Ref EnvConfigsentryEnvironmentAsString
-          SENTRY_LAMBDA_DSN: !Ref EnvConfigsentryLambdaDSNAsString
-      Events:
-        UserDataAPIPUT:
-          Type: HttpApi
-          Properties:
-            Path: /
-            Method: PUT
-            ApiId: !Ref UserDataAPI
-            PayloadFormatVersion: '2.0'
-            TimeoutInMillis: 29000
   memoryjarDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
@@ -781,6 +744,19 @@ Resources:
       RetentionPolicy: Delete
     Metadata:
       BuildMethod: nodejs14.x
+  CdnBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref memoryjarbucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CdnOriginAccessIdentity}
+            Action: s3:GetObject
+            Resource: !Sub
+              - ${BucketArn}/*
+              - BucketArn: !GetAtt memoryjarbucket.Arn
 Parameters:
   SourceLocation:
     Type: String
